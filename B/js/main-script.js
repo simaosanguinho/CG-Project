@@ -42,7 +42,7 @@ function createScene() {
   scene.background = new THREE.Color(0, 0, 0, 0);
 
   // add axes to the scene
-  axes = new THREE.AxesHelper(1000);
+  axes = new THREE.AxesHelper(10000);
   scene.add(axes);
 }
 

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-const UNIT = 50;
+const UNIT = 40;
 
 const CLOCK = new THREE.Clock();
 
@@ -46,6 +46,12 @@ const colors = {
   magenta: 0xff00ff,
 };
 
+const cranePosition = {
+  positionX: 4.5 * UNIT,
+  positionY: 0.5 * UNIT,
+  positionZ: 1.5 * UNIT,
+};
+
 const baseVals = {
   width: 3 * UNIT,
   depth: 3 * UNIT,
@@ -54,8 +60,21 @@ const baseVals = {
   positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.red}),
 };
+
+const towerVals = {
+  width: 1 * UNIT,
+  depth: 1 * UNIT,
+  height: 12 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 6  * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+};
+
+
 
 export {
   UNIT,
@@ -70,4 +89,6 @@ export {
   maxViewDistance,
   colors,
   baseVals,
+  towerVals,
+  cranePosition,  
 };

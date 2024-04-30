@@ -38,6 +38,13 @@ function createObject(objectVals) {
   const mesh = new THREE.Mesh(geometry, objectVals.material);
   object.add(mesh);
 
+  /* let edges = new THREE.EdgesGeometry(mesh.geometry);
+  let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }));
+  // increase the size of the edges
+  line.scale.set(1.1, 1.1, 1.1);
+
+  object.add(line); */
+
   return object;
 }
 
