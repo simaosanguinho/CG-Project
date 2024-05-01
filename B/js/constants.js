@@ -35,6 +35,7 @@ const cameraValues = [
   [500, 2000, 2000],
 ];
 
+// REMOVE
 const colors = {
   white: 0xffffff,
   black: 0x000000,
@@ -107,6 +108,17 @@ const upperTowerVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
 };
 
+const counterWeightVals = {
+  width: 1.5 * UNIT,
+  depth: 1 * UNIT,
+  height: 0.5 * UNIT,
+  positionX: -3.25 * UNIT,
+  positionY: 14.75 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
 
 export {
   UNIT,
@@ -126,4 +138,5 @@ export {
   cranePosition,
   jibVals,
   upperTowerVals,
+  counterWeightVals,
 };
