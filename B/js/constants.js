@@ -102,7 +102,7 @@ const upperTowerVals = {
   depth: 1 * UNIT,
   height: 3 * UNIT,
   positionX: 0 * UNIT,
-  positionY: 16 * UNIT,
+  positionY: 17.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
