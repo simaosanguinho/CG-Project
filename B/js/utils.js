@@ -19,7 +19,7 @@ function createObject(objectVals) {
       );
       break;
     case Primitives.CYLINDER:
-        console.log("Cylinder");
+      console.log("Cylinder");
       geometry = new THREE.CylinderGeometry(
         objectVals.radiusTop,
         objectVals.radiusBottom,
@@ -27,9 +27,9 @@ function createObject(objectVals) {
       );
       break;
     case Primitives.TETRAEDRON:
-        console.log("Tetrahedron");
-        geometry = new THREE.TetrahedronGeometry(objectVals.radius);
-        break;
+      console.log("Tetrahedron");
+      geometry = new THREE.TetrahedronGeometry(objectVals.radius);
+      break;
     default:
       console.log("Object type not found");
       break;
@@ -48,10 +48,42 @@ function createObject(objectVals) {
   return object;
 }
 
-function setPosition(object, values) {
-    "use strict";
-    object.position.set(values.positionX, values.positionY, values.positionZ);
-  }
+function setPosition(object, vals) {
+  "use strict";
+  object.position.set(vals.positionX, vals.positionY, vals.positionZ);
+}
 
+function rotateObject(object, rotationVals, axis) {
+  "use strict";
+
+  switch (axis) {
+    case AXIS.X:
+      object.rotation.x = THREE.Math.clamp(
+        object.userData.step * delta + object.rotation.x,
+        rotationVals.min,
+        rotationVals.max
+      );
+      break;
+
+    case AXIS.Y:
+      object.rotation.y += THREE.Math.clamp(
+        object.userData.step * delta + object.rotation.y,
+        rotationVals.min,
+        rotationVals.max
+      );
+      break;
+
+    case AXIS.Z:
+      object.rotation.z += THREE.Math.clamp(
+        object.userData.step * delta + object.rotation.z,
+        rotationVals.min,
+        rotationVals.max
+      );
+      break;
+
+    default:
+      console.log("Axis not found");
+  }
+}
 
 export { createObject, setPosition };

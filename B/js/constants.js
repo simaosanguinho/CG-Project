@@ -48,7 +48,7 @@ const colors = {
 
 const cranePosition = {
   positionX: 4.5 * UNIT,
-  positionY: 0.5 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 1.5 * UNIT,
 };
 
@@ -57,10 +57,10 @@ const baseVals = {
   depth: 3 * UNIT,
   height: 1 * UNIT,
   positionX: 0 * UNIT,
-  positionY: 0 * UNIT,
+  positionY: 0.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red}),
+  material: new THREE.MeshBasicMaterial({ color: colors.red}),   //transparent: true, opacity: 0.5,
 };
 
 const towerVals = {
@@ -68,11 +68,23 @@ const towerVals = {
   depth: 1 * UNIT,
   height: 12 * UNIT,
   positionX: 0 * UNIT,
-  positionY: 6  * UNIT,
+  positionY: 7  * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
+
+const cabVals = {
+  width: 2 * UNIT,
+  depth: 2 * UNIT,
+  height: 2 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 14 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+};
+
 
 
 
@@ -90,5 +102,6 @@ export {
   colors,
   baseVals,
   towerVals,
+  cabVals,
   cranePosition,  
 };
