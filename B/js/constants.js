@@ -6,7 +6,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = 0xa2bce0;
+const backgroundColor = 0x052138;
 
 const fov = 70;
 
@@ -71,7 +71,7 @@ const towerVals = {
   positionY: 7  * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
 };
 
 const cabVals = {
@@ -93,9 +93,19 @@ const jibVals = {
   positionY: 15.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+const upperTowerVals = {
+  width: 1 * UNIT,
+  depth: 1 * UNIT,
+  height: 3 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 16 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+};
 
 
 export {
@@ -115,4 +125,5 @@ export {
   cabVals,
   cranePosition,
   jibVals,
+  upperTowerVals,
 };

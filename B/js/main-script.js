@@ -39,8 +39,7 @@ function createScene() {
   scene = new THREE.Scene();
 
   // set the background color of the scene
-  scene.background = new THREE.Color(0, 0, 0, 0);
-
+  scene.background = new THREE.Color(backgroundColor);
   // add axes to the scene
   axes = new THREE.AxesHelper(10000);
   scene.add(axes);

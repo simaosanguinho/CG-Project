@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { UNIT, colors, baseVals, towerVals, cabVals, cranePosition, jibVals } from './constants.js';
+import { UNIT, colors, baseVals, towerVals, cabVals, cranePosition, jibVals, upperTowerVals } from './constants.js';
 import { createObject, setPosition } from './utils.js';
 import { scene } from './main-script.js';
 
@@ -62,9 +62,11 @@ function createUpperStructure() {
     let group = new THREE.Group();
     const cab = createCab();
     const jib = createJib();
+    const upperTower = createUpperTower();
 
     group.add(cab);
     group.add(jib);
+    group.add(upperTower);
     return group;
 }
 
@@ -94,6 +96,13 @@ function createJib() {
     const jib = createObject(jibVals);
     setPosition(jib, jibVals);
     return jib;
+}
+
+function createUpperTower() {
+    "use strict";
+    const upperTower = createObject(upperTowerVals);
+    setPosition(upperTower, upperTowerVals);
+    return upperTower;
 }
 
 export { createCrane };
