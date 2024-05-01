@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { UNIT, colors, baseVals, towerVals, cabVals, cranePosition } from './constants.js';
+import { UNIT, colors, baseVals, towerVals, cabVals, cranePosition, jibVals } from './constants.js';
 import { createObject, setPosition } from './utils.js';
 import { scene } from './main-script.js';
 
@@ -46,7 +46,6 @@ function createCrane() {
 
 function createLowerStructure() {
     "use strict";
-
     let group = new THREE.Group();
     const base = createBase();
     const tower = createTower();
@@ -59,10 +58,13 @@ function createLowerStructure() {
 
 function createUpperStructure() {
     "use strict";
+    // TODO: In order to rotate the oibject 'group' must be the one declared in main-script.js
     let group = new THREE.Group();
     const cab = createCab();
+    const jib = createJib();
 
     group.add(cab);
+    group.add(jib);
     return group;
 }
 
@@ -85,6 +87,13 @@ function createCab() {
     const cab = createObject(cabVals);
     setPosition(cab, cabVals);
     return cab;
+}
+
+function createJib() {
+    "use strict";
+    const jib = createObject(jibVals);
+    setPosition(jib, jibVals);
+    return jib;
 }
 
 export { createCrane };

@@ -149,7 +149,7 @@ function init() {
   currentCamera = cameras[3];
 
   // create object functions
-  scene.add(createCrane());
+  createCrane();
 
   // resetSteps();
 

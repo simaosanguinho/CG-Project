@@ -85,6 +85,16 @@ const cabVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
 };
 
+const jibVals = {
+  width: 18 * UNIT,
+  depth: 1 * UNIT,
+  height: 1 * UNIT,
+  positionX: 4.5 * UNIT,
+  positionY: 15 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+};
 
 
 
@@ -103,5 +113,6 @@ export {
   baseVals,
   towerVals,
   cabVals,
-  cranePosition,  
+  cranePosition,
+  jibVals,
 };
