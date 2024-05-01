@@ -6,7 +6,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = 0x052138;
+const backgroundColor = 0xeaf6ff;
 
 const fov = 70;
 

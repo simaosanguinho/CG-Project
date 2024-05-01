@@ -1,5 +1,47 @@
 body {
-    margin: 0px;
-    background-color: #fff;
-    overflow: hidden;
+  margin: 0px;
+  background-color: #fff;
+  overflow: hidden;
 }
+
+#hud {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 9999;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr); /* Adjust the number of columns as needed */
+    grid-auto-rows: minmax(20px, auto); /* Adjust the height of the rows as needed */
+    grid-gap: 8px; /* Increase the gap between buttons for better readability */
+    background-color: rgba(84, 140, 177, 0.5); /* Semi-transparent background */
+    border-radius: 15px; /* Rounded corners */
+    padding: 10px; /* Add padding for better spacing */
+    box-shadow: 0 4px 6px rgba(13, 11, 143, 0.1); /* Soft shadow */
+}
+
+.key-button {
+    background-color: rgba(56, 82, 116, 0.6);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    padding: 4px; /* Add padding for better button visibility */
+    transition: background-color 0.3s; /* Add transition effect for smoother hover effect */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Button shadow */
+}
+
+.active {
+    animation: glow 1s infinite alternate;
+    background-color: #0c4f92;
+}
+
+@keyframes glow {
+    from, to {
+        box-shadow: 0 0 5px rgba(207, 255, 253, 0.8);
+    }
+}
+

@@ -2,6 +2,8 @@ import * as THREE from "three";
 
 import { Primitives } from "./constants.js";
 
+let meshesToUpdate = [];
+
 function createObject(objectVals) {
   "use strict";
 
@@ -45,6 +47,7 @@ function createObject(objectVals) {
 
   object.add(line); */
 
+  meshesToUpdate.push(mesh);
   return object;
 }
 
@@ -86,4 +89,8 @@ function rotateObject(object, rotationVals, axis) {
   }
 }
 
-export { createObject, setPosition };
+function getMeshesToUpdate() {
+  return meshesToUpdate;
+}
+
+export { createObject, setPosition , getMeshesToUpdate};

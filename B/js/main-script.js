@@ -18,7 +18,7 @@ import {
   maxViewDistance,
 } from "./constants.js";
 import { createCrane } from "./crane.js";
-
+import { getMeshesToUpdate } from "./utils.js";
 
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -158,6 +158,7 @@ function init() {
 
   // add event listeners
   window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("keyup", onKeyUp);
 }
 
 /////////////////////
@@ -198,28 +199,64 @@ function onKeyDown(e) {
     case 49: //1
       console.log("1");
       currentCamera = cameras[0];
+      makeButtonActive("1");
       break;
 
     case 50: //2
       currentCamera = cameras[1];
+      makeButtonActive("2");
       break;
 
     case 51: //3
       currentCamera = cameras[2];
+      makeButtonActive("3");
       break;
 
     case 52: //4
       currentCamera = cameras[3];
+      makeButtonActive("4");
       break;
 
     case 53: //5
       currentCamera = cameras[4];
+      makeButtonActive("5");
       break;
 
     case 54: //6
       currentCamera = cameras[5];
+      makeButtonActive("6");
       break;
-    
+
+    case 81 || 113: // Q or q
+      makeButtonActive("Q");
+      break;
+    case 65 || 97: // A or a
+      makeButtonActive("A");
+      break;
+    case 87 || 119: // W or w
+      makeButtonActive("W");
+      break;
+    case 83 || 115: // S or s
+      makeButtonActive("S");
+      break;
+    case 69 || 101: // E or e
+      makeButtonActive("E");
+      break;
+    case 68 || 100: // D or d
+      makeButtonActive("D");
+      break;
+    case 82 || 114: // R or r
+      makeButtonActive("R");
+      break;
+    case 70 || 102: // F or f
+      makeButtonActive("F");
+      break;
+    case 88 || 120: // X or x
+      isWireframe = !isWireframe;
+      updateWireframe(); // Update wireframe rendering
+      makeButtonActive("X");
+      break;
+
     case 32: //space - show axes
       axes.visible = !axes.visible;
       break;
@@ -231,9 +268,100 @@ function onKeyDown(e) {
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
+  switch (e.keyCode) {
+    case 49: //1
+      makeButtonInactive("1");
+      break;
+    case 50: //2
+      makeButtonInactive("2");
+      break;
+
+    case 51: //3
+      makeButtonInactive("3");
+      break;
+
+    case 52: //4
+      makeButtonInactive("4");
+      break;
+
+    case 53: //5
+      makeButtonInactive("5");
+      break;
+
+    case 54: //6
+      makeButtonInactive("6");
+      break;
+
+    case 81 || 113: // Q or q
+      makeButtonInactive("Q");
+      break;
+
+    case 65 || 97: // A or a
+      makeButtonInactive("A");
+      break;
+
+    case 87 || 119: // W or w
+      makeButtonInactive("W");
+      break;
+
+    case 83 || 115: // S or s
+      makeButtonInactive("S");
+      break;
+
+    case 69 || 101: // E or e
+      makeButtonInactive("E");
+      break;
+
+    case 68 || 100: // D or d
+      makeButtonInactive("D");
+      break;
+
+    case 82 || 114: // R or r
+      makeButtonInactive("R");
+      break;
+
+    case 70 || 102: // F or f
+      makeButtonInactive("F");
+      break;
+    case 88 || 120: // X or x
+      makeButtonInactive("X");
+      break;
+  }
 }
 
 init();
 animate();
 
 export { scene, renderer, currentCamera };
+
+///////////////////////
+/* Heads-Up Display */
+///////////////////////
+
+function makeButtonActive(key) {
+  key = key.toUpperCase();
+  const button = document.getElementById(`key${key}`);
+  if (button) {
+    button.classList.add("active");
+  }
+}
+
+function makeButtonInactive(key) {
+  key = key.toUpperCase();
+  const button = document.getElementById(`key${key}`);
+  if (button) {
+    button.classList.remove("active");
+  }
+}
+
+///////////////////////
+/* Wireframe */
+///////////////////////
+
+let isWireframe = false; // Variable to track wireframe mode
+
+function updateWireframe() {
+    getMeshesToUpdate().forEach(mesh => {
+        mesh.material.wireframe = isWireframe;
+    });
+}
