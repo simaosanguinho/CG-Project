@@ -90,7 +90,7 @@ const jibVals = {
   depth: 1 * UNIT,
   height: 1 * UNIT,
   positionX: 4.5 * UNIT,
-  positionY: 15 * UNIT,
+  positionY: 15.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
