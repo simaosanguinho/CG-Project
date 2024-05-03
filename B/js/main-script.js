@@ -19,7 +19,7 @@ const fov = 70;
 
 const minViewDistance = 1;
 
-const rotationUnit = Math.PI / 20;
+const rotationUnit = Math.PI / 80;
 
 const maxViewDistance = 10000;
 
@@ -172,10 +172,12 @@ const rearPendantVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
+// Adjust rotation speed
 const upperStructureRotation = {
   step: rotationUnit,
-  min: -Math.PI * 2,
+  min: -1,
   max: Math.PI * 2,
+  rotationDirection: 0,
 };
 
 //////////////////////
@@ -316,9 +318,19 @@ function myClamp(value, min, max) {
   "use strict";
 
   // can rotate continuously
-  if (min < 0) {
+  if (value < min) {
     return value % (Math.PI * 2);
   }
+
+  if (value < min) {
+    return min;
+  }
+
+  if (value > max) {
+    return max;
+  }
+
+  return value;
 }
 
 function rotateObject(object, rotationVals, axis) {
@@ -326,27 +338,18 @@ function rotateObject(object, rotationVals, axis) {
 
   switch (axis) {
     case AXIS.X:
-      object.rotation.x = THREE.MathUtils.clamp(
-        object.userData.step * delta + object.rotation.x,
-        rotationVals.min,
-        rotationVals.max % (Math.PI * 2)
-      );
+      object.rotation.x +=
+        rotationVals.rotationDirection * rotationVals.step * delta;
       break;
 
     case AXIS.Y:
-      object.rotation.y += myClamp(
-        object.userData.step * delta + object.rotation.y,
-        rotationVals.min,
-        rotationVals.max
-      );
+      object.rotation.y +=
+        rotationVals.rotationDirection * rotationVals.step * delta;
       break;
 
     case AXIS.Z:
-      object.rotation.z += THREE.MathUtils.clamp(
-        object.userData.step * delta + object.rotation.z,
-        rotationVals.min,
-        rotationVals.max
-      );
+      object.rotation.z +=
+        rotationVals.rotationDirection * rotationVals.step * delta;
       break;
 
     default:
@@ -502,8 +505,14 @@ function handleCollisions() {
 ////////////
 function update() {
   "use strict";
+  if (isAnimating) {
+    // checkCollisions();
+    // handleCollisions();
+    return;
+  }
 
   rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
+  
 }
 
 /////////////
@@ -582,7 +591,6 @@ function onKeyDown(e) {
 
   switch (e.keyCode) {
     case 49: //1
-      console.log("1");
       currentCamera = cameras[0];
       makeButtonActive("1");
       break;
@@ -614,11 +622,11 @@ function onKeyDown(e) {
 
     case 81 || 113: // Q or q
       makeButtonActive("Q");
-      upperStructure.userData.step = upperStructureRotation.step;
+      upperStructureRotation.rotationDirection = -1;
       break;
     case 65 || 97: // A or a
       makeButtonActive("A");
-      upperStructure.userData.step = -upperStructureRotation.step;
+      upperStructureRotation.rotationDirection = 1;
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
@@ -647,6 +655,7 @@ function onKeyDown(e) {
     case 32: //space - show axes
       axes.visible = !axes.visible;
       break;
+
   }
 }
 
@@ -655,6 +664,7 @@ function onKeyDown(e) {
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
+
   switch (e.keyCode) {
     case 49: //1
       makeButtonInactive("1");
@@ -681,12 +691,12 @@ function onKeyUp(e) {
 
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
-      upperStructure.userData.step = 0;
+      upperStructureRotation.rotationDirection = 0;
       break;
 
     case 65 || 97: // A or a
       makeButtonInactive("A");
-      upperStructure.userData.step = 0;
+      upperStructureRotation.rotationDirection = 0;
       break;
 
     case 87 || 119: // W or w
@@ -715,6 +725,7 @@ function onKeyUp(e) {
     case 55: // 7
       makeButtonInactive("7");
       break;
+
   }
 }
 
