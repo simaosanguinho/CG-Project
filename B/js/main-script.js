@@ -13,7 +13,10 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = 0xeaf6ff;
+const backgroundColor = "#eaf6ff";
+
+// Background color for dark mode
+const backgroundColorDark = "#344c5e";
 
 const fov = 70;
 
@@ -22,6 +25,7 @@ const minViewDistance = 1;
 const rotationUnit = Math.PI / 80;
 
 const maxViewDistance = 10000;
+
 
 const AXIS = {
   X: "x",
@@ -189,6 +193,8 @@ let lowerStructure, upperStructure;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
+let isDarkMode = false; // Variable to track dark mode
+const darkModeButton = document.getElementById("darkModeButton");
 
 /////////////////////
 /* GOTO: CREATE SCENE(S) */
@@ -553,6 +559,9 @@ function init() {
   // add event listeners
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
+  
+  darkModeButton.addEventListener("click", toggleDarkMode);
+
 }
 
 /////////////////////
@@ -762,4 +771,38 @@ function updateWireframe() {
   getMeshesToUpdate().forEach((mesh) => {
     mesh.material.wireframe = isWireframe;
   });
+}
+
+/////////////////////////
+/*      DARKMODE      */
+///////////////////////
+// Add event listener to dark mode button
+darkModeButton.addEventListener("click", toggleDarkMode);
+
+// Function to toggle dark mode
+function toggleDarkMode() {
+  isDarkMode = !isDarkMode; // Toggle dark mode
+  updateToggleSwitch(); // Update toggle switch appearance
+  updateBackgroundColor(); // Update background color
+}
+
+// Function to update toggle switch appearance based on dark mode
+function updateToggleSwitch() {
+  if (isDarkMode) {
+    darkModeButton.classList.add("on"); // Add 'on' class for on state
+  } else {
+    darkModeButton.classList.remove("on"); // Remove 'on' class for off state
+  }
+}
+
+// Function to update background color based on dark mode
+function updateBackgroundColor() {
+  if (isDarkMode) {
+    // make background color dark
+    scene.background = new THREE.Color(backgroundColorDark); // Dark background color
+    document.body.style.backgroundColor = backgroundColorDark; // Dark background color
+  } else {
+    scene.background = new THREE.Color(backgroundColor); // Light background color (original)
+    document.body.style.backgroundColor = backgroundColor; // Light background color (original)
+  }
 }
