@@ -23,7 +23,6 @@ const rotationUnit = Math.PI / 20;
 
 const maxViewDistance = 10000;
 
-
 const AXIS = {
   X: "x",
   Y: "y",
@@ -110,7 +109,7 @@ const jibVals = {
 const upperTowerVals = {
   width: 1 * UNIT,
   depth: 1 * UNIT,
-  height: 3 * UNIT,
+  height: 3.1 * UNIT, // room to hide pendants edges
   positionX: 0 * UNIT,
   positionY: 17.5 * UNIT,
   positionZ: 0 * UNIT,
@@ -151,12 +150,34 @@ const cableVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+const frontPendantVals = {
+  width: 0.1 * UNIT,
+  depth: 0.1 * UNIT,
+  height: 11 * UNIT, // ~sqr130
+  positionX: 5.5 * UNIT,
+  positionY: 17.5 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CYLINDER,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const rearPendantVals = {
+  width: 0.1 * UNIT,
+  depth: 0.1 * UNIT,
+  height: 4.3 * UNIT, // ~sqrt18
+  positionX: -2 * UNIT,
+  positionY: 17.5 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CYLINDER,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
 
 const upperStructureRotation = {
-    step: rotationUnit,
-    min: -Math.PI * 2,
-    max: Math.PI * 2,
+  step: rotationUnit,
+  min: -Math.PI * 2,
+  max: Math.PI * 2,
 };
+
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
@@ -246,7 +267,6 @@ function createObject(objectVals) {
 
   switch (objectVals.type) {
     case Primitives.CUBE:
-      console.log("Cube");
       geometry = new THREE.BoxGeometry(
         objectVals.width,
         objectVals.height,
@@ -254,7 +274,6 @@ function createObject(objectVals) {
       );
       break;
     case Primitives.CYLINDER:
-      console.log("Cylinder");
       geometry = new THREE.CylinderGeometry(
         objectVals.radiusTop,
         objectVals.radiusBottom,
@@ -262,11 +281,9 @@ function createObject(objectVals) {
       );
       break;
     case Primitives.TETRAEDRON:
-      console.log("Tetrahedron");
       geometry = new THREE.TetrahedronGeometry(objectVals.radius);
       break;
     default:
-      console.log("Object type not found");
       break;
   }
   // TODO: ADD MATERIAL
@@ -296,14 +313,13 @@ function resetSteps() {
 }
 
 function myClamp(value, min, max) {
-  "use strict"
+  "use strict";
 
   // can rotate continuously
   if (min < 0) {
-    return value%(Math.PI*2);
+    return value % (Math.PI * 2);
   }
 }
-
 
 function rotateObject(object, rotationVals, axis) {
   "use strict";
@@ -313,7 +329,7 @@ function rotateObject(object, rotationVals, axis) {
       object.rotation.x = THREE.MathUtils.clamp(
         object.userData.step * delta + object.rotation.x,
         rotationVals.min,
-        rotationVals.max%(Math.PI*2)
+        rotationVals.max % (Math.PI * 2)
       );
       break;
 
@@ -352,7 +368,11 @@ function createCrane() {
   crane.add(lowerStructure);
   crane.add(upperStructure);
 
-  crane.position.set(cranePosition.positionX, cranePosition.positionY, cranePosition.positionZ);
+  crane.position.set(
+    cranePosition.positionX,
+    cranePosition.positionY,
+    cranePosition.positionZ
+  );
   scene.add(crane);
 }
 
@@ -377,6 +397,8 @@ function createUpperStructure() {
   const counterWeight = createCounterWeight();
   const trolley = createTrolley();
   const cable = createCable();
+  const frontPendant = createFrontPendant();
+  const rearPendant = createRearPendant();
 
   upperStructure.add(cab);
   upperStructure.add(jib);
@@ -384,7 +406,8 @@ function createUpperStructure() {
   upperStructure.add(counterWeight);
   upperStructure.add(trolley);
   upperStructure.add(cable);
-
+  upperStructure.add(frontPendant);
+  upperStructure.add(rearPendant);
   return upperStructure;
 }
 
@@ -442,6 +465,22 @@ function createCable() {
   const cable = createObject(cableVals);
   setPosition(cable, cableVals);
   return cable;
+}
+
+function createFrontPendant() {
+  "use strict";
+  const frontPendant = createObject(frontPendantVals);
+  setPosition(frontPendant, frontPendantVals);
+  frontPendant.rotation.z = Math.PI / 2.43;
+  return frontPendant;
+}
+
+function createRearPendant() {
+  "use strict";
+  const rearPendant = createObject(rearPendantVals);
+  setPosition(rearPendant, rearPendantVals);
+  rearPendant.rotation.z = -Math.PI / 4;
+  return rearPendant;
 }
 
 //////////////////////
