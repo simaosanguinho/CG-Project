@@ -569,10 +569,10 @@ function onKeyDown(e) {
     case 70 || 102: // F or f
       makeButtonActive("F");
       break;
-    case 88 || 120: // X or x
+    case 55: // 7
       isWireframe = !isWireframe;
-      updateWireframe(); // Update wireframe rendering
-      makeButtonActive("X");
+      updateWireframe();
+      makeButtonActive("7");
       break;
 
     case 32: //space - show axes
@@ -641,8 +641,8 @@ function onKeyUp(e) {
     case 70 || 102: // F or f
       makeButtonInactive("F");
       break;
-    case 88 || 120: // X or x
-      makeButtonInactive("X");
+    case 55: // 7
+      makeButtonInactive("7");
       break;
   }
 }
