@@ -9,45 +9,23 @@ import {
   jibVals,
   upperTowerVals,
   counterWeightVals,
+  trolleyVals,
+  cableVals,
 } from "./constants.js";
 import { createObject, setPosition } from "./utils.js";
 import { scene } from "./main-script.js";
 
 let lowerStructure;
 
-function createCube() {
-  "use strict";
-
-  let cube = new THREE.Mesh(
-    new THREE.BoxGeometry(UNIT, UNIT, UNIT),
-    new THREE.MeshBasicMaterial({ color: colors.green })
-  );
-
-  // add white limits
-  let edges = new THREE.EdgesGeometry(cube.geometry);
-  let line = new THREE.LineSegments(
-    edges,
-    new THREE.LineBasicMaterial({ color: 0xffffff })
-  );
-  // increase the size of the edges
-  line.scale.set(1.1, 1.1, 1.1);
-
-  cube.add(line);
-
-  cube.position.set(0, 0, 0);
-
-  return cube;
-}
-
 function createCrane() {
   "use strict";
 
   let crane = new THREE.Group();
   let lowerStructure = createLowerStructure();
-  let upperStructuire = createUpperStructure();
+  let upperStructure = createUpperStructure();
 
   crane.add(lowerStructure);
-  crane.add(upperStructuire);
+  crane.add(upperStructure);
 
   setPosition(crane, cranePosition);
   scene.add(crane);
@@ -66,17 +44,21 @@ function createLowerStructure() {
 
 function createUpperStructure() {
   "use strict";
-  // TODO: In order to rotate the oibject 'group' must be the one declared in main-script.js
+  // TODO: In order to rotate the object 'group' must be the one declared in main-script.js
   let group = new THREE.Group();
   const cab = createCab();
   const jib = createJib();
   const upperTower = createUpperTower();
   const counterWeight = createCounterWeight();
+  const trolley = createTrolley();
+  const cable = createCable();
 
   group.add(cab);
   group.add(jib);
   group.add(upperTower);
   group.add(counterWeight);
+  group.add(trolley);
+  group.add(cable);
   return group;
 }
 
@@ -120,6 +102,20 @@ function createCounterWeight() {
   const counterWeight = createObject(counterWeightVals);
   setPosition(counterWeight, counterWeightVals);
   return counterWeight;
+}
+
+function createTrolley() {
+  "use strict";
+  const trolley = createObject(trolleyVals);
+  setPosition(trolley, trolleyVals);
+  return trolley;
+}
+
+function createCable() {
+  "use strict";
+  const cable = createObject(cableVals);
+  setPosition(cable, cableVals);
+  return cable;
 }
 
 export { createCrane };
