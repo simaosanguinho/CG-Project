@@ -20,7 +20,10 @@ const fov = 70;
 
 const minViewDistance = 1;
 
+const rotationUnit = Math.PI / 20;
+
 const maxViewDistance = 10000;
+
 
 const AXIS = {
   X: "x",
@@ -149,12 +152,18 @@ const cableVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+
+const upperStructureRotation = {
+    step: rotationUnit,
+    min: -Math.PI * 2,
+    max: Math.PI * 2,
+};
 //////////////////////
 /* GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
 let meshesToUpdate = [];
-let lowerStructure;
+let lowerStructure, upperStructure;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -281,20 +290,36 @@ function setPosition(object, vals) {
   object.position.set(vals.positionX, vals.positionY, vals.positionZ);
 }
 
+function resetSteps() {
+  "use strict";
+
+  upperStructure.userData.step = 0;
+}
+
+function myClamp(value, min, max) {
+  "use strict"
+
+  // can rotate continuously
+  if (min < 0) {
+    return value%(Math.PI*2);
+  }
+}
+
+
 function rotateObject(object, rotationVals, axis) {
   "use strict";
 
   switch (axis) {
     case AXIS.X:
-      object.rotation.x = THREE.Math.clamp(
+      object.rotation.x = THREE.MathUtils.clamp(
         object.userData.step * delta + object.rotation.x,
         rotationVals.min,
-        rotationVals.max
+        rotationVals.max%(Math.PI*2)
       );
       break;
 
     case AXIS.Y:
-      object.rotation.y += THREE.Math.clamp(
+      object.rotation.y += myClamp(
         object.userData.step * delta + object.rotation.y,
         rotationVals.min,
         rotationVals.max
@@ -302,7 +327,7 @@ function rotateObject(object, rotationVals, axis) {
       break;
 
     case AXIS.Z:
-      object.rotation.z += THREE.Math.clamp(
+      object.rotation.z += THREE.MathUtils.clamp(
         object.userData.step * delta + object.rotation.z,
         rotationVals.min,
         rotationVals.max
@@ -323,12 +348,12 @@ function createCrane() {
 
   let crane = new THREE.Group();
   let lowerStructure = createLowerStructure();
-  let upperStructure = createUpperStructure();
+  upperStructure = createUpperStructure();
 
   crane.add(lowerStructure);
   crane.add(upperStructure);
 
-  setPosition(crane, cranePosition);
+  crane.position.set(cranePosition.positionX, cranePosition.positionY, cranePosition.positionZ);
   scene.add(crane);
 }
 
@@ -346,7 +371,7 @@ function createLowerStructure() {
 function createUpperStructure() {
   "use strict";
   // TODO: In order to rotate the object 'group' must be the one declared in main-script.js
-  let group = new THREE.Group();
+  upperStructure = new THREE.Group();
   const cab = createCab();
   const jib = createJib();
   const upperTower = createUpperTower();
@@ -354,13 +379,14 @@ function createUpperStructure() {
   const trolley = createTrolley();
   const cable = createCable();
 
-  group.add(cab);
-  group.add(jib);
-  group.add(upperTower);
-  group.add(counterWeight);
-  group.add(trolley);
-  group.add(cable);
-  return group;
+  upperStructure.add(cab);
+  upperStructure.add(jib);
+  upperStructure.add(upperTower);
+  upperStructure.add(counterWeight);
+  upperStructure.add(trolley);
+  upperStructure.add(cable);
+
+  return upperStructure;
 }
 
 function createBase() {
@@ -438,6 +464,8 @@ function handleCollisions() {
 ////////////
 function update() {
   "use strict";
+
+  rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
 }
 
 /////////////
@@ -469,7 +497,7 @@ function init() {
   // create object functions
   createCrane();
 
-  // resetSteps();
+  resetSteps();
 
   isAnimating = false;
 
@@ -508,7 +536,7 @@ function onResize() {
   }
 }
 
-///////////////////////
+////////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
 function onKeyDown(e) {
@@ -548,9 +576,11 @@ function onKeyDown(e) {
 
     case 81 || 113: // Q or q
       makeButtonActive("Q");
+      upperStructure.userData.step = upperStructureRotation.step;
       break;
     case 65 || 97: // A or a
       makeButtonActive("A");
+      upperStructure.userData.step = -upperStructureRotation.step;
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
@@ -613,10 +643,12 @@ function onKeyUp(e) {
 
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
+      upperStructure.userData.step = 0;
       break;
 
     case 65 || 97: // A or a
       makeButtonInactive("A");
+      upperStructure.userData.step = 0;
       break;
 
     case 87 || 119: // W or w
