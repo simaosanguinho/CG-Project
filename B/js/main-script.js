@@ -4,9 +4,8 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
-// import constants.js
 //////////////////////
-/* CONSTANTS        */
+/* GOTO: CONSTANTS  */
 //////////////////////
 const UNIT = 20;
 
@@ -150,7 +149,7 @@ const cableVals = {
 };
 
 //////////////////////
-/* GLOBAL VARIABLES */
+/* GOTO: GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
 let meshesToUpdate = [];
@@ -160,7 +159,7 @@ let camera, scene, renderer, delta, axes;
 let isAnimating;
 
 /////////////////////
-/* CREATE SCENE(S) */
+/* GOTO: CREATE SCENE(S) */
 /////////////////////
 function createScene() {
   "use strict";
@@ -175,7 +174,7 @@ function createScene() {
 }
 
 //////////////////////
-/* CREATE CAMERA(S) */
+/* GOTO: CREATE CAMERA(S) */
 //////////////////////
 function createCameras() {
   "use strict";
@@ -222,11 +221,11 @@ function createOrtographicCamera(cameraValue) {
 }
 
 /////////////////////
-/* CREATE LIGHT(S) */
+/* GOTO: CREATE LIGHT(S) */
 /////////////////////
 
 ////////////////////////
-/* CREATE OBJECT3D(S) */
+/* GOTO: CREATE OBJECT3D(S) */
 ////////////////////////
 
 function createObject(objectVals) {
@@ -420,28 +419,28 @@ function createCable() {
 }
 
 //////////////////////
-/* CHECK COLLISIONS */
+/* GOTO: CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
   "use strict";
 }
 
 ///////////////////////
-/* HANDLE COLLISIONS */
+/* GOTO: HANDLE COLLISIONS */
 ///////////////////////
 function handleCollisions() {
   "use strict";
 }
 
 ////////////
-/* UPDATE */
+/* GOTO: UPDATE */
 ////////////
 function update() {
   "use strict";
 }
 
 /////////////
-/* DISPLAY */
+/* GOTO: DISPLAY */
 /////////////
 function render() {
   "use strict";
@@ -449,7 +448,7 @@ function render() {
 }
 
 ////////////////////////////////
-/* INITIALIZE ANIMATION CYCLE */
+/* GOTO: INITIALIZE ANIMATION CYCLE */
 ////////////////////////////////
 function init() {
   "use strict";
@@ -481,7 +480,7 @@ function init() {
 }
 
 /////////////////////
-/* ANIMATION CYCLE */
+/* GOTO: ANIMATION CYCLE */
 /////////////////////
 function animate() {
   "use strict";
@@ -496,7 +495,7 @@ function animate() {
 }
 
 ////////////////////////////
-/* RESIZE WINDOW CALLBACK */
+/* GOTO: RESIZE WINDOW CALLBACK */
 ////////////////////////////
 function onResize() {
   "use strict";
@@ -509,7 +508,7 @@ function onResize() {
 }
 
 ///////////////////////
-/* KEY DOWN CALLBACK */
+/* GOTO: KEY DOWN CALLBACK */
 ///////////////////////
 function onKeyDown(e) {
   "use strict";
@@ -583,7 +582,7 @@ function onKeyDown(e) {
 }
 
 ///////////////////////
-/* KEY UP CALLBACK */
+/* GOTO: KEY UP CALLBACK */
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
@@ -652,7 +651,7 @@ init();
 animate();
 
 ///////////////////////
-/* Heads-Up Display  */
+/* GOTO: Heads-Up Display  */
 ///////////////////////
 
 function makeButtonActive(key) {
@@ -672,7 +671,7 @@ function makeButtonInactive(key) {
 }
 
 ////////////////////////
-/*    WIREFRAME       */
+/* GOTO: WIREFRAME */
 ///////////////////////
 
 let isWireframe = false; // Variable to track wireframe mode
