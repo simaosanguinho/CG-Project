@@ -4,9 +4,8 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 
-// import constants.js
 //////////////////////
-/* CONSTANTS        */
+/* GOTO: CONSTANTS  */
 //////////////////////
 const UNIT = 20;
 
@@ -159,7 +158,7 @@ const upperStructureRotation = {
     max: Math.PI * 2,
 };
 //////////////////////
-/* GLOBAL VARIABLES */
+/* GOTO: GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
 let meshesToUpdate = [];
@@ -169,7 +168,7 @@ let camera, scene, renderer, delta, axes;
 let isAnimating;
 
 /////////////////////
-/* CREATE SCENE(S) */
+/* GOTO: CREATE SCENE(S) */
 /////////////////////
 function createScene() {
   "use strict";
@@ -184,7 +183,7 @@ function createScene() {
 }
 
 //////////////////////
-/* CREATE CAMERA(S) */
+/* GOTO: CREATE CAMERA(S) */
 //////////////////////
 function createCameras() {
   "use strict";
@@ -231,11 +230,11 @@ function createOrtographicCamera(cameraValue) {
 }
 
 /////////////////////
-/* CREATE LIGHT(S) */
+/* GOTO: CREATE LIGHT(S) */
 /////////////////////
 
 ////////////////////////
-/* CREATE OBJECT3D(S) */
+/* GOTO: CREATE OBJECT3D(S) */
 ////////////////////////
 
 function createObject(objectVals) {
@@ -446,21 +445,21 @@ function createCable() {
 }
 
 //////////////////////
-/* CHECK COLLISIONS */
+/* GOTO: CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
   "use strict";
 }
 
 ///////////////////////
-/* HANDLE COLLISIONS */
+/* GOTO: HANDLE COLLISIONS */
 ///////////////////////
 function handleCollisions() {
   "use strict";
 }
 
 ////////////
-/* UPDATE */
+/* GOTO: UPDATE */
 ////////////
 function update() {
   "use strict";
@@ -469,7 +468,7 @@ function update() {
 }
 
 /////////////
-/* DISPLAY */
+/* GOTO: DISPLAY */
 /////////////
 function render() {
   "use strict";
@@ -477,7 +476,7 @@ function render() {
 }
 
 ////////////////////////////////
-/* INITIALIZE ANIMATION CYCLE */
+/* GOTO: INITIALIZE ANIMATION CYCLE */
 ////////////////////////////////
 function init() {
   "use strict";
@@ -509,7 +508,7 @@ function init() {
 }
 
 /////////////////////
-/* ANIMATION CYCLE */
+/* GOTO: ANIMATION CYCLE */
 /////////////////////
 function animate() {
   "use strict";
@@ -524,7 +523,7 @@ function animate() {
 }
 
 ////////////////////////////
-/* RESIZE WINDOW CALLBACK */
+/* GOTO: RESIZE WINDOW CALLBACK */
 ////////////////////////////
 function onResize() {
   "use strict";
@@ -536,7 +535,7 @@ function onResize() {
   }
 }
 
-////////////////////////
+///////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
 function onKeyDown(e) {
@@ -600,10 +599,10 @@ function onKeyDown(e) {
     case 70 || 102: // F or f
       makeButtonActive("F");
       break;
-    case 88 || 120: // X or x
+    case 55: // 7
       isWireframe = !isWireframe;
-      updateWireframe(); // Update wireframe rendering
-      makeButtonActive("X");
+      updateWireframe();
+      makeButtonActive("7");
       break;
 
     case 32: //space - show axes
@@ -613,7 +612,7 @@ function onKeyDown(e) {
 }
 
 ///////////////////////
-/* KEY UP CALLBACK */
+/* GOTO: KEY UP CALLBACK */
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
@@ -674,8 +673,8 @@ function onKeyUp(e) {
     case 70 || 102: // F or f
       makeButtonInactive("F");
       break;
-    case 88 || 120: // X or x
-      makeButtonInactive("X");
+    case 55: // 7
+      makeButtonInactive("7");
       break;
   }
 }
@@ -684,7 +683,7 @@ init();
 animate();
 
 ///////////////////////
-/* Heads-Up Display  */
+/* GOTO: Heads-Up Display  */
 ///////////////////////
 
 function makeButtonActive(key) {
@@ -704,7 +703,7 @@ function makeButtonInactive(key) {
 }
 
 ////////////////////////
-/*    WIREFRAME       */
+/* GOTO: WIREFRAME */
 ///////////////////////
 
 let isWireframe = false; // Variable to track wireframe mode
