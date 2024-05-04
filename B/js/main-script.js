@@ -26,7 +26,6 @@ const rotationUnit = Math.PI / 80;
 
 const maxViewDistance = 10000;
 
-
 const AXIS = {
   X: "x",
   Y: "y",
@@ -878,6 +877,13 @@ function createClawEdge() {
 //////////////////////
 function checkCollisions() {
   "use strict";
+}
+
+function checkCollision(object1, object2) {
+  "use strict";
+  const box1 = new THREE.Box3().setFromObject(object1);
+  const box2 = new THREE.Box3().setFromObject(object2);
+  return box1.intersectsBox(box2);
 }
 
 ///////////////////////
