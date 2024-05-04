@@ -187,6 +187,17 @@ const binFirstWallVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
+const binSecondWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 10 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 8 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
 // Adjust rotation speed
 const upperStructureRotation = {
   step: rotationUnit,
@@ -509,6 +520,15 @@ function createBinFirstWall() {
   setPosition(binFirstWall, binFirstWallVals);
   binFirstWall.rotation.z = Math.PI / 2;
   return binFirstWall;
+}
+
+function createBinSecondWall() {
+  "use strict";
+  const binSecondWall = createObject(binSecondWallVals);
+  setPosition(binSecondWall, binSecondWallVals);
+  binSecondWall.rotation.z = Math.PI / 2;
+  binSecondWall.rotation.y = Math.PI / 2;
+  return binSecondWall;
 }
 
 //////////////////////
