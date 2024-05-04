@@ -657,6 +657,45 @@ function createLowerStructure() {
   return group;
 }
 
+function createFiveRandomObjects() {
+  "use strict";
+  for (let i = 0; i < 5; i++) {
+    let object;
+    switch (i) {
+      case 0:
+        object = createCube();
+        break;
+      case 1:
+        object = createDodecahedron();
+        break;
+      case 2:
+        object = createIcosahedron();
+        break;
+      case 3:
+        object = createTorus();
+        break;
+      case 4:
+        object = createTorusKnot();
+        break;
+      default:
+        break;
+    }
+    randomizePosition(object);
+    // check collision
+    for (let j = 0; j < objectsToUpdate.length; j++) {
+      // check if not the same object
+      if (object === objectsToUpdate[j]) {
+        continue;
+      }
+      if (checkCollision(object, objectsToUpdate[j])) {
+        randomizePosition(object);
+        j = 0; // restart loop
+      }
+    }
+    scene.add(object);
+  }
+}
+
 function createUpperStructure() {
   "use strict";
   // TODO: In order to rotate the object 'group' must be the one declared in main-script.js
@@ -982,6 +1021,10 @@ function init() {
   // create object functions
   createCrane();
   createBin();
+  createFiveRandomObjects();
+  // grid
+  const gridHelper = new THREE.GridHelper(1000, 100);
+  scene.add(gridHelper);
 
   resetSteps();
 
