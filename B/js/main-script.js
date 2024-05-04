@@ -154,6 +154,114 @@ const cableVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+const clawBlockVals = {
+  width: 1 * UNIT,
+  depth: 1 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+};
+
+const upperClawVals1 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 12.25 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const lowerClawVals1 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 12.75 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const upperClawVals2 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 10.75 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const lowerClawVals2 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 10.25 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const upperClawVals3 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: -0.75 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const lowerClawVals3 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: -1.25 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const upperClawVals4 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0.75 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const lowerClawVals4 = {
+  width: 0.5 * UNIT,
+  depth: 0.5 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 1.25 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const clawEdgeVals = {
+  width: 0.5 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 9.1 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.TetrahedronGeometry,
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
+};
+
 const frontPendantVals = {
   width: 0.1 * UNIT,
   depth: 0.1 * UNIT,
@@ -482,6 +590,16 @@ function createUpperStructure() {
   const cable = createCable();
   const frontPendant = createFrontPendant();
   const rearPendant = createRearPendant();
+  const clawBlock = createClawBlock();
+  const clawUpper1 = createClawUpper(upperClawVals1);
+  const clawLower1 = createClawLower1(lowerClawVals1);
+  const clawUpper2 = createClawUpper(upperClawVals2);
+  const clawLower2 = createClawLower2(lowerClawVals2);
+  const clawUpper3 = createClawUpper(upperClawVals3);
+  const clawLower3 = createClawLower3(lowerClawVals3);
+  const clawUpper4 = createClawUpper(upperClawVals4);
+  const clawLower4 = createClawLower4(lowerClawVals4);
+  const clawEdge = createClawEdge();
 
   upperStructure.add(cab);
   upperStructure.add(jib);
@@ -491,6 +609,17 @@ function createUpperStructure() {
   upperStructure.add(cable);
   upperStructure.add(frontPendant);
   upperStructure.add(rearPendant);
+  upperStructure.add(clawBlock);
+  upperStructure.add(clawUpper1);
+  upperStructure.add(clawLower1);
+  upperStructure.add(clawUpper2);
+  upperStructure.add(clawLower2);
+  upperStructure.add(clawLower3);
+  upperStructure.add(clawUpper3);
+  upperStructure.add(clawUpper4);
+  upperStructure.add(clawLower4);
+  upperStructure.add(clawEdge);
+
   return upperStructure;
 }
 
@@ -605,6 +734,63 @@ function createBinBottom() {
   const binBottom = createObject(binBottomVals);
   setPosition(binBottom, binBottomVals);
   return binBottom;
+}
+
+function createClawBlock() {
+  "use strict";
+  const clawBlock = createObject(clawBlockVals);
+  setPosition(clawBlock, clawBlockVals);
+  return clawBlock;
+}
+
+function createClawUpper(upperClawVals) {
+  "use strict";
+  const claw = createObject(upperClawVals);
+  setPosition(claw, upperClawVals);
+  return claw;
+}
+
+function createClawLower1(lowerClawVals) {
+  "use strict";
+  const claw = createObject(lowerClawVals);
+  setPosition(claw, lowerClawVals);
+  claw.rotation.z = -Math.PI / 4;
+  claw.position.y -= 0.25 * UNIT;
+  return claw;
+}
+
+function createClawLower2(lowerClawVals) {
+  "use strict";
+  const claw = createObject(lowerClawVals);
+  setPosition(claw, lowerClawVals);
+  claw.rotation.z = Math.PI / 4;
+  claw.position.y -= 0.25 * UNIT;
+  return claw;
+}
+
+function createClawLower3(lowerClawVals) {
+  "use strict";
+  const claw = createObject(lowerClawVals);
+  setPosition(claw, lowerClawVals);
+  claw.rotation.x = -Math.PI / 4;
+  claw.position.y -= 0.25 * UNIT;
+  return claw;
+}
+
+function createClawLower4(lowerClawVals) {
+  "use strict";
+  const claw = createObject(lowerClawVals);
+  setPosition(claw, lowerClawVals);
+  claw.rotation.x = Math.PI / 4;
+  claw.position.y -= 0.25 * UNIT;
+  return claw;
+}
+
+function createClawEdge() {
+  "use strict";
+  const clawEdge = createObject(clawEdgeVals);
+  setPosition(clawEdge, clawEdgeVals);
+  return clawEdge;
 }
 
 //////////////////////
