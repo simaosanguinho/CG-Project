@@ -902,6 +902,21 @@ function createTorusKnot() {
   return torusKnot;
 }
 
+function randomizePosition(object) {
+  "use strict";
+  let randomizedX, randomizedZ;
+  let enoughDistance = 3 * UNIT;
+  do {
+    randomizedX = Math.floor(Math.random() * 10 - Math.random() * 10) * UNIT;
+    randomizedZ = Math.floor(Math.random() * 10 - Math.random() * 10) * UNIT;
+  } while (
+    // avoid placing object at the base of the crane
+    cranePosition.positionX - randomizedX < enoughDistance &&
+    cranePosition.positionZ - randomizedZ < enoughDistance
+  );
+
+  object.position.set(randomizedX, 0.5 * UNIT, randomizedZ);
+}
 
 //////////////////////
 /* GOTO: CHECK COLLISIONS */
