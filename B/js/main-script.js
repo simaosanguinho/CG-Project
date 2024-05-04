@@ -409,7 +409,7 @@ const upperStructureRotation = {
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
-let meshesToUpdate = [];
+let objectsToUpdate = [];
 let lowerStructure, upperStructure;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
@@ -548,7 +548,7 @@ function createObject(objectVals) {
   
     object.add(line); */
 
-  meshesToUpdate.push(mesh);
+  objectsToUpdate.push(object);
   return object;
 }
 
@@ -606,8 +606,8 @@ function rotateObject(object, rotationVals, axis) {
   }
 }
 
-function getMeshesToUpdate() {
-  return meshesToUpdate;
+function getObjectsToUpdate() {
+  return objectsToUpdate;
 }
 
 function createCrane() {
@@ -1150,8 +1150,8 @@ function makeButtonInactive(key) {
 let isWireframe = false; // Variable to track wireframe mode
 
 function updateWireframe() {
-  getMeshesToUpdate().forEach((mesh) => {
-    mesh.material.wireframe = isWireframe;
+  getObjectsToUpdate().forEach((object) => {
+    object.children[0].material.wireframe = isWireframe;
   });
 }
 
@@ -1183,7 +1183,7 @@ function updateBackgroundColor() {
     scene.background = new THREE.Color(backgroundColorDark);
     document.body.style.backgroundColor = backgroundColorDark;
   } else {
-    scene.background = new THREE.Color(backgroundColor)
+    scene.background = new THREE.Color(backgroundColor);
     document.body.style.backgroundColor = backgroundColor;
   }
 }
