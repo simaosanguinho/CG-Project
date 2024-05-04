@@ -1332,7 +1332,7 @@ function makeButtonInactive(key) {
 /* GOTO: WIREFRAME */
 ///////////////////////
 
-let isWireframe = false; // Variable to track wireframe mode
+let isWireframe = false;
 
 function updateWireframe() {
   getObjectsToUpdate().forEach((object) => {
@@ -1343,17 +1343,14 @@ function updateWireframe() {
 /////////////////////////
 /* GOTO: DARKMODE     */
 ///////////////////////
-// Add event listener to dark mode button
 darkModeButton.addEventListener("click", toggleDarkMode);
 
-// Function to toggle dark mode
 function toggleDarkMode() {
-  isDarkMode = !isDarkMode; // Toggle dark mode
-  updateToggleSwitch(); // Update toggle switch appearance
-  updateBackgroundColor(); // Update background color
+  isDarkMode = !isDarkMode; 
+  updateToggleSwitch(); 
+  updateBackgroundColor(); 
 }
 
-// Function to update toggle switch appearance based on dark mode
 function updateToggleSwitch() {
   if (isDarkMode) {
     darkModeButton.classList.add("on");
@@ -1362,7 +1359,6 @@ function updateToggleSwitch() {
   }
 }
 
-// Update background color based on dark mode
 function updateBackgroundColor() {
   if (isDarkMode) {
     scene.background = new THREE.Color(backgroundColorDark);
