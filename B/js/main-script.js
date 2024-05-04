@@ -44,37 +44,73 @@ const Primitives = {
   PYRAMID: "pyramid",
 };
 
-const vertices = new Float32Array( [
+const vertices = new Float32Array([
   // first triangle
-  0 * UNIT, 0 * UNIT, 0 * UNIT,
-  0.5 * UNIT, 0 * UNIT, 0 * UNIT,
-  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
 
   // second triangle
-  0 * UNIT, 0 * UNIT, 0 * UNIT,
-  0 * UNIT, 0.2 * UNIT, 0 * UNIT,
-  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
 
   // third triangle
-  0 * UNIT, 0 * UNIT, 0 * UNIT,
-  0 * UNIT, 0.2 * UNIT, 0 * UNIT,
-  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
+  0.25 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
 
   // fourth triangle
-  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
-  0 * UNIT, 0.2 * UNIT, 0 * UNIT,
-  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+  0.5 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
+  0.25 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
 
   // fifth triangle
-  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
-  0.5 * UNIT, 0 * UNIT, 0 * UNIT,
-  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+  0.5 * UNIT,
+  0.2 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.25 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
 
   // sixth triangle
-  0 * UNIT, 0 * UNIT, 0 * UNIT,
-  0.5 * UNIT, 0 * UNIT, 0 * UNIT,
-  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
-] );
+  0 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
+  0 * UNIT,
+  0 * UNIT,
+  0.25 * UNIT,
+  0 * UNIT,
+  0.5 * UNIT,
+]);
 
 const cameraValues = [
   [0, 0, 1000],
@@ -84,7 +120,7 @@ const cameraValues = [
   [1000, 1000, 1000],
   [500, 2000, 2000],
 ];
-1
+1;
 // REMOVE
 const colors = {
   white: 0xffffff,
@@ -465,7 +501,7 @@ const upperStructureRotation = {
 //////////////////////
 const cameras = [];
 let objectsToUpdate = [];
-let lowerStructure, upperStructure;
+let lowerStructure, upperStructure, cable, claw;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -591,7 +627,7 @@ function createObject(objectVals) {
       break;
     case Primitives.PYRAMID:
       geometry = new THREE.BufferGeometry();
-      geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+      geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
       geometry.vertices = vertices;
       break;
     default:
@@ -755,6 +791,40 @@ function createFiveRandomObjects() {
   }
 }
 
+function createClaw() {
+  "use strict";
+  claw = new THREE.Group();
+  const clawBlock = createClawBlock();
+  const clawUpper1 = createClawUpper(upperClawVals1);
+  const clawLower1 = createClawLower1(lowerClawVals1);
+  const clawUpper2 = createClawUpper(upperClawVals2);
+  const clawLower2 = createClawLower2(lowerClawVals2);
+  const clawUpper3 = createClawUpper(upperClawVals3);
+  const clawLower3 = createClawLower3(lowerClawVals3);
+  const clawUpper4 = createClawUpper(upperClawVals4);
+  const clawLower4 = createClawLower4(lowerClawVals4);
+  const clawEdge3 = createClawEdge3();
+  const clawEdge2 = createClawEdge2();
+  const clawEdge1 = createClawEdge1();
+  const clawEdge4 = createClawEdge4();
+
+  claw.add(clawBlock);
+  claw.add(clawUpper1);
+  claw.add(clawLower1);
+  claw.add(clawUpper2);
+  claw.add(clawLower2);
+  claw.add(clawUpper3);
+  claw.add(clawLower3);
+  claw.add(clawUpper4);
+  claw.add(clawLower4);
+  claw.add(clawEdge1);
+  claw.add(clawEdge2);
+  claw.add(clawEdge3);
+  claw.add(clawEdge4);
+
+  return claw;
+}
+
 function createUpperStructure() {
   "use strict";
   // TODO: In order to rotate the object 'group' must be the one declared in main-script.js
@@ -767,21 +837,7 @@ function createUpperStructure() {
   const cable = createCable();
   const frontPendant = createFrontPendant();
   const rearPendant = createRearPendant();
-  const clawBlock = createClawBlock();
-  const clawUpper1 = createClawUpper(upperClawVals1);
-  const clawLower1 = createClawLower1(lowerClawVals1);
-  const clawUpper2 = createClawUpper(upperClawVals2);
-  const clawLower2 = createClawLower2(lowerClawVals2);
-  const clawUpper3 = createClawUpper(upperClawVals3);
-  const clawLower3 = createClawLower3(lowerClawVals3);
-  const clawUpper4 = createClawUpper(upperClawVals4);
-  const clawLower4 = createClawLower4(lowerClawVals4);
-  const clawEdge3 = createClawEdge3(); // 1
-  const clawEdge2 = createClawEdge2(); // 3
-
-  const clawEdge1 = createClawEdge1();
-  
-  const clawEdge4 = createClawEdge4();
+  const claw = createClaw();
 
   upperStructure.add(cab);
   upperStructure.add(jib);
@@ -791,19 +847,7 @@ function createUpperStructure() {
   upperStructure.add(cable);
   upperStructure.add(frontPendant);
   upperStructure.add(rearPendant);
-  upperStructure.add(clawBlock);
-  upperStructure.add(clawUpper1);
-  upperStructure.add(clawLower1);
-  upperStructure.add(clawUpper2);
-  upperStructure.add(clawLower2);
-  upperStructure.add(clawLower3);
-  upperStructure.add(clawUpper3);
-  upperStructure.add(clawUpper4);
-  upperStructure.add(clawLower4);
-  upperStructure.add(clawEdge1);
-  upperStructure.add(clawEdge2);
-  upperStructure.add(clawEdge3);
-  upperStructure.add(clawEdge4);
+  upperStructure.add(claw);
 
   return upperStructure;
 }
@@ -859,8 +903,10 @@ function createTrolley() {
 
 function createCable() {
   "use strict";
-  const cable = createObject(cableVals);
-  setPosition(cable, cableVals);
+  cable = new THREE.Group();
+  const cableObj = createObject(cableVals);
+  setPosition(cableObj, cableVals);
+  cable.add(cableObj);
   return cable;
 }
 
@@ -1214,9 +1260,12 @@ function onKeyDown(e) {
       break;
     case 69 || 101: // E or e
       makeButtonActive("E");
+      climbClaw();
+
       break;
     case 68 || 100: // D or d
       makeButtonActive("D");
+      lowerClaw();
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
@@ -1286,10 +1335,12 @@ function onKeyUp(e) {
 
     case 69 || 101: // E or e
       makeButtonInactive("E");
+      climbClaw();
       break;
 
     case 68 || 100: // D or d
       makeButtonInactive("D");
+      lowerClaw();
       break;
 
     case 82 || 114: // R or r
@@ -1346,9 +1397,9 @@ function updateWireframe() {
 darkModeButton.addEventListener("click", toggleDarkMode);
 
 function toggleDarkMode() {
-  isDarkMode = !isDarkMode; 
-  updateToggleSwitch(); 
-  updateBackgroundColor(); 
+  isDarkMode = !isDarkMode;
+  updateToggleSwitch();
+  updateBackgroundColor();
 }
 
 function updateToggleSwitch() {
@@ -1367,4 +1418,20 @@ function updateBackgroundColor() {
     scene.background = new THREE.Color(backgroundColor);
     document.body.style.backgroundColor = backgroundColor;
   }
+}
+
+function climbClaw() {
+  "use strict";
+  let newYClaw = claw.position.y + 0.1 * UNIT;
+  let newYCable = cable.position.y + 0.1 * UNIT;
+  claw.position.y = Math.min(newYClaw, 5 * UNIT);
+  cable.position.y = Math.min(newYCable, 5 * UNIT);
+}
+
+function lowerClaw() {
+  "use strict";
+  let newYClaw = claw.position.y - 0.1 * UNIT;
+  let newYCable = cable.position.y - 0.1 * UNIT;
+  claw.position.y = Math.max(newYClaw, -7.5 * UNIT);
+  cable.position.y = Math.max(newYCable, -7.5 * UNIT);
 }
