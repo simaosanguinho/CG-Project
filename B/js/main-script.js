@@ -41,7 +41,40 @@ const Primitives = {
 
   CYLINDER: "cylinder",
   TETAEDRON: "tetraedron",
+  PYRAMID: "pyramid",
 };
+
+const vertices = new Float32Array( [
+  // first triangle
+  0 * UNIT, 0 * UNIT, 0 * UNIT,
+  0.5 * UNIT, 0 * UNIT, 0 * UNIT,
+  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
+
+  // second triangle
+  0 * UNIT, 0 * UNIT, 0 * UNIT,
+  0 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
+
+  // third triangle
+  0 * UNIT, 0 * UNIT, 0 * UNIT,
+  0 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+
+  // fourth triangle
+  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+
+  // fifth triangle
+  0.5 * UNIT, 0.2 * UNIT, 0 * UNIT,
+  0.5 * UNIT, 0 * UNIT, 0 * UNIT,
+  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+
+  // sixth triangle
+  0 * UNIT, 0 * UNIT, 0 * UNIT,
+  0.5 * UNIT, 0 * UNIT, 0 * UNIT,
+  0.25 * UNIT, 0 * UNIT, 0.5 * UNIT,
+] );
 
 const cameraValues = [
   [0, 0, 1000],
@@ -51,7 +84,7 @@ const cameraValues = [
   [1000, 1000, 1000],
   [500, 2000, 2000],
 ];
-
+1
 // REMOVE
 const colors = {
   white: 0xffffff,
@@ -257,13 +290,36 @@ const lowerClawVals4 = {
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
-const clawEdgeVals = {
-  width: 0.5 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 9.1 * UNIT,
-  positionZ: 0 * UNIT,
-  type: Primitives.TetrahedronGeometry,
-  material: new THREE.MeshBasicMaterial({ color: colors.black }),
+const clawEdgeVals1 = {
+  positionX: 11.25 * UNIT,
+  positionY: 9 * UNIT,
+  positionZ: 1.5 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const clawEdgeVals2 = {
+  positionX: 11.75 * UNIT,
+  positionY: 9 * UNIT,
+  positionZ: -1.5 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const clawEdgeVals3 = {
+  positionX: 13 * UNIT,
+  positionY: 9 * UNIT,
+  positionZ: 0.25 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+};
+
+const clawEdgeVals4 = {
+  positionX: 10 * UNIT,
+  positionY: 9 * UNIT,
+  positionZ: -0.25 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
 
 const frontPendantVals = {
@@ -533,9 +589,15 @@ function createObject(objectVals) {
     case Primitives.TETRAEDRON:
       geometry = new THREE.TetrahedronGeometry(objectVals.radius);
       break;
+    case Primitives.PYRAMID:
+      geometry = new THREE.BufferGeometry();
+      geometry.setAttribute( 'position', new THREE.BufferAttribute( vertices, 3 ) );
+      geometry.vertices = vertices;
+      break;
     default:
       break;
   }
+
   // TODO: ADD MATERIAL
   const mesh = new THREE.Mesh(geometry, objectVals.material);
   object.add(mesh);
@@ -714,7 +776,12 @@ function createUpperStructure() {
   const clawLower3 = createClawLower3(lowerClawVals3);
   const clawUpper4 = createClawUpper(upperClawVals4);
   const clawLower4 = createClawLower4(lowerClawVals4);
-  const clawEdge = createClawEdge();
+  const clawEdge3 = createClawEdge3(); // 1
+  const clawEdge2 = createClawEdge2(); // 3
+
+  const clawEdge1 = createClawEdge1();
+  
+  const clawEdge4 = createClawEdge4();
 
   upperStructure.add(cab);
   upperStructure.add(jib);
@@ -733,7 +800,10 @@ function createUpperStructure() {
   upperStructure.add(clawUpper3);
   upperStructure.add(clawUpper4);
   upperStructure.add(clawLower4);
-  upperStructure.add(clawEdge);
+  upperStructure.add(clawEdge1);
+  upperStructure.add(clawEdge2);
+  upperStructure.add(clawEdge3);
+  upperStructure.add(clawEdge4);
 
   return upperStructure;
 }
@@ -869,8 +939,8 @@ function createClawLower1(lowerClawVals) {
   "use strict";
   const claw = createObject(lowerClawVals);
   setPosition(claw, lowerClawVals);
-  claw.rotation.z = -Math.PI / 4;
-  claw.position.y -= 0.25 * UNIT;
+  // claw.rotation.z = -Math.PI / 4;
+  // claw.position.y -= 0.25 * UNIT;
   return claw;
 }
 
@@ -878,8 +948,8 @@ function createClawLower2(lowerClawVals) {
   "use strict";
   const claw = createObject(lowerClawVals);
   setPosition(claw, lowerClawVals);
-  claw.rotation.z = Math.PI / 4;
-  claw.position.y -= 0.25 * UNIT;
+  // claw.rotation.z = Math.PI / 4;
+  // claw.position.y -= 0.25 * UNIT;
   return claw;
 }
 
@@ -887,8 +957,8 @@ function createClawLower3(lowerClawVals) {
   "use strict";
   const claw = createObject(lowerClawVals);
   setPosition(claw, lowerClawVals);
-  claw.rotation.x = -Math.PI / 4;
-  claw.position.y -= 0.25 * UNIT;
+  // claw.rotation.x = -Math.PI / 4;
+  // claw.position.y -= 0.25 * UNIT;
   return claw;
 }
 
@@ -896,15 +966,39 @@ function createClawLower4(lowerClawVals) {
   "use strict";
   const claw = createObject(lowerClawVals);
   setPosition(claw, lowerClawVals);
-  claw.rotation.x = Math.PI / 4;
-  claw.position.y -= 0.25 * UNIT;
+  // claw.rotation.x = Math.PI / 4;
+  // claw.position.y -= 0.25 * UNIT;
   return claw;
 }
 
-function createClawEdge() {
+function createClawEdge1() {
   "use strict";
-  const clawEdge = createObject(clawEdgeVals);
-  setPosition(clawEdge, clawEdgeVals);
+  const clawEdge = createObject(clawEdgeVals1);
+  setPosition(clawEdge, clawEdgeVals1);
+  return clawEdge;
+}
+
+function createClawEdge2() {
+  "use strict";
+  const clawEdge = createObject(clawEdgeVals2);
+  clawEdge.rotation.y = Math.PI;
+  setPosition(clawEdge, clawEdgeVals2);
+  return clawEdge;
+}
+
+function createClawEdge3() {
+  "use strict";
+  const clawEdge = createObject(clawEdgeVals3);
+  clawEdge.rotation.y = Math.PI / 2;
+  setPosition(clawEdge, clawEdgeVals3);
+  return clawEdge;
+}
+
+function createClawEdge4() {
+  "use strict";
+  const clawEdge = createObject(clawEdgeVals4);
+  clawEdge.rotation.y = -Math.PI / 2;
+  setPosition(clawEdge, clawEdgeVals4);
   return clawEdge;
 }
 
