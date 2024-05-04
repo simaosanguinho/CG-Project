@@ -1,6 +1,6 @@
 body {
   margin: 0px;
-  background-color: #fff;
+  background-color: #eaf6ff;
   overflow: hidden;
 }
 
@@ -19,6 +19,8 @@ body {
     border-radius: 15px; /* Rounded corners */
     padding: 10px; /* Add padding for better spacing */
     box-shadow: 0 4px 6px rgba(13, 11, 143, 0.1); /* Soft shadow */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
 }
 
 .key-button {
@@ -39,6 +41,37 @@ body {
     background-color: #0c4f92;
 }
 
+#darkModeButton {
+    width: 80px; /* Adjust width of the capsule */
+    height: 40px; /* Adjust height of the capsule */
+    border: none;
+    background-color: #bdc3c7; /* Default color for off state */
+    border-radius: 20px; /* Adjust to make the button capsule-shaped */
+    position: relative;
+    cursor: pointer;
+    display: flex; /* Use flexbox to center the content */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    margin: 0 auto; /* Center the button */
+  }
+  
+  .toggle-circle {
+    width: 30px; /* Adjust size of the circle */
+    height: 30px; /* Adjust size of the circle */
+    background-color: #fff; /* Color of the circle */
+    border-radius: 50%; /* Make the circle round */
+    position: absolute;
+    left: 5px; /* Adjust position relative to the button */
+    right: -5px; /* Adjust position relative to the button */
+    top: 5px; /* Adjust position relative to the button */
+    transition: transform 0.4s ease; /* Smooth transition effect */
+  }
+  
+  /* Move the circle to the right for the on state */
+  #darkModeButton.on .toggle-circle {
+    transform: translateX(40px); /* Adjust based on the button width */
+  }
+  
 @keyframes glow {
     from, to {
         box-shadow: 0 0 5px rgba(207, 255, 253, 0.8);
