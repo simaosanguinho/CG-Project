@@ -872,6 +872,37 @@ function createClawEdge() {
   return clawEdge;
 }
 
+function createCube() {
+  "use strict";
+  const cube = createObject(cubeVals);
+  return cube;
+}
+
+function createDodecahedron() {
+  "use strict";
+  const dodecahedron = createObject(dodecahedronVals);
+  return dodecahedron;
+}
+
+function createIcosahedron() {
+  "use strict";
+  const icosahedron = createObject(icosahedronVals);
+  return icosahedron;
+}
+
+function createTorus() {
+  "use strict";
+  const torus = createObject(torusVals);
+  return torus;
+}
+
+function createTorusKnot() {
+  "use strict";
+  const torusKnot = createObject(torusKnotVals);
+  return torusKnot;
+}
+
+
 //////////////////////
 /* GOTO: CHECK COLLISIONS */
 //////////////////////
@@ -905,7 +936,6 @@ function update() {
   }
 
   rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
-  
 }
 
 /////////////
@@ -947,9 +977,8 @@ function init() {
   // add event listeners
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
-  
-  darkModeButton.addEventListener("click", toggleDarkMode);
 
+  darkModeButton.addEventListener("click", toggleDarkMode);
 }
 
 /////////////////////
@@ -1052,7 +1081,6 @@ function onKeyDown(e) {
     case 32: //space - show axes
       axes.visible = !axes.visible;
       break;
-
   }
 }
 
@@ -1122,7 +1150,6 @@ function onKeyUp(e) {
     case 55: // 7
       makeButtonInactive("7");
       break;
-
   }
 }
 
