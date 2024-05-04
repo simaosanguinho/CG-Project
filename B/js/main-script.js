@@ -35,6 +35,11 @@ const AXIS = {
 
 const Primitives = {
   CUBE: "cube",
+  DODECAHEDRON: "dodecahedron",
+  ICOSAHEDRON: "icosahedron",
+  TORUS: "torus",
+  TORUS_KNOT: "torusKnot",
+
   CYLINDER: "cylinder",
   TETAEDRON: "tetraedron",
 };
