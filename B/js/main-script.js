@@ -176,6 +176,61 @@ const rearPendantVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
+const binFirstWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 8 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 10 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const binSecondWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 10 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 8 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const binThirdWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 12 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 10 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const binFourthWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 10 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 12 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const binBottomVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 10 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 10 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+};
+
 // Adjust rotation speed
 const upperStructureRotation = {
   step: rotationUnit,
@@ -385,6 +440,25 @@ function createCrane() {
   scene.add(crane);
 }
 
+function createBin() {
+  "use strict";
+
+  let bin = new THREE.Group();
+  const binFirstWall = createBinFirstWall();
+  const binSecondWall = createBinSecondWall();
+  const binThirdWall = createBinThirdWall();
+  const binFourthWall = createBinFourthWall();
+  const binBottom = createBinBottom();
+
+  bin.add(binFirstWall);
+  bin.add(binSecondWall);
+  bin.add(binThirdWall);
+  bin.add(binFourthWall);
+  bin.add(binBottom);
+
+  scene.add(bin);
+}
+
 function createLowerStructure() {
   "use strict";
   let group = new THREE.Group();
@@ -492,6 +566,47 @@ function createRearPendant() {
   return rearPendant;
 }
 
+function createBinFirstWall() {
+  "use strict";
+  const binFirstWall = createObject(binFirstWallVals);
+  setPosition(binFirstWall, binFirstWallVals);
+  binFirstWall.rotation.z = Math.PI / 2;
+  return binFirstWall;
+}
+
+function createBinSecondWall() {
+  "use strict";
+  const binSecondWall = createObject(binSecondWallVals);
+  setPosition(binSecondWall, binSecondWallVals);
+  binSecondWall.rotation.z = Math.PI / 2;
+  binSecondWall.rotation.y = Math.PI / 2;
+  return binSecondWall;
+}
+
+function createBinThirdWall() {
+  "use strict";
+  const binThirdWall = createObject(binThirdWallVals);
+  setPosition(binThirdWall, binThirdWallVals);
+  binThirdWall.rotation.z = Math.PI / 2;
+  return binThirdWall;
+}
+
+function createBinFourthWall() {
+  "use strict";
+  const binFourthWall = createObject(binFourthWallVals);
+  setPosition(binFourthWall, binFourthWallVals);
+  binFourthWall.rotation.z = Math.PI / 2;
+  binFourthWall.rotation.y = Math.PI / 2;
+  return binFourthWall;
+}
+
+function createBinBottom() {
+  "use strict";
+  const binBottom = createObject(binBottomVals);
+  setPosition(binBottom, binBottomVals);
+  return binBottom;
+}
+
 //////////////////////
 /* GOTO: CHECK COLLISIONS */
 //////////////////////
@@ -549,6 +664,7 @@ function init() {
 
   // create object functions
   createCrane();
+  createBin();
 
   resetSteps();
 
@@ -774,7 +890,7 @@ function updateWireframe() {
 }
 
 /////////////////////////
-/*      DARKMODE      */
+/* GOTO: DARKMODE     */
 ///////////////////////
 // Add event listener to dark mode button
 darkModeButton.addEventListener("click", toggleDarkMode);
@@ -789,20 +905,19 @@ function toggleDarkMode() {
 // Function to update toggle switch appearance based on dark mode
 function updateToggleSwitch() {
   if (isDarkMode) {
-    darkModeButton.classList.add("on"); // Add 'on' class for on state
+    darkModeButton.classList.add("on");
   } else {
-    darkModeButton.classList.remove("on"); // Remove 'on' class for off state
+    darkModeButton.classList.remove("on");
   }
 }
 
-// Function to update background color based on dark mode
+// Update background color based on dark mode
 function updateBackgroundColor() {
   if (isDarkMode) {
-    // make background color dark
-    scene.background = new THREE.Color(backgroundColorDark); // Dark background color
-    document.body.style.backgroundColor = backgroundColorDark; // Dark background color
+    scene.background = new THREE.Color(backgroundColorDark);
+    document.body.style.backgroundColor = backgroundColorDark;
   } else {
-    scene.background = new THREE.Color(backgroundColor); // Light background color (original)
-    document.body.style.backgroundColor = backgroundColor; // Light background color (original)
+    scene.background = new THREE.Color(backgroundColor)
+    document.body.style.backgroundColor = backgroundColor;
   }
 }
