@@ -496,6 +496,8 @@ const upperStructureRotation = {
   rotationDirection: 0,
 };
 
+
+
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
@@ -700,6 +702,58 @@ function rotateObject(object, rotationVals, axis) {
 
     default:
       console.log("Axis not found");
+  }
+}
+
+function translateObject(object, objectValues, offset, axis) {
+  "use strict";
+
+  switch (axis) {
+    case AXIS.X:
+      object.position.copy(
+        new THREE.Vector3(
+          THREE.Math.clamp(
+            object.userData.step * delta + object.position.x,
+            objectValues.min + offset,
+            objectValues.max + offset
+          ),
+          object.position.y,
+          object.position.z
+        )
+      );
+
+      break;
+    case AXIS.Y:
+      object.position.copy(
+        new THREE.Vector3(
+          object.position.x,
+          THREE.Math.clamp(
+            THREE.Math.clamp(
+              object.userData.step * delta + object.position.y,
+              objectValues.min + offset,
+              objectValues.max + offset
+            ),
+            object.position.z
+          )
+        )
+      );
+      break;
+    case AXIS.Z:
+      object.position.copy(
+        new THREE.Vector3(
+          object.position.x,
+          object.position.y,
+          THREE.Math.clamp(
+            object.userData.step * delta + object.position.z,
+            objectValues.min + offset,
+            objectValues.max + offset
+          )
+        )
+      );
+      break;
+
+    default:
+      console.log("Invalid axis");
   }
 }
 
