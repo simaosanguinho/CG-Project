@@ -206,14 +206,9 @@ const counterWeightVals = {
 };
 
 const trolleyClawStructureVals = {
-  width: 0 * UNIT,
-  depth: 0 * UNIT,
-  height: 0 * UNIT,
   positionX: 11.5 * UNIT,
   positionY: 14.85 * UNIT,
   positionZ: 0 * UNIT,
-  type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const trolleyVals = {
@@ -238,12 +233,18 @@ const cableVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+const clawStructureVals = {
+  positionX: 0 * UNIT,
+  positionY: -6 * UNIT,
+  positionZ: 0 * UNIT,
+};
+
 const clawBlockVals = {
   width: 1 * UNIT,
   depth: 1 * UNIT,
   height: 0.2 * UNIT,
   positionX: 0 * UNIT,
-  positionY: -5.75 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
@@ -253,8 +254,8 @@ const upperClawVals1 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 12.25 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 0.75 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
@@ -264,19 +265,27 @@ const lowerClawVals1 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 12.75 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 1.25 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const clawEdgeVals1 = {
+  positionX: 1.5 * UNIT,
+  positionY: -0.1 * UNIT,
+  positionZ: 0.25 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
 
 const upperClawVals2 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 10.75 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: -0.75 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
@@ -286,19 +295,27 @@ const lowerClawVals2 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 10.25 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: -1.25 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const clawEdgeVals2 = {
+  positionX: -1.5 * UNIT,
+  positionY: -0.1 * UNIT,
+  positionZ: -0.25 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
 
 const upperClawVals3 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: -0.75 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
@@ -308,19 +325,27 @@ const lowerClawVals3 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: -1.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const clawEdgeVals3 = {
+  positionX: 0.25 * UNIT,
+  positionY: -0.1 * UNIT,
+  positionZ: -1.5 * UNIT,
+  type: Primitives.PYRAMID,
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
 
 const upperClawVals4 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0.75 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
@@ -330,41 +355,17 @@ const lowerClawVals4 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 1.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
-const clawEdgeVals1 = {
-  positionX: 11.25 * UNIT,
-  positionY: 9 * UNIT,
-  positionZ: 1.5 * UNIT,
-  type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
-};
-
-const clawEdgeVals2 = {
-  positionX: 11.75 * UNIT,
-  positionY: 9 * UNIT,
-  positionZ: -1.5 * UNIT,
-  type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
-};
-
-const clawEdgeVals3 = {
-  positionX: 13 * UNIT,
-  positionY: 9 * UNIT,
-  positionZ: 0.25 * UNIT,
-  type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
-};
-
 const clawEdgeVals4 = {
-  positionX: 10 * UNIT,
-  positionY: 9 * UNIT,
-  positionZ: -0.25 * UNIT,
+  positionX: -0.25 * UNIT,
+  positionY: -0.1 * UNIT,
+  positionZ: 1.5 * UNIT,
   type: Primitives.PYRAMID,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
@@ -519,7 +520,8 @@ const trolleyClawStructureTranslation = {
 //////////////////////
 const cameras = [];
 let objectsToUpdate = [];
-let lowerStructure, upperStructure, cable, claw, trolleyClawStructure;
+let lowerStructure, upperStructure, cable, trolleyClawStructure;
+let claw, clawUpper1, clawLower1, clawUpper2, clawLower2, clawUpper3, clawLower3, clawUpper4, clawLower4;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -850,36 +852,126 @@ function createFiveRandomObjects() {
   }
 }
 
+function changePivot(obj, group, offset, axis) {
+  switch (axis) {
+    case AXIS.X:
+      obj.position.copy(
+        new THREE.Vector3(
+          obj.position.x - offset,
+          obj.position.y,
+          obj.position.z
+        )
+      );
+      group.position.copy(
+        new THREE.Vector3(
+          group.position.x + offset,
+          group.position.y,
+          group.position.z
+        )
+      );
+      break;
+    case AXIS.Y:
+      obj.position.copy(
+        new THREE.Vector3(
+          obj.position.x,
+          obj.position.y - offset,
+          obj.position.z
+        )
+      );
+      group.position.copy(
+        new THREE.Vector3(
+          group.position.x,
+          group.position.y + offset,
+          group.position.z
+        )
+      );
+      break;
+    case AXIS.Z:
+      obj.position.copy(
+        new THREE.Vector3(
+          obj.position.x,
+          obj.position.y,
+          obj.position.z - offset
+        )
+      );
+      group.position.copy(
+        new THREE.Vector3(
+          group.position.x,
+          group.position.y,
+          group.position.z + offset
+        )
+      );
+      break;
+    default:
+      console.log("Invalid axis");
+      break;
+  }
+}
+
+function groupLowerClaw(clawNum) {
+  "use strict";
+  let group = new THREE.Group();
+  switch (clawNum) {
+    case 1:
+      const clawLower1 = createClawLower1(lowerClawVals1);
+      const clawEdge1 = createClawEdge1();
+      group.add(clawLower1);
+      group.add(clawEdge1);
+      break;
+    case 2:
+      const clawLower2 = createClawLower2(lowerClawVals2);
+      const clawEdge2 = createClawEdge2();
+      group.add(clawLower2);
+      group.add(clawEdge2);
+      break;
+    case 3:
+      const clawLower3 = createClawLower3(lowerClawVals3);
+      const clawEdge3 = createClawEdge3();
+      group.add(clawLower3);
+      group.add(clawEdge3);
+      break;
+    case 4:
+      const clawLower4 = createClawLower4(lowerClawVals4);
+      const clawEdge4 = createClawEdge4();
+      group.add(clawLower4);
+      group.add(clawEdge4);
+      break;
+    default:
+      break;
+  }
+
+  return group;
+}
+
 function createClaw() {
   "use strict";
+
   claw = new THREE.Group();
   const clawBlock = createClawBlock();
-  const clawUpper1 = createClawUpper(upperClawVals1);
-  const clawLower1 = createClawLower1(lowerClawVals1);
-  const clawUpper2 = createClawUpper(upperClawVals2);
-  const clawLower2 = createClawLower2(lowerClawVals2);
-  const clawUpper3 = createClawUpper(upperClawVals3);
-  const clawLower3 = createClawLower3(lowerClawVals3);
-  const clawUpper4 = createClawUpper(upperClawVals4);
-  const clawLower4 = createClawLower4(lowerClawVals4);
-  const clawEdge3 = createClawEdge3();
-  const clawEdge2 = createClawEdge2();
-  const clawEdge1 = createClawEdge1();
-  const clawEdge4 = createClawEdge4();
-
   claw.add(clawBlock);
+
+  const clawUpper1 = createClawUpper(upperClawVals1);
+  const clawLower1 = groupLowerClaw(1);
   claw.add(clawUpper1);
   claw.add(clawLower1);
+
+  const clawUpper2 = createClawUpper(upperClawVals2);
+  const clawLower2 = groupLowerClaw(2);
   claw.add(clawUpper2);
   claw.add(clawLower2);
+
+  
+  const clawUpper3 = createClawUpper(upperClawVals3);
+  const clawLower3 = groupLowerClaw(3);
   claw.add(clawUpper3);
   claw.add(clawLower3);
+
+  const clawUpper4 = createClawUpper(upperClawVals4);
+  const clawLower4 = groupLowerClaw(4);
   claw.add(clawUpper4);
   claw.add(clawLower4);
-  claw.add(clawEdge1);
-  claw.add(clawEdge2);
-  claw.add(clawEdge3);
-  claw.add(clawEdge4);
+
+  setPosition(claw, clawStructureVals);
 
   return claw;
 }
@@ -1091,6 +1183,7 @@ function createClawLower4(lowerClawVals) {
 function createClawEdge1() {
   "use strict";
   const clawEdge = createObject(clawEdgeVals1);
+  clawEdge.rotation.y = Math.PI / 2;
   setPosition(clawEdge, clawEdgeVals1);
   return clawEdge;
 }
@@ -1098,7 +1191,7 @@ function createClawEdge1() {
 function createClawEdge2() {
   "use strict";
   const clawEdge = createObject(clawEdgeVals2);
-  clawEdge.rotation.y = Math.PI;
+  clawEdge.rotation.y = -Math.PI / 2;
   setPosition(clawEdge, clawEdgeVals2);
   return clawEdge;
 }
@@ -1106,7 +1199,7 @@ function createClawEdge2() {
 function createClawEdge3() {
   "use strict";
   const clawEdge = createObject(clawEdgeVals3);
-  clawEdge.rotation.y = Math.PI / 2;
+  clawEdge.rotation.y = Math.PI;
   setPosition(clawEdge, clawEdgeVals3);
   return clawEdge;
 }
@@ -1114,7 +1207,6 @@ function createClawEdge3() {
 function createClawEdge4() {
   "use strict";
   const clawEdge = createObject(clawEdgeVals4);
-  clawEdge.rotation.y = -Math.PI / 2;
   setPosition(clawEdge, clawEdgeVals4);
   return clawEdge;
 }
@@ -1343,9 +1435,11 @@ function onKeyDown(e) {
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
+      openClaw();
       break;
     case 70 || 102: // F or f
       makeButtonActive("F");
+      closeClaw();
       break;
     case 55: // 7
       isWireframe = !isWireframe;
@@ -1421,10 +1515,12 @@ function onKeyUp(e) {
 
     case 82 || 114: // R or r
       makeButtonInactive("R");
+      openClaw();
       break;
 
     case 70 || 102: // F or f
       makeButtonInactive("F");
+      closeClaw();
       break;
     case 55: // 7
       makeButtonInactive("7");
@@ -1512,4 +1608,12 @@ function lowerClaw() {
   cable.position.y = Math.max(newYCable, -7.5 * UNIT);
 }
 
+function closeClaw() {
+  "use strict";
+  
+}
 
+function openClaw() {
+  "use strict";
+  
+}
