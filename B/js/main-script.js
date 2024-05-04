@@ -205,12 +205,23 @@ const counterWeightVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
+const trolleyClawStructureVals = {
+  width: 0 * UNIT,
+  depth: 0 * UNIT,
+  height: 0 * UNIT,
+  positionX: 11.5 * UNIT,
+  positionY: 14.85 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
 const trolleyVals = {
   width: 2 * UNIT,
   depth: 1 * UNIT,
   height: 0.3 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 14.85 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
@@ -220,8 +231,8 @@ const cableVals = {
   width: 0.2 * UNIT,
   depth: 0.2 * UNIT,
   height: 5.7 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 12 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: -3 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
@@ -231,8 +242,8 @@ const clawBlockVals = {
   width: 1 * UNIT,
   depth: 1 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 11.5 * UNIT,
-  positionY: 9.1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: -5.75 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
@@ -496,14 +507,19 @@ const upperStructureRotation = {
   rotationDirection: 0,
 };
 
-
+const trolleyClawStructureTranslation = {
+  step: 0.5 * UNIT,
+  min: 2 * UNIT,
+  max: 12 * UNIT,
+  translationDirection: 0,
+};
 
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
 let objectsToUpdate = [];
-let lowerStructure, upperStructure, cable, claw;
+let lowerStructure, upperStructure, cable, claw, trolleyClawStructure;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -707,49 +723,38 @@ function rotateObject(object, rotationVals, axis) {
 
 function translateObject(object, objectValues, offset, axis) {
   "use strict";
-
+  // TODO: confirm translation on Y and Z axis
   switch (axis) {
     case AXIS.X:
-      object.position.copy(
-        new THREE.Vector3(
-          THREE.Math.clamp(
-            object.userData.step * delta + object.position.x,
-            objectValues.min + offset,
-            objectValues.max + offset
-          ),
-          object.position.y,
-          object.position.z
-        )
-      );
-
+      if(objectValues.translationDirection === -1) {
+        object.position.x = Math.min(object.position.x + objectValues.step * delta, objectValues.max + offset);
+        break;
+      }
+      if (objectValues.translationDirection === 1) {
+        object.position.x = Math.max(object.position.x - objectValues.step * delta, objectValues.min + offset);
+        break;
+      }
+      
       break;
     case AXIS.Y:
-      object.position.copy(
-        new THREE.Vector3(
-          object.position.x,
-          THREE.Math.clamp(
-            THREE.Math.clamp(
-              object.userData.step * delta + object.position.y,
-              objectValues.min + offset,
-              objectValues.max + offset
-            ),
-            object.position.z
-          )
-        )
-      );
+      if(objectValues.translationDirection === -1) {
+        object.position.y = Math.min(object.position.y + objectValues.step * delta, objectValues.max + offset);
+        break;
+      }
+      if (objectValues.translationDirection === 1) {
+        object.position.y = Math.max(object.position.y - objectValues.step * delta, objectValues.min + offset);
+        break;
+      }
       break;
     case AXIS.Z:
-      object.position.copy(
-        new THREE.Vector3(
-          object.position.x,
-          object.position.y,
-          THREE.Math.clamp(
-            object.userData.step * delta + object.position.z,
-            objectValues.min + offset,
-            objectValues.max + offset
-          )
-        )
-      );
+      if(objectValues.translationDirection === -1) {
+        object.position.z = Math.min(object.position.z + objectValues.step * delta, objectValues.max + offset);
+        break;
+      }
+      if (objectValues.translationDirection === 1) {
+        object.position.z = Math.max(object.position.z - objectValues.step * delta, objectValues.min + offset);
+        break;
+      }
       break;
 
     default:
@@ -879,29 +884,41 @@ function createClaw() {
   return claw;
 }
 
+function createTrolleyClawStructure() {
+  "use strict";
+
+  trolleyClawStructure = new THREE.Group();
+  const trolley = createTrolley();
+  const cable = createCable();
+  const claw = createClaw();
+
+  trolleyClawStructure.add(trolley);
+  trolleyClawStructure.add(cable);
+  trolleyClawStructure.add(claw);
+
+  setPosition(trolleyClawStructure, trolleyClawStructureVals);
+
+  return trolleyClawStructure;
+}
+
 function createUpperStructure() {
   "use strict";
-  // TODO: In order to rotate the object 'group' must be the one declared in main-script.js
   upperStructure = new THREE.Group();
   const cab = createCab();
   const jib = createJib();
   const upperTower = createUpperTower();
   const counterWeight = createCounterWeight();
-  const trolley = createTrolley();
-  const cable = createCable();
   const frontPendant = createFrontPendant();
   const rearPendant = createRearPendant();
-  const claw = createClaw();
+  const trolleyClawStructure = createTrolleyClawStructure();
 
   upperStructure.add(cab);
   upperStructure.add(jib);
   upperStructure.add(upperTower);
   upperStructure.add(counterWeight);
-  upperStructure.add(trolley);
-  upperStructure.add(cable);
   upperStructure.add(frontPendant);
   upperStructure.add(rearPendant);
-  upperStructure.add(claw);
+  upperStructure.add(trolleyClawStructure);
 
   return upperStructure;
 }
@@ -1184,6 +1201,7 @@ function update() {
   }
 
   rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
+  translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
 }
 
 /////////////
@@ -1308,9 +1326,11 @@ function onKeyDown(e) {
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
+      trolleyClawStructureTranslation.translationDirection = 1;
       break;
     case 83 || 115: // S or s
       makeButtonActive("S");
+      trolleyClawStructureTranslation.translationDirection = -1;
       break;
     case 69 || 101: // E or e
       makeButtonActive("E");
@@ -1381,10 +1401,12 @@ function onKeyUp(e) {
 
     case 87 || 119: // W or w
       makeButtonInactive("W");
+      trolleyClawStructureTranslation.translationDirection = 0;
       break;
 
     case 83 || 115: // S or s
       makeButtonInactive("S");
+      trolleyClawStructureTranslation.translationDirection = 0;
       break;
 
     case 69 || 101: // E or e
@@ -1489,3 +1511,5 @@ function lowerClaw() {
   claw.position.y = Math.max(newYClaw, -7.5 * UNIT);
   cable.position.y = Math.max(newYCable, -7.5 * UNIT);
 }
+
+
