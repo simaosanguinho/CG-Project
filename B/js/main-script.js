@@ -440,6 +440,25 @@ function createCrane() {
   scene.add(crane);
 }
 
+function createBin() {
+  "use strict";
+
+  let bin = new THREE.Group();
+  const binFirstWall = createBinFirstWall();
+  const binSecondWall = createBinSecondWall();
+  const binThirdWall = createBinThirdWall();
+  const binFourthWall = createBinFourthWall();
+  const binBottom = createBinBottom();
+
+  bin.add(binFirstWall);
+  bin.add(binSecondWall);
+  bin.add(binThirdWall);
+  bin.add(binFourthWall);
+  bin.add(binBottom);
+
+  scene.add(bin);
+}
+
 function createLowerStructure() {
   "use strict";
   let group = new THREE.Group();
@@ -645,6 +664,7 @@ function init() {
 
   // create object functions
   createCrane();
+  createBin();
 
   resetSteps();
 
