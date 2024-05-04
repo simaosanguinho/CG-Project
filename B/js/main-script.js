@@ -684,9 +684,6 @@ function createFiveRandomObjects() {
     // check collision
     for (let j = 0; j < objectsToUpdate.length; j++) {
       // check if not the same object
-      if (object === objectsToUpdate[j]) {
-        continue;
-      }
       if (checkCollision(object, objectsToUpdate[j])) {
         randomizePosition(object);
         j = 0; // restart loop
@@ -966,6 +963,9 @@ function checkCollisions() {
 
 function checkCollision(object1, object2) {
   "use strict";
+  if (object1 === object2) {
+    return false;
+  }
   const box1 = new THREE.Box3().setFromObject(object1);
   const box2 = new THREE.Box3().setFromObject(object2);
   return box1.intersectsBox(box2);
