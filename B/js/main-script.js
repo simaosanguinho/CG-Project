@@ -509,6 +509,28 @@ function createObject(objectVals) {
         objectVals.height
       );
       break;
+    case Primitives.DODECAHEDRON:
+      geometry = new THREE.DodecahedronGeometry(objectVals.radius);
+      break;
+    case Primitives.ICOSAHEDRON:
+      geometry = new THREE.IcosahedronGeometry(objectVals.radius);
+      break;
+    case Primitives.TORUS:
+      geometry = new THREE.TorusGeometry(
+        objectVals.radius,
+        objectVals.tube,
+        objectVals.radialSegments,
+        objectVals.tubularSegments
+      );
+      break;
+    case Primitives.TORUS_KNOT:
+      geometry = new THREE.TorusKnotGeometry(
+        objectVals.radius,
+        objectVals.tube,
+        objectVals.tubularSegments,
+        objectVals.radialSegments
+      );
+      break;
     case Primitives.TETRAEDRON:
       geometry = new THREE.TetrahedronGeometry(objectVals.radius);
       break;
