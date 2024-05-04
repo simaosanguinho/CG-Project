@@ -176,6 +176,17 @@ const rearPendantVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
+const binFirstWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 8 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 10 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
 // Adjust rotation speed
 const upperStructureRotation = {
   step: rotationUnit,
@@ -490,6 +501,14 @@ function createRearPendant() {
   setPosition(rearPendant, rearPendantVals);
   rearPendant.rotation.z = -Math.PI / 4;
   return rearPendant;
+}
+
+function createBinFirstWall() {
+  "use strict";
+  const binFirstWall = createObject(binFirstWallVals);
+  setPosition(binFirstWall, binFirstWallVals);
+  binFirstWall.rotation.z = Math.PI / 2;
+  return binFirstWall;
 }
 
 //////////////////////
