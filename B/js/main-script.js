@@ -344,6 +344,59 @@ const binBottomVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+const cubeVals = {
+  width: 1 * UNIT,
+  height: 1 * UNIT,
+  depth: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const dodecahedronVals = {
+  radius: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.DODECAHEDRON,
+  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+};
+
+const icosahedronVals = {
+  radius: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.ICOSAHEDRON,
+  material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+};
+
+const torusVals = {
+  radius: 1 * UNIT,
+  tube: 0.3 * UNIT,
+  radialSegments: 16,
+  tubularSegments: 100,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.TORUS,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const torusKnotVals = {
+  radius: 1 * UNIT,
+  tube: 0.3 * UNIT,
+  tubularSegments: 100,
+  radialSegments: 16,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.TORUS_KNOT,
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+};
+
 // Adjust rotation speed
 const upperStructureRotation = {
   step: rotationUnit,
