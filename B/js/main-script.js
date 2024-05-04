@@ -26,7 +26,6 @@ const rotationUnit = Math.PI / 80;
 
 const maxViewDistance = 10000;
 
-
 const AXIS = {
   X: "x",
   Y: "y",
@@ -35,6 +34,11 @@ const AXIS = {
 
 const Primitives = {
   CUBE: "cube",
+  DODECAHEDRON: "dodecahedron",
+  ICOSAHEDRON: "icosahedron",
+  TORUS: "torus",
+  TORUS_KNOT: "torusKnot",
+
   CYLINDER: "cylinder",
   TETAEDRON: "tetraedron",
 };
@@ -339,6 +343,59 @@ const binBottomVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
 
+const cubeVals = {
+  width: 1 * UNIT,
+  height: 1 * UNIT,
+  depth: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+};
+
+const dodecahedronVals = {
+  radius: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.DODECAHEDRON,
+  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+};
+
+const icosahedronVals = {
+  radius: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.ICOSAHEDRON,
+  material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+};
+
+const torusVals = {
+  radius: 1 * UNIT,
+  tube: 0.3 * UNIT,
+  radialSegments: 16,
+  tubularSegments: 100,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.TORUS,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const torusKnotVals = {
+  radius: 1 * UNIT,
+  tube: 0.3 * UNIT,
+  tubularSegments: 100,
+  radialSegments: 16,
+  positionX: 0 * UNIT,
+  positionY: 0 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.TORUS_KNOT,
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+};
+
 // Adjust rotation speed
 const upperStructureRotation = {
   step: rotationUnit,
@@ -351,7 +408,7 @@ const upperStructureRotation = {
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
-let meshesToUpdate = [];
+let objectsToUpdate = [];
 let lowerStructure, upperStructure;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
@@ -451,6 +508,28 @@ function createObject(objectVals) {
         objectVals.height
       );
       break;
+    case Primitives.DODECAHEDRON:
+      geometry = new THREE.DodecahedronGeometry(objectVals.radius);
+      break;
+    case Primitives.ICOSAHEDRON:
+      geometry = new THREE.IcosahedronGeometry(objectVals.radius);
+      break;
+    case Primitives.TORUS:
+      geometry = new THREE.TorusGeometry(
+        objectVals.radius,
+        objectVals.tube,
+        objectVals.radialSegments,
+        objectVals.tubularSegments
+      );
+      break;
+    case Primitives.TORUS_KNOT:
+      geometry = new THREE.TorusKnotGeometry(
+        objectVals.radius,
+        objectVals.tube,
+        objectVals.tubularSegments,
+        objectVals.radialSegments
+      );
+      break;
     case Primitives.TETRAEDRON:
       geometry = new THREE.TetrahedronGeometry(objectVals.radius);
       break;
@@ -468,7 +547,7 @@ function createObject(objectVals) {
   
     object.add(line); */
 
-  meshesToUpdate.push(mesh);
+  objectsToUpdate.push(object);
   return object;
 }
 
@@ -526,8 +605,8 @@ function rotateObject(object, rotationVals, axis) {
   }
 }
 
-function getMeshesToUpdate() {
-  return meshesToUpdate;
+function getObjectsToUpdate() {
+  return objectsToUpdate;
 }
 
 function createCrane() {
@@ -576,6 +655,42 @@ function createLowerStructure() {
   group.add(base);
   group.add(tower);
   return group;
+}
+
+function createFiveRandomObjects() {
+  "use strict";
+  for (let i = 0; i < 5; i++) {
+    let object;
+    switch (i) {
+      case 0:
+        object = createCube();
+        break;
+      case 1:
+        object = createDodecahedron();
+        break;
+      case 2:
+        object = createIcosahedron();
+        break;
+      case 3:
+        object = createTorus();
+        break;
+      case 4:
+        object = createTorusKnot();
+        break;
+      default:
+        break;
+    }
+    randomizePosition(object);
+    // check collision
+    for (let j = 0; j < objectsToUpdate.length; j++) {
+      // check if not the same object
+      if (checkCollision(object, objectsToUpdate[j])) {
+        randomizePosition(object);
+        j = 0; // restart loop
+      }
+    }
+    scene.add(object);
+  }
 }
 
 function createUpperStructure() {
@@ -793,11 +908,67 @@ function createClawEdge() {
   return clawEdge;
 }
 
+function createCube() {
+  "use strict";
+  const cube = createObject(cubeVals);
+  return cube;
+}
+
+function createDodecahedron() {
+  "use strict";
+  const dodecahedron = createObject(dodecahedronVals);
+  return dodecahedron;
+}
+
+function createIcosahedron() {
+  "use strict";
+  const icosahedron = createObject(icosahedronVals);
+  return icosahedron;
+}
+
+function createTorus() {
+  "use strict";
+  const torus = createObject(torusVals);
+  return torus;
+}
+
+function createTorusKnot() {
+  "use strict";
+  const torusKnot = createObject(torusKnotVals);
+  return torusKnot;
+}
+
+function randomizePosition(object) {
+  "use strict";
+  let randomizedX, randomizedZ;
+  let enoughDistance = 3 * UNIT;
+  do {
+    randomizedX = Math.floor(Math.random() * 10 - Math.random() * 10) * UNIT;
+    randomizedZ = Math.floor(Math.random() * 10 - Math.random() * 10) * UNIT;
+  } while (
+    // avoid placing object at the base of the crane
+    cranePosition.positionX - randomizedX < enoughDistance &&
+    cranePosition.positionZ - randomizedZ < enoughDistance
+  );
+
+  object.position.set(randomizedX, 0.5 * UNIT, randomizedZ);
+}
+
 //////////////////////
 /* GOTO: CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
   "use strict";
+}
+
+function checkCollision(object1, object2) {
+  "use strict";
+  if (object1 === object2) {
+    return false;
+  }
+  const box1 = new THREE.Box3().setFromObject(object1);
+  const box2 = new THREE.Box3().setFromObject(object2);
+  return box1.intersectsBox(box2);
 }
 
 ///////////////////////
@@ -819,7 +990,6 @@ function update() {
   }
 
   rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
-  
 }
 
 /////////////
@@ -851,6 +1021,10 @@ function init() {
   // create object functions
   createCrane();
   createBin();
+  createFiveRandomObjects();
+  // grid
+  const gridHelper = new THREE.GridHelper(1000, 100);
+  scene.add(gridHelper);
 
   resetSteps();
 
@@ -861,9 +1035,8 @@ function init() {
   // add event listeners
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
-  
-  darkModeButton.addEventListener("click", toggleDarkMode);
 
+  darkModeButton.addEventListener("click", toggleDarkMode);
 }
 
 /////////////////////
@@ -966,7 +1139,6 @@ function onKeyDown(e) {
     case 32: //space - show axes
       axes.visible = !axes.visible;
       break;
-
   }
 }
 
@@ -1036,7 +1208,6 @@ function onKeyUp(e) {
     case 55: // 7
       makeButtonInactive("7");
       break;
-
   }
 }
 
@@ -1070,8 +1241,8 @@ function makeButtonInactive(key) {
 let isWireframe = false; // Variable to track wireframe mode
 
 function updateWireframe() {
-  getMeshesToUpdate().forEach((mesh) => {
-    mesh.material.wireframe = isWireframe;
+  getObjectsToUpdate().forEach((object) => {
+    object.children[0].material.wireframe = isWireframe;
   });
 }
 
@@ -1103,7 +1274,7 @@ function updateBackgroundColor() {
     scene.background = new THREE.Color(backgroundColorDark);
     document.body.style.backgroundColor = backgroundColorDark;
   } else {
-    scene.background = new THREE.Color(backgroundColor)
+    scene.background = new THREE.Color(backgroundColor);
     document.body.style.backgroundColor = backgroundColor;
   }
 }
