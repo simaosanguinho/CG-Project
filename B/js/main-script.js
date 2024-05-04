@@ -774,7 +774,7 @@ function updateWireframe() {
 }
 
 /////////////////////////
-/*      DARKMODE      */
+/* GOTO: DARKMODE     */
 ///////////////////////
 // Add event listener to dark mode button
 darkModeButton.addEventListener("click", toggleDarkMode);
@@ -789,20 +789,19 @@ function toggleDarkMode() {
 // Function to update toggle switch appearance based on dark mode
 function updateToggleSwitch() {
   if (isDarkMode) {
-    darkModeButton.classList.add("on"); // Add 'on' class for on state
+    darkModeButton.classList.add("on");
   } else {
-    darkModeButton.classList.remove("on"); // Remove 'on' class for off state
+    darkModeButton.classList.remove("on");
   }
 }
 
-// Function to update background color based on dark mode
+// Update background color based on dark mode
 function updateBackgroundColor() {
   if (isDarkMode) {
-    // make background color dark
-    scene.background = new THREE.Color(backgroundColorDark); // Dark background color
-    document.body.style.backgroundColor = backgroundColorDark; // Dark background color
+    scene.background = new THREE.Color(backgroundColorDark);
+    document.body.style.backgroundColor = backgroundColorDark;
   } else {
-    scene.background = new THREE.Color(backgroundColor); // Light background color (original)
-    document.body.style.backgroundColor = backgroundColor; // Light background color (original)
+    scene.background = new THREE.Color(backgroundColor)
+    document.body.style.backgroundColor = backgroundColor;
   }
 }
