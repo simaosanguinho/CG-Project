@@ -511,28 +511,28 @@ const upperStructureRotation = {
 const lowerClawRotation1 = {
   step: rotationUnit,
   min: -1,
-  max: -Math.PI * 2,
+  max: Math.PI / 4,
   rotationDirection: 0,
 };
 
 const lowerClawRotation2 = {
   step: rotationUnit,
-  min: -1,
-  max: Math.PI * 2,
+  min: -Math.PI / 4,
+  max: 1,
   rotationDirection: 0,
 };
 
 const clawRotation1 = {
   step: rotationUnit,
   min: -1,
-  max: Math.PI * 2,
+  max: Math.PI / 4,
   rotationDirection: 0,
 };
 
 const clawRotation2 = {
   step: rotationUnit,
-  min: -1,
-  max: Math.PI * 2,
+  min: -Math.PI / 4,
+  max: 1,
   rotationDirection: 0,
 };
 
@@ -715,10 +715,6 @@ function resetSteps() {
 function myClamp(value, min, max) {
   "use strict";
 
-  // can rotate continuously
-  if (value < min) {
-    return value % (Math.PI * 2);
-  }
 
   if (value < min) {
     return min;
@@ -736,18 +732,27 @@ function rotateObject(object, rotationVals, axis) {
 
   switch (axis) {
     case AXIS.X:
-      object.rotation.x +=
-        rotationVals.rotationDirection * rotationVals.step * delta;
+      object.rotation.x += myClamp(
+        rotationVals.rotationDirection * rotationVals.step * delta,
+        rotationVals.min,
+        rotationVals.max
+      );
       break;
 
     case AXIS.Y:
-      object.rotation.y +=
-        rotationVals.rotationDirection * rotationVals.step * delta;
+      object.rotation.y += myClamp(
+        rotationVals.rotationDirection * rotationVals.step * delta,
+        rotationVals.min,
+        rotationVals.max
+      );
       break;
 
     case AXIS.Z:
-      object.rotation.z +=
-        rotationVals.rotationDirection * rotationVals.step * delta;
+      object.rotation.z += myClamp(
+        rotationVals.rotationDirection * rotationVals.step * delta,
+        rotationVals.min,
+        rotationVals.max
+      );
       break;
 
     default:
