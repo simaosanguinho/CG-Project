@@ -13,7 +13,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#eaf6ff";
+const backgroundColor = "#344c5e"; // #eaf6ff
 
 // Background color for dark mode
 const backgroundColorDark = "#344c5e";
@@ -254,7 +254,7 @@ const upperClawVals1 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 0.75 * UNIT,
+  positionX: 0.25 * UNIT,
   positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
@@ -277,14 +277,14 @@ const clawEdgeVals1 = {
   positionY: -0.1 * UNIT,
   positionZ: 0.25 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
 const upperClawVals2 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
   height: 0.2 * UNIT,
-  positionX: -0.75 * UNIT,
+  positionX: -0.25 * UNIT,
   positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
@@ -307,7 +307,7 @@ const clawEdgeVals2 = {
   positionY: -0.1 * UNIT,
   positionZ: -0.25 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
 const upperClawVals3 = {
@@ -316,7 +316,7 @@ const upperClawVals3 = {
   height: 0.2 * UNIT,
   positionX: 0 * UNIT,
   positionY: 0 * UNIT,
-  positionZ: -0.75 * UNIT,
+  positionZ: -0.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
@@ -337,7 +337,7 @@ const clawEdgeVals3 = {
   positionY: -0.1 * UNIT,
   positionZ: -0.5 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
 const upperClawVals4 = {
@@ -346,7 +346,7 @@ const upperClawVals4 = {
   height: 0.2 * UNIT,
   positionX: 0 * UNIT,
   positionY: 0 * UNIT,
-  positionZ: 0.75 * UNIT,
+  positionZ: 0.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
@@ -367,7 +367,7 @@ const clawEdgeVals4 = {
   positionY: -0.1 * UNIT,
   positionZ: 0.5 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
 const frontPendantVals = {
@@ -508,10 +508,24 @@ const upperStructureRotation = {
   rotationDirection: 0,
 };
 
-const clawRotation1 = {
+const lowerClawRotation1 = {
   step: rotationUnit,
   min: -1,
   max: -Math.PI * 2,
+  rotationDirection: 0,
+};
+
+const lowerClawRotation2 = {
+  step: rotationUnit,
+  min: -1,
+  max: Math.PI * 2,
+  rotationDirection: 0,
+};
+
+const clawRotation1 = {
+  step: rotationUnit,
+  min: -1,
+  max: Math.PI * 2,
   rotationDirection: 0,
 };
 
@@ -536,7 +550,9 @@ const cameras = [];
 let objectsToUpdate = [];
 let lowerStructure, upperStructure, cable, trolleyClawStructure;
 let claw, clawUpper1, clawLower1, clawUpper2, clawLower2, clawUpper3, clawLower3, clawUpper4, clawLower4;
-let clawPivot1, clawPivot2, clawPivot3, clawPivot4;
+let lowerClawPivot1, lowerClawPivot2, lowerClawPivot3, lowerClawPivot4;
+let clawPivot1, clawPivot2, clawPivot3, clawPivot4, aux1, aux2, aux3, aux4, auxaux1, auxaux2, auxaux3, auxaux4;;
+let claw1, claw2, claw3, claw4;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -872,27 +888,27 @@ function groupLowerClaw(clawNum) {
   let group = new THREE.Group();
   switch (clawNum) {
     case 1:
-      const clawLower1Aux = createClawLower1(lowerClawVals1);
+      const clawLower1aux = createClawLower1(lowerClawVals1);
       const clawEdge1 = createClawEdge1();
-      group.add(clawLower1Aux);
+      group.add(clawLower1aux);
       group.add(clawEdge1);
       break;
     case 2:
-      const clawLower2Aux = createClawLower2(lowerClawVals2);
+      const clawLower2aux = createClawLower2(lowerClawVals2);
       const clawEdge2 = createClawEdge2();
-      group.add(clawLower2Aux);
+      group.add(clawLower2aux);
       group.add(clawEdge2);
       break;
     case 3:
-      const clawLower3Aux = createClawLower3(lowerClawVals3);
+      const clawLower3aux = createClawLower3(lowerClawVals3);
       const clawEdge3 = createClawEdge3();
-      group.add(clawLower3Aux);
+      group.add(clawLower3aux);
       group.add(clawEdge3);
       break;
     case 4:
-      const clawLower4Aux = createClawLower4(lowerClawVals4);
+      const clawLower4aux = createClawLower4(lowerClawVals4);
       const clawEdge4 = createClawEdge4();
-      group.add(clawLower4Aux);
+      group.add(clawLower4aux);
       group.add(clawEdge4);
       break;
     default:
@@ -904,46 +920,100 @@ function groupLowerClaw(clawNum) {
 
 function createClaw() {
   "use strict";
-
   claw = new THREE.Group();
 
   const clawBlock = createClawBlock();
   claw.add(clawBlock);
 
+  /* CLAW 1 */
+
+  claw1 = new THREE.Group();
+
   clawPivot1 = new THREE.Group();
-  clawUpper1 = createClawUpper(upperClawVals1);
-  clawLower1 = groupLowerClaw(1);
-  clawPivot1.add(clawLower1);
-  claw.add(clawUpper1);
-  claw.add(clawPivot1);
-  clawPivot1.position.set(1 * UNIT, 0, 0);
+  clawPivot1.add(createClawUpper(upperClawVals1));
+
+  aux1 = new THREE.Group();
+  aux1.add(clawPivot1);
+  aux1.position.set(0.5 * UNIT, 0, 0);
+
+  lowerClawPivot1 = new THREE.Group();
+  lowerClawPivot1.add(groupLowerClaw(1));
+
+  auxaux1 = new THREE.Group();
+  auxaux1.add(lowerClawPivot1);
+  auxaux1.position.set(0.5 * UNIT, 0, 0);
+  aux1.add(auxaux1);
+
+  claw1.add(aux1);
+  claw.add(claw1);
+
+  /* CLAW 2 */
+
+  claw2 = new THREE.Group();
 
   clawPivot2 = new THREE.Group();
-  clawUpper2 = createClawUpper(upperClawVals2);
-  clawLower2 = groupLowerClaw(2);
-  clawPivot2.add(clawLower2);
-  claw.add(clawUpper2);
-  claw.add(clawPivot2);
-  clawPivot2.position.set(-1 * UNIT, 0, 0);
+  clawPivot2.add(createClawUpper(upperClawVals2));
+
+  aux2 = new THREE.Group();
+  aux2.add(clawPivot2);
+  aux2.position.set(-0.5 * UNIT, 0, 0);
+
+  lowerClawPivot2 = new THREE.Group();
+  lowerClawPivot2.add(groupLowerClaw(2));
+
+  auxaux2 = new THREE.Group();
+  auxaux2.add(lowerClawPivot2);
+  auxaux2.position.set(-0.5 * UNIT, 0, 0);
+  aux2.add(auxaux2);
+
+  claw2.add(aux2);
+  claw.add(claw2);
+
+  /* CLAW 3 */
+
+  claw3 = new THREE.Group();
 
   clawPivot3 = new THREE.Group();
-  clawUpper3 = createClawUpper(upperClawVals3);
-  clawLower3 = groupLowerClaw(3);
-  clawPivot3.add(clawLower3);
-  claw.add(clawUpper3);
-  claw.add(clawPivot3);
-  clawPivot3.position.set(0, 0, -1 * UNIT);
+  clawPivot3.add(createClawUpper(upperClawVals3));
+
+  aux3 = new THREE.Group();
+  aux3.add(clawPivot3);
+  aux3.position.set(0, 0, -0.5 * UNIT);
+
+  lowerClawPivot3 = new THREE.Group();
+  lowerClawPivot3.add(groupLowerClaw(3));
+
+  auxaux3 = new THREE.Group();
+  auxaux3.add(lowerClawPivot3);
+  auxaux3.position.set(0, 0, -0.5 * UNIT);
+  aux3.add(auxaux3);
+
+  claw3.add(aux3);
+  claw.add(claw3);
+
+  /* CLAW 4 */
+
+  claw4 = new THREE.Group();
 
   clawPivot4 = new THREE.Group();
-  clawUpper4 = createClawUpper(upperClawVals4);
-  clawLower4 = groupLowerClaw(4);
-  clawPivot4.add(clawLower4);
-  claw.add(clawUpper4);
-  claw.add(clawPivot4);
-  clawPivot4.position.set(0, 0, 1 * UNIT);
+  clawPivot4.add(createClawUpper(upperClawVals4));
+
+  aux4 = new THREE.Group();
+  aux4.add(clawPivot4);
+  aux4.position.set(0, 0, 0.5 * UNIT);
+
+  lowerClawPivot4 = new THREE.Group();
+  lowerClawPivot4.add(groupLowerClaw(4));
+
+  auxaux4 = new THREE.Group();
+  auxaux4.add(lowerClawPivot4);
+  auxaux4.position.set(0, 0, 0.5 * UNIT);
+  aux4.add(auxaux4);
+
+  claw4.add(aux4);
+  claw.add(claw4);
 
   setPosition(claw, clawStructureVals);
-
   return claw;
 }
 
@@ -1264,10 +1334,16 @@ function update() {
   }
 
   rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
-  rotateObject(clawLower1, clawRotation1, AXIS.Z);
-  rotateObject(clawLower2, clawRotation2, AXIS.Z);
-  rotateObject(clawLower3, clawRotation1, AXIS.X);
-  rotateObject(clawLower4, clawRotation2, AXIS.X);
+
+  rotateObject(aux1, clawRotation1, AXIS.Z);
+  rotateObject(auxaux1, lowerClawRotation1, AXIS.Z);
+  rotateObject(aux2, clawRotation2, AXIS.Z);
+  rotateObject(auxaux2, lowerClawRotation2, AXIS.Z);
+  rotateObject(aux3, clawRotation1, AXIS.X);
+  rotateObject(auxaux3, lowerClawRotation1, AXIS.X);
+  rotateObject(aux4, clawRotation2, AXIS.X);
+  rotateObject(auxaux4, lowerClawRotation2, AXIS.X);
+
   translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
 }
 
@@ -1410,11 +1486,15 @@ function onKeyDown(e) {
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
+      lowerClawRotation1.rotationDirection = 1;
+      lowerClawRotation2.rotationDirection = -1;
       clawRotation1.rotationDirection = 1;
       clawRotation2.rotationDirection = -1;
       break;
     case 70 || 102: // F or f
       makeButtonActive("F");
+      lowerClawRotation1.rotationDirection = -1;
+      lowerClawRotation2.rotationDirection = 1;
       clawRotation1.rotationDirection = -1;
       clawRotation2.rotationDirection = 1;
       break;
@@ -1492,12 +1572,16 @@ function onKeyUp(e) {
 
     case 82 || 114: // R or r
       makeButtonInactive("R");
+      lowerClawRotation1.rotationDirection = 0;
+      lowerClawRotation2.rotationDirection = 0;
       clawRotation1.rotationDirection = 0;
       clawRotation2.rotationDirection = 0;
       break;
 
     case 70 || 102: // F or f
       makeButtonInactive("F");
+      lowerClawRotation1.rotationDirection = 0;
+      lowerClawRotation2.rotationDirection = 0;
       clawRotation1.rotationDirection = 0;
       clawRotation2.rotationDirection = 0;
       break;
