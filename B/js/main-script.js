@@ -538,7 +538,7 @@ const clawRotation2 = {
 
 const trolleyClawStructureTranslation = {
   step: 0.5 * UNIT,
-  min: 2 * UNIT,
+  min: 2.7 * UNIT,
   max: 12 * UNIT,
   translationDirection: 0,
 };
@@ -721,8 +721,12 @@ function resetSteps() {
   upperStructure.userData.step = 0;
 }
 
-function myClamp(value, min, max) {
+function myClamp(value, min, max, infinite) {
   "use strict";
+
+  if (infinite) {
+    return value;
+  }
 
   if (value < min) {
     return min;
@@ -735,7 +739,7 @@ function myClamp(value, min, max) {
   return value;
 }
 
-function rotateObject(object, rotationVals, axis) {
+function rotateObject(object, rotationVals, axis, infinite) {
   "use strict";
 
   switch (axis) {
@@ -743,7 +747,8 @@ function rotateObject(object, rotationVals, axis) {
       object.rotation.x = myClamp(
         object.rotation.x + rotationVals.rotationDirection * rotationVals.step * delta,
         rotationVals.min,
-        rotationVals.max
+        rotationVals.max,
+        infinite,
       );
       break;
 
@@ -751,7 +756,8 @@ function rotateObject(object, rotationVals, axis) {
       object.rotation.y = myClamp(
         object.rotation.y + rotationVals.rotationDirection * rotationVals.step * delta,
         rotationVals.min,
-        rotationVals.max
+        rotationVals.max,
+        infinite,
       );
       break;
 
@@ -759,7 +765,8 @@ function rotateObject(object, rotationVals, axis) {
       object.rotation.z = myClamp(
         object.rotation.z + rotationVals.rotationDirection * rotationVals.step * delta,
         rotationVals.min,
-        rotationVals.max
+        rotationVals.max,
+        infinite,
       );
       break;
 
@@ -1325,16 +1332,16 @@ function update() {
     return;
   }
 
-  rotateObject(upperStructure, upperStructureRotation, AXIS.Y);
+  rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
 
-  rotateObject(clawUpper1, clawRotation1, AXIS.Z);
-  rotateObject(clawLower1, lowerClawRotation1, AXIS.Z);
-  rotateObject(clawUpper2, clawRotation2, AXIS.Z);
-  rotateObject(clawLower2, lowerClawRotation2, AXIS.Z);
-  rotateObject(clawUpper3, clawRotation1, AXIS.X);
-  rotateObject(clawLower3, lowerClawRotation1, AXIS.X);
-  rotateObject(clawUpper4, clawRotation2, AXIS.X);
-  rotateObject(clawLower4, lowerClawRotation2, AXIS.X);
+  rotateObject(clawUpper1, clawRotation1, AXIS.Z, false);
+  rotateObject(clawLower1, lowerClawRotation1, AXIS.Z, false);
+  rotateObject(clawUpper2, clawRotation2, AXIS.Z, false);
+  rotateObject(clawLower2, lowerClawRotation2, AXIS.Z, false);
+  rotateObject(clawUpper3, clawRotation1, AXIS.X, false);
+  rotateObject(clawLower3, lowerClawRotation1, AXIS.X, false);
+  rotateObject(clawUpper4, clawRotation2, AXIS.X, false);
+  rotateObject(clawLower4, lowerClawRotation2, AXIS.X, false);
 
   translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
   translateObject(cableClaw, cableClawTranslation, 0, AXIS.Y);
