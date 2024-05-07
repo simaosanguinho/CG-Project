@@ -225,10 +225,11 @@ const trolleyVals = {
 const cableVals = {
   width: 0.2 * UNIT,
   depth: 0.2 * UNIT,
-  height: 5.7 * UNIT,
+  height: 13 * UNIT,
   positionX: 0 * UNIT,
-  positionY: -3 * UNIT,
+  positionY: -6.6 * UNIT,
   positionZ: 0 * UNIT,
+  scale: 0.45,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
@@ -550,6 +551,27 @@ const cableClawTranslation = {
   translationDirection: 0,
 };
 
+const cableScale = {
+  step: 0.019,
+  min: 0.2,
+  max: 1,
+  scaleDirection: 0,
+};
+
+const cableTranslation = {
+  step: 0.5 * UNIT,
+  min: 0 * UNIT,
+  max: 0 * UNIT,
+  translationDirection: 0,
+};
+
+const clawTranslation = {
+  step: 0.25 * UNIT,
+  min: -13 * UNIT,
+  max: -2.5 * UNIT,
+  translationDirection: 0,
+};
+
 
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
@@ -715,6 +737,19 @@ function setPosition(object, vals) {
   object.position.set(vals.positionX, vals.positionY, vals.positionZ);
 }
 
+function setScaleOnAxis(object, vals, axis) {
+  "use strict";
+  if (axis === AXIS.Y) {
+    object.scale.y = vals;
+  }
+  if (axis === AXIS.X) {
+    object.scale.x = vals;
+  }
+  if (axis === AXIS.Z) {
+    object.scale.z = vals;
+  }
+}
+
 function resetSteps() {
   "use strict";
 
@@ -808,6 +843,25 @@ function translateObject(object, objectValues, offset, axis) {
       console.log("Invalid axis");
   }
 }
+
+function scaleObject(object, scaleValues, axis) {
+  "use strict";
+
+  switch (axis) {
+    case AXIS.Y:
+      if (scaleValues.scaleDirection === -1) {  // scale down
+        object.scale.y = Math.max(object.scale.y - scaleValues.step * delta, scaleValues.min);
+        break;
+      }
+      if (scaleValues.scaleDirection === 1) { // scale up
+        object.scale.y = Math.min(object.scale.y + scaleValues.step * delta, scaleValues.max);
+        break;
+      }
+      break;
+    }
+}
+
+  
 
 function getObjectsToUpdate() {
   return objectsToUpdate;
@@ -1020,6 +1074,7 @@ function createTrolleyClawStructure() {
   const trolley = createTrolley();
   cableClaw = new THREE.Group();
   const cable = createCable();
+  setScaleOnAxis(cable, cableVals.scale, AXIS.Y);
   const claw = createClaw();
   cableClaw.add(cable);
   cableClaw.add(claw);
@@ -1337,7 +1392,8 @@ function update() {
   rotateObject(clawLower4, lowerClawRotation2, AXIS.X);
 
   translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
-  translateObject(cableClaw, cableClawTranslation, 0, AXIS.Y);
+  scaleObject(cable, cableScale, AXIS.Y);
+  translateObject(claw, clawTranslation, 0, AXIS.Y);
 }
 
 /////////////
@@ -1469,12 +1525,16 @@ function onKeyDown(e) {
       trolleyClawStructureTranslation.translationDirection = -1;
       break;
     case 69 || 101: // E or e
-      makeButtonActive("E");
-      cableClawTranslation.translationDirection = 1;
+      makeButtonActive("E"); // up
+      cableTranslation.translationDirection = -1;
+      clawTranslation.translationDirection = -1;
+      cableScale.scaleDirection = -1;
       break;
     case 68 || 100: // D or d
-      makeButtonActive("D");
-      cableClawTranslation.translationDirection = -1;
+      makeButtonActive("D");  // down
+      cableTranslation.translationDirection = 1;
+      clawTranslation.translationDirection = 1;
+      cableScale.scaleDirection = 1;
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
@@ -1554,12 +1614,16 @@ function onKeyUp(e) {
 
     case 69 || 101: // E or e
       makeButtonInactive("E");
-      cableClawTranslation.translationDirection = 0;
+      cableTranslation.translationDirection = 0;
+      clawTranslation.translationDirection = 0;
+      cableScale.scaleDirection = 0;
       break;
 
     case 68 || 100: // D or d
       makeButtonInactive("D");
-      cableClawTranslation.translationDirection = 0;
+      cableTranslation.translationDirection = 0;
+      clawTranslation.translationDirection = 0;
+      cableScale.scaleDirection = 0;
       break;
 
     case 82 || 114: // R or r
