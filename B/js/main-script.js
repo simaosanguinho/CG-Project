@@ -543,6 +543,14 @@ const trolleyClawStructureTranslation = {
   translationDirection: 0,
 };
 
+const cableClawTranslation = {
+  step: 0.5 * UNIT,
+  min: -7 * UNIT,
+  max: 5 * UNIT,
+  translationDirection: 0,
+};
+
+
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
@@ -553,6 +561,7 @@ let lowerClawPivot1, lowerClawPivot2, lowerClawPivot3, lowerClawPivot4;
 let upperClawPivot1, upperClawPivot2, upperClawPivot3, upperClawPivot4;
 let clawUpper1, clawUpper2, clawUpper3, clawUpper4;
 let clawLower1, clawLower2, clawLower3, clawLower4;
+let cableClaw;
 let claw, claw1, claw2, claw3, claw4;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
@@ -1009,12 +1018,16 @@ function createTrolleyClawStructure() {
 
   trolleyClawStructure = new THREE.Group();
   const trolley = createTrolley();
+  cableClaw = new THREE.Group();
   const cable = createCable();
   const claw = createClaw();
+  cableClaw.add(cable);
+  cableClaw.add(claw);
+
+
 
   trolleyClawStructure.add(trolley);
-  trolleyClawStructure.add(cable);
-  trolleyClawStructure.add(claw);
+  trolleyClawStructure.add(cableClaw);
 
   setPosition(trolleyClawStructure, trolleyClawStructureVals);
 
@@ -1324,6 +1337,7 @@ function update() {
   rotateObject(clawLower4, lowerClawRotation2, AXIS.X);
 
   translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
+  translateObject(cableClaw, cableClawTranslation, 0, AXIS.Y);
 }
 
 /////////////
@@ -1456,9 +1470,11 @@ function onKeyDown(e) {
       break;
     case 69 || 101: // E or e
       makeButtonActive("E");
+      cableClawTranslation.translationDirection = 1;
       break;
     case 68 || 100: // D or d
       makeButtonActive("D");
+      cableClawTranslation.translationDirection = -1;
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
@@ -1538,10 +1554,12 @@ function onKeyUp(e) {
 
     case 69 || 101: // E or e
       makeButtonInactive("E");
+      cableClawTranslation.translationDirection = 0;
       break;
 
     case 68 || 100: // D or d
       makeButtonInactive("D");
+      cableClawTranslation.translationDirection = 0;
       break;
 
     case 82 || 114: // R or r
