@@ -13,7 +13,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#344c5e"; // #eaf6ff
+const backgroundColor = "#eaf6ff"; // #eaf6ff
 
 // Background color for dark mode
 const backgroundColorDark = "#344c5e";
