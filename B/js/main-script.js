@@ -118,7 +118,7 @@ const cameraValues = [
   [0, 1000, 0],
   [2000, 1000, 3000],
   [1000, 1000, 1000],
-  [500, 2000, 2000],
+  [700, 700, 700],
 ];
 1;
 // REMOVE
@@ -147,7 +147,7 @@ const baseVals = {
   positionY: 0.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }), //transparent: true, opacity: 0.5,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const towerVals = {
@@ -589,9 +589,10 @@ function createScene() {
 //////////////////////
 function createCameras() {
   "use strict";
-  cameraValues.forEach((cameraValue) => {
-    createOrtographicCamera(cameraValue);
-  });
+  createOrtographicCamera(cameraValues[0]);
+  createOrtographicCamera(cameraValues[1]);
+  createOrtographicCamera(cameraValues[2]);
+  createOrtographicCamera(cameraValues[3]);
   createPrespectiveCamera(cameraValues[4]);
   createPrespectiveCamera(cameraValues[5]);
 }
