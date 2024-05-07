@@ -1456,12 +1456,9 @@ function onKeyDown(e) {
       break;
     case 69 || 101: // E or e
       makeButtonActive("E");
-      climbClaw();
-
       break;
     case 68 || 100: // D or d
       makeButtonActive("D");
-      lowerClaw();
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
@@ -1541,12 +1538,10 @@ function onKeyUp(e) {
 
     case 69 || 101: // E or e
       makeButtonInactive("E");
-      climbClaw();
       break;
 
     case 68 || 100: // D or d
       makeButtonInactive("D");
-      lowerClaw();
       break;
 
     case 82 || 114: // R or r
@@ -1632,20 +1627,4 @@ function updateBackgroundColor() {
     scene.background = new THREE.Color(backgroundColor);
     document.body.style.backgroundColor = backgroundColor;
   }
-}
-
-function climbClaw() {
-  "use strict";
-  let newYClaw = claw.position.y + 0.1 * UNIT;
-  let newYCable = cable.position.y + 0.1 * UNIT;
-  claw.position.y = Math.min(newYClaw, 5 * UNIT);
-  cable.position.y = Math.min(newYCable, 5 * UNIT);
-}
-
-function lowerClaw() {
-  "use strict";
-  let newYClaw = claw.position.y - 0.1 * UNIT;
-  let newYCable = cable.position.y - 0.1 * UNIT;
-  claw.position.y = Math.max(newYClaw, -7.5 * UNIT);
-  cable.position.y = Math.max(newYCable, -7.5 * UNIT);
 }
