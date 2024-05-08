@@ -589,6 +589,7 @@ let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
 let isDarkMode = false;
+let qPressed = false, aPressed = false, wPressed = false, sPressed = false, ePressed = false, dPressed = false, rPressed = false, fPressed = false;
 const darkModeButton = document.getElementById("darkModeButton");
 
 /////////////////////
@@ -1488,6 +1489,16 @@ function onResize() {
 ///////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
+
+function setMotionDirection(currentDir, dir) {
+  "use strict";
+  if (currentDir == -dir) {
+    return 0;
+  } else {
+    return dir;
+  }
+}
+
 function onKeyDown(e) {
   "use strict";
 
@@ -1524,45 +1535,95 @@ function onKeyDown(e) {
 
     case 81 || 113: // Q or q
       makeButtonActive("Q");
-      upperStructureRotation.rotationDirection = -1;
+      if(aPressed) {
+        upperStructureRotation.rotationDirection = 0;
+      } else {
+        upperStructureRotation.rotationDirection = 1;
+      }
+      qPressed = true;
       break;
     case 65 || 97: // A or a
       makeButtonActive("A");
-      upperStructureRotation.rotationDirection = 1;
+      if(qPressed) {
+        upperStructureRotation.rotationDirection = 0;
+      } else {
+        upperStructureRotation.rotationDirection = -1;
+      }
+      aPressed = true;
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
-      trolleyClawStructureTranslation.translationDirection = 1;
+      if(sPressed) {
+        trolleyClawStructureTranslation.translationDirection = 0;
+      } else {
+        trolleyClawStructureTranslation.translationDirection = -1;
+      }
+      wPressed = true;
       break;
     case 83 || 115: // S or s
       makeButtonActive("S");
-      trolleyClawStructureTranslation.translationDirection = -1;
+      if(wPressed) {
+        trolleyClawStructureTranslation.translationDirection = 0;
+      } else {
+        trolleyClawStructureTranslation.translationDirection = 1;
+      }
+      sPressed = true;
       break;
     case 69 || 101: // E or e
       makeButtonActive("E"); // up
-      cableTranslation.translationDirection = -1;
-      clawTranslation.translationDirection = -1;
-      cableScale.scaleDirection = -1;
+      if(dPressed) {
+        cableTranslation.translationDirection = 0;
+        clawTranslation.translationDirection = 0;
+        cableScale.scaleDirection = 0;
+      } else {
+        cableTranslation.translationDirection = -1;
+        clawTranslation.translationDirection = -1;
+        cableScale.scaleDirection = -1;
+      }
+      ePressed = true;
       break;
     case 68 || 100: // D or d
       makeButtonActive("D");  // down
-      cableTranslation.translationDirection = 1;
-      clawTranslation.translationDirection = 1;
-      cableScale.scaleDirection = 1;
+      if(ePressed) {
+        cableTranslation.translationDirection = 0;
+        clawTranslation.translationDirection = 0;
+        cableScale.scaleDirection = 0;
+      } else {
+        cableTranslation.translationDirection = 1;
+        clawTranslation.translationDirection = 1;
+        cableScale.scaleDirection = 1;
+      }
+      dPressed = true;
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
-      lowerClawRotation1.rotationDirection = 1;
-      lowerClawRotation2.rotationDirection = -1;
-      clawRotation1.rotationDirection = 1;
-      clawRotation2.rotationDirection = -1;
+      if(fPressed) {
+        lowerClawRotation1.rotationDirection = 0;
+        lowerClawRotation2.rotationDirection = 0;
+        clawRotation1.rotationDirection = 0;
+        clawRotation2.rotationDirection = 0;
+      } else {
+        lowerClawRotation1.rotationDirection = 1;
+        lowerClawRotation2.rotationDirection = -1;
+        clawRotation1.rotationDirection = 1;
+        clawRotation2.rotationDirection = -1;
+      }
+      rPressed = true;
       break;
     case 70 || 102: // F or f
       makeButtonActive("F");
-      lowerClawRotation1.rotationDirection = -1;
-      lowerClawRotation2.rotationDirection = 1;
-      clawRotation1.rotationDirection = -1;
-      clawRotation2.rotationDirection = 1;
+      if(rPressed) {
+        lowerClawRotation1.rotationDirection = 0;
+        lowerClawRotation2.rotationDirection = 0;
+        clawRotation1.rotationDirection = 0;
+        clawRotation2.rotationDirection = 0;
+      } else {
+        lowerClawRotation1.rotationDirection = -1;
+        lowerClawRotation2.rotationDirection = 1;
+        clawRotation1.rotationDirection = -1;
+        clawRotation2.rotationDirection = 1;
+      }
+      fPressed = true;
       break;
     case 55: // 7
       isWireframe = !isWireframe;
@@ -1608,52 +1669,102 @@ function onKeyUp(e) {
 
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
-      upperStructureRotation.rotationDirection = 0;
+      if(aPressed) {
+        upperStructureRotation.rotationDirection = -1;
+      } else {
+        upperStructureRotation.rotationDirection = 0;
+      }
+      qPressed = false;
       break;
 
       case 65 || 97: // A or a
       makeButtonInactive("A");
-      upperStructureRotation.rotationDirection = 0;
+      if(qPressed) {
+        upperStructureRotation.rotationDirection = 1;
+      } else {
+        upperStructureRotation.rotationDirection = 0;
+      }
+      aPressed = false;
       break;
 
     case 87 || 119: // W or w
       makeButtonInactive("W");
-      trolleyClawStructureTranslation.translationDirection = 0;
+      if(sPressed) {
+        trolleyClawStructureTranslation.translationDirection = -1;
+      } else {
+        trolleyClawStructureTranslation.translationDirection = 0;
+      } 
+      wPressed = false;
       break;
 
     case 83 || 115: // S or s
       makeButtonInactive("S");
-      trolleyClawStructureTranslation.translationDirection = 0;
+      if(wPressed) {
+        trolleyClawStructureTranslation.translationDirection = 1;
+      } else {
+        trolleyClawStructureTranslation.translationDirection = 0;
+      }
+      sPressed = false;
       break;
 
     case 69 || 101: // E or e
       makeButtonInactive("E");
-      cableTranslation.translationDirection = 0;
-      clawTranslation.translationDirection = 0;
-      cableScale.scaleDirection = 0;
+      if(dPressed) {
+        cableTranslation.translationDirection = 1;
+        clawTranslation.translationDirection = 1;
+        cableScale.scaleDirection = 1;
+      } else {
+        cableTranslation.translationDirection = 0;
+        clawTranslation.translationDirection = 0;
+        cableScale.scaleDirection = 0;
+      }
+      ePressed = false;
       break;
 
     case 68 || 100: // D or d
       makeButtonInactive("D");
-      cableTranslation.translationDirection = 0;
-      clawTranslation.translationDirection = 0;
-      cableScale.scaleDirection = 0;
+      if(ePressed) {
+        cableTranslation.translationDirection = -1;
+        clawTranslation.translationDirection = -1;
+        cableScale.scaleDirection = -1;
+      } else {
+        cableTranslation.translationDirection = 0;
+        clawTranslation.translationDirection = 0;
+        cableScale.scaleDirection = 0;
+      }
+      dPressed = false;
       break;
 
     case 82 || 114: // R or r
       makeButtonInactive("R");
-      lowerClawRotation1.rotationDirection = 0;
-      lowerClawRotation2.rotationDirection = 0;
-      clawRotation1.rotationDirection = 0;
-      clawRotation2.rotationDirection = 0;
+      if(fPressed) {
+        lowerClawRotation1.rotationDirection = 1;
+        lowerClawRotation2.rotationDirection = -1;
+        clawRotation1.rotationDirection = 1;
+        clawRotation2.rotationDirection = -1;
+      } else {
+        lowerClawRotation1.rotationDirection = 0;
+        lowerClawRotation2.rotationDirection = 0;
+        clawRotation1.rotationDirection = 0;
+        clawRotation2.rotationDirection = 0;
+      }
+      rPressed = false;
       break;
 
     case 70 || 102: // F or f
-      makeButtonInactive("F");
-      lowerClawRotation1.rotationDirection = 0;
-      lowerClawRotation2.rotationDirection = 0;
-      clawRotation1.rotationDirection = 0;
-      clawRotation2.rotationDirection = 0;
+      makeButtonInactive("F");  
+      if(rPressed) {
+        lowerClawRotation1.rotationDirection = -1;
+        lowerClawRotation2.rotationDirection = 1;
+        clawRotation1.rotationDirection = -1;
+        clawRotation2.rotationDirection = 1;
+      } else {
+        lowerClawRotation1.rotationDirection = 0;
+        lowerClawRotation2.rotationDirection = 0;
+        clawRotation1.rotationDirection = 0;
+        clawRotation2.rotationDirection = 0;
+      }
+      fPressed = false;
       break;
     case 55: // 7
       makeButtonInactive("7");
