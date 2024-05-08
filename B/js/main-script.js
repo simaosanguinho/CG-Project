@@ -579,10 +579,10 @@ const clawTranslation = {
 const cameras = [];
 let objectsToUpdate = [];
 let upperStructure, cable, trolleyClawStructure;
-let lowerClawPivot1, lowerClawPivot2, lowerClawPivot3, lowerClawPivot4;
-let upperClawPivot1, upperClawPivot2, upperClawPivot3, upperClawPivot4;
-let clawUpper1, clawUpper2, clawUpper3, clawUpper4;
 let clawLower1, clawLower2, clawLower3, clawLower4;
+let clawUpper1, clawUpper2, clawUpper3, clawUpper4;
+let clawUpperPivot1, clawUpperPivot2, clawUpperPivot3, clawUpperPivot4;
+let clawLowerPivot1, clawLowerPivot2, clawLowerPivot3, clawLowerPivot4;
 let cableClaw;
 let claw, claw1, claw2, claw3, claw4;
 let currentCamera;
@@ -1010,71 +1010,71 @@ function createClaw() {
   /* CLAW 1 */
 
   claw1 = new THREE.Group();
-  upperClawPivot1 = new THREE.Group();
-  upperClawPivot1.add(createClawUpper(upperClawVals1));
   clawUpper1 = new THREE.Group();
-  clawUpper1.add(upperClawPivot1);
-  clawUpper1.position.set(0.5 * UNIT, 0, 0);
-  lowerClawPivot1 = new THREE.Group();
-  lowerClawPivot1.add(groupLowerClaw(1));
+  clawUpper1.add(createClawUpper(upperClawVals1));
+  clawUpperPivot1 = new THREE.Group();
+  clawUpperPivot1.add(clawUpper1);
+  clawUpperPivot1.position.set(0.5 * UNIT, 0, 0);
   clawLower1 = new THREE.Group();
-  clawLower1.add(lowerClawPivot1);
-  clawLower1.position.set(0.5 * UNIT, 0, 0);
-  clawUpper1.add(clawLower1);
-  claw1.add(clawUpper1);
+  clawLower1.add(groupLowerClaw(1));
+  clawLowerPivot1 = new THREE.Group();
+  clawLowerPivot1.add(clawLower1);
+  clawLowerPivot1.position.set(0.5 * UNIT, 0, 0);
+  clawUpperPivot1.add(clawLowerPivot1);
+  claw1.add(clawUpperPivot1);
   claw.add(claw1);
 
   /* CLAW 2 */
 
   claw2 = new THREE.Group();
 
-  upperClawPivot2 = new THREE.Group();
-  upperClawPivot2.add(createClawUpper(upperClawVals2));
   clawUpper2 = new THREE.Group();
-  clawUpper2.add(upperClawPivot2);
-  clawUpper2.position.set(-0.5 * UNIT, 0, 0);
-  lowerClawPivot2 = new THREE.Group();
-  lowerClawPivot2.add(groupLowerClaw(2));
+  clawUpper2.add(createClawUpper(upperClawVals2));
+  clawUpperPivot2 = new THREE.Group();
+  clawUpperPivot2.add(clawUpper2);
+  clawUpperPivot2.position.set(-0.5 * UNIT, 0, 0);
   clawLower2 = new THREE.Group();
-  clawLower2.add(lowerClawPivot2);
-  clawLower2.position.set(-0.5 * UNIT, 0, 0);
-  clawUpper2.add(clawLower2);
-  claw2.add(clawUpper2);
+  clawLower2.add(groupLowerClaw(2));
+  clawLowerPivot2 = new THREE.Group();
+  clawLowerPivot2.add(clawLower2);
+  clawLowerPivot2.position.set(-0.5 * UNIT, 0, 0);
+  clawUpperPivot2.add(clawLowerPivot2);
+  claw2.add(clawUpperPivot2);
   claw.add(claw2);
 
   /* CLAW 3 */
 
   claw3 = new THREE.Group();
-  upperClawPivot3 = new THREE.Group();
-  upperClawPivot3.add(createClawUpper(upperClawVals3));
   clawUpper3 = new THREE.Group();
-  clawUpper3.add(upperClawPivot3);
-  clawUpper3.position.set(0, 0, -0.5 * UNIT);
-  lowerClawPivot3 = new THREE.Group();
-  lowerClawPivot3.add(groupLowerClaw(3));
+  clawUpper3.add(createClawUpper(upperClawVals3));
+  clawUpperPivot3 = new THREE.Group();
+  clawUpperPivot3.add(clawUpper3);
+  clawUpperPivot3.position.set(0, 0, -0.5 * UNIT);
   clawLower3 = new THREE.Group();
-  clawLower3.add(lowerClawPivot3);
-  clawLower3.position.set(0, 0, -0.5 * UNIT);
-  clawUpper3.add(clawLower3);
+  clawLower3.add(groupLowerClaw(3));
+  clawLowerPivot3 = new THREE.Group();
+  clawLowerPivot3.add(clawLower3);
+  clawLowerPivot3.position.set(0, 0, -0.5 * UNIT);
+  clawUpperPivot3.add(clawLowerPivot3);
 
-  claw3.add(clawUpper3);
+  claw3.add(clawUpperPivot3);
   claw.add(claw3);
 
   /* CLAW 4 */
 
   claw4 = new THREE.Group();
-  upperClawPivot4 = new THREE.Group();
-  upperClawPivot4.add(createClawUpper(upperClawVals4));
   clawUpper4 = new THREE.Group();
-  clawUpper4.add(upperClawPivot4);
-  clawUpper4.position.set(0, 0, 0.5 * UNIT);
-  lowerClawPivot4 = new THREE.Group();
-  lowerClawPivot4.add(groupLowerClaw(4));
+  clawUpper4.add(createClawUpper(upperClawVals4));
+  clawUpperPivot4 = new THREE.Group();
+  clawUpperPivot4.add(clawUpper4);
+  clawUpperPivot4.position.set(0, 0, 0.5 * UNIT);
   clawLower4 = new THREE.Group();
-  clawLower4.add(lowerClawPivot4);
-  clawLower4.position.set(0, 0, 0.5 * UNIT);
-  clawUpper4.add(clawLower4);
-  claw4.add(clawUpper4);
+  clawLower4.add(groupLowerClaw(4));
+  clawLowerPivot4 = new THREE.Group();
+  clawLowerPivot4.add(clawLower4);
+  clawLowerPivot4.position.set(0, 0, 0.5 * UNIT);
+  clawUpperPivot4.add(clawLowerPivot4);
+  claw4.add(clawUpperPivot4);
   claw.add(claw4);
 
   setPosition(claw, clawStructureVals);
@@ -1396,14 +1396,14 @@ function update() {
 
   rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
 
-  rotateObject(clawUpper1, clawRotation1, AXIS.Z, false);
-  rotateObject(clawLower1, lowerClawRotation1, AXIS.Z, false);
-  rotateObject(clawUpper2, clawRotation2, AXIS.Z, false);
-  rotateObject(clawLower2, lowerClawRotation2, AXIS.Z, false);
-  rotateObject(clawUpper3, clawRotation1, AXIS.X, false);
-  rotateObject(clawLower3, lowerClawRotation1, AXIS.X, false);
-  rotateObject(clawUpper4, clawRotation2, AXIS.X, false);
-  rotateObject(clawLower4, lowerClawRotation2, AXIS.X, false);
+  rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
+  rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+  rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
+  rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+  rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
+  rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+  rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
+  rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
 
   translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
   scaleObject(cable, cableScale, AXIS.Y);
@@ -1611,7 +1611,7 @@ function onKeyUp(e) {
       upperStructureRotation.rotationDirection = 0;
       break;
 
-    case 65 || 97: // A or a
+      case 65 || 97: // A or a
       makeButtonInactive("A");
       upperStructureRotation.rotationDirection = 0;
       break;
