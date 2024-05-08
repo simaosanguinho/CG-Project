@@ -118,7 +118,7 @@ const cameraValues = [
   [0, 1000, 0],
   [2000, 1000, 3000],
   [1000, 1000, 1000],
-  [700, 700, 700],
+  [0, 0, 0],
 ];
 1;
 // REMOVE
@@ -615,11 +615,10 @@ function createCameras() {
   createOrtographicCamera(cameraValues[1]);
   createOrtographicCamera(cameraValues[2]);
   createOrtographicCamera(cameraValues[3]);
-  createPrespectiveCamera(cameraValues[4]);
-  createPrespectiveCamera(cameraValues[5]);
+  createPrespectiveCamera(cameraValues[4], null);
 }
 
-function createPrespectiveCamera(cameraValue) {
+function createPrespectiveCamera(cameraValue, location) {
   "use strict";
   camera = new THREE.PerspectiveCamera(
     fov,
@@ -633,6 +632,12 @@ function createPrespectiveCamera(cameraValue) {
   camera.lookAt(scene.position);
 
   cameras.push(camera);
+
+  // TODO: if there is a location besides origin - CAMERA 6
+  if (location) {
+    location.add(camera);
+    camera.lookAt(0, -1, 0);
+  }
 }
 
 function createOrtographicCamera(cameraValue) {
@@ -1000,6 +1005,7 @@ function createClaw() {
 
   const clawBlock = createClawBlock();
   claw.add(clawBlock);
+  createPrespectiveCamera(cameraValues[5], clawBlock);
 
   /* CLAW 1 */
 
