@@ -1738,10 +1738,10 @@ function onKeyUp(e) {
     case 82 || 114: // R or r
       makeButtonInactive("R");
       if(fPressed) {
-        lowerClawRotation1.rotationDirection = 1;
-        lowerClawRotation2.rotationDirection = -1;
-        clawRotation1.rotationDirection = 1;
-        clawRotation2.rotationDirection = -1;
+        lowerClawRotation1.rotationDirection = -1;
+        lowerClawRotation2.rotationDirection = 1;
+        clawRotation1.rotationDirection = -1;
+        clawRotation2.rotationDirection = 1;
       } else {
         lowerClawRotation1.rotationDirection = 0;
         lowerClawRotation2.rotationDirection = 0;
@@ -1754,10 +1754,10 @@ function onKeyUp(e) {
     case 70 || 102: // F or f
       makeButtonInactive("F");  
       if(rPressed) {
-        lowerClawRotation1.rotationDirection = -1;
-        lowerClawRotation2.rotationDirection = 1;
-        clawRotation1.rotationDirection = -1;
-        clawRotation2.rotationDirection = 1;
+        lowerClawRotation1.rotationDirection = 1;
+        lowerClawRotation2.rotationDirection = -1;
+        clawRotation1.rotationDirection = 1;
+        clawRotation2.rotationDirection = -1;
       } else {
         lowerClawRotation1.rotationDirection = 0;
         lowerClawRotation2.rotationDirection = 0;
