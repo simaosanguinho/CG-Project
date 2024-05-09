@@ -1534,6 +1534,7 @@ function init() {
   // add event listeners
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
+  window.addEventListener("resize", onResize);
 
   darkModeButton.addEventListener("click", toggleDarkMode);
 }
