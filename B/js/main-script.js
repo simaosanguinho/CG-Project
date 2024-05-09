@@ -120,17 +120,31 @@ const cameraValues = [
   [0, 0, 0],
 ];
 1;
-// REMOVE
-const colors = {
-  white: 0xffffff,
-  black: 0x000000,
-  red: 0xff0000,
-  green: 0x00ff00,
-  blue: 0x0000ff,
-  yellow: 0xffff00,
-  cyan: 0x00ffff,
-  magenta: 0xff00ff,
+
+const colorsRegular = {
+  white: 0xeff1f5,
+  black: 0x4c4f69,
+  red: 0xd20f39,
+  green: 0x40a02b,
+  blue: 0x1e66f5,
+  yellow: 0xdf8e1d,
+  cyan: 0x04a5e5,
+  magenta: 0xdd7878,
 };
+
+// saving my eyes
+const colorsDark = {
+  white: 0xbac2de,
+  black: 0x11111b,
+  red: 0x181825,
+  green: 0x1e1e2e,
+  blue: 0x313244,
+  yellow: 0x45475a,
+  cyan: 0x585b70,
+  magenta: 0x6c7086,
+};
+
+const colors = colorsRegular; // default colors
 
 const cranePosition = {
   positionX: 0 * UNIT,
@@ -146,7 +160,7 @@ const baseVals = {
   positionY: 0.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
 };
 
 const towerVals = {
@@ -201,7 +215,7 @@ const counterWeightVals = {
   positionY: 14.75 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
 
 const trolleyClawStructureVals = {
@@ -218,7 +232,7 @@ const trolleyVals = {
   positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
 };
 
 const cableVals = {
@@ -230,7 +244,7 @@ const cableVals = {
   positionZ: 0 * UNIT,
   scale: 0.45,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
 };
 
 const clawStructureVals = {
@@ -247,7 +261,7 @@ const clawBlockVals = {
   positionY: 0 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
 };
 
 const upperClawVals1 = {
@@ -277,7 +291,7 @@ const clawEdgeVals1 = {
   positionY: -0.1 * UNIT,
   positionZ: 0.25 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const upperClawVals2 = {
@@ -307,7 +321,7 @@ const clawEdgeVals2 = {
   positionY: -0.1 * UNIT,
   positionZ: -0.25 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const upperClawVals3 = {
@@ -337,7 +351,7 @@ const clawEdgeVals3 = {
   positionY: -0.1 * UNIT,
   positionZ: -0.5 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const upperClawVals4 = {
@@ -367,7 +381,7 @@ const clawEdgeVals4 = {
   positionY: -0.1 * UNIT,
   positionZ: 0.5 * UNIT,
   type: Primitives.PYRAMID,
-  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const frontPendantVals = {
@@ -378,7 +392,7 @@ const frontPendantVals = {
   positionY: 17.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
 };
 
 const rearPendantVals = {
@@ -389,7 +403,7 @@ const rearPendantVals = {
   positionY: 17.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
 };
 
 const binFirstWallVals = {
@@ -400,7 +414,7 @@ const binFirstWallVals = {
   positionY: 2 * UNIT,
   positionZ: 8 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
 const binSecondWallVals = {
@@ -411,7 +425,7 @@ const binSecondWallVals = {
   positionY: 2 * UNIT,
   positionZ: 6 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
 };
 
 const binThirdWallVals = {
@@ -422,7 +436,7 @@ const binThirdWallVals = {
   positionY: 2 * UNIT,
   positionZ: 8 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
 };
 
 const binFourthWallVals = {
@@ -433,7 +447,7 @@ const binFourthWallVals = {
   positionY: 2 * UNIT,
   positionZ: 10 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
 };
 
 const binBottomVals = {
@@ -444,7 +458,7 @@ const binBottomVals = {
   positionY: 0 * UNIT,
   positionZ: 8 * UNIT,
   type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  material: new THREE.MeshBasicMaterial({ color: colors.black }),
 };
 
 const cubeVals = {
