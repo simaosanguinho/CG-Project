@@ -1990,9 +1990,6 @@ function onKeyUp(e) {
   }
 }
 
-init();
-animate();
-
 ///////////////////////
 /* GOTO: Heads-Up Display  */
 ///////////////////////
@@ -2043,3 +2040,6 @@ function updateBackgroundColor() {
   scene.background = new THREE.Color(isDarkMode ? backgroundColorDark : backgroundColor);
   document.body.style.backgroundColor = isDarkMode ? backgroundColorDark : backgroundColor;
 }
+
+init();
+animate();
