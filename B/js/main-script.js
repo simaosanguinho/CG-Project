@@ -2042,11 +2042,6 @@ function updateToggleSwitch() {
 }
 
 function updateBackgroundColor() {
-  if (isDarkMode) {
-    scene.background = new THREE.Color(backgroundColorDark);
-    document.body.style.backgroundColor = backgroundColorDark;
-  } else {
-    scene.background = new THREE.Color(backgroundColor);
-    document.body.style.backgroundColor = backgroundColor;
-  }
+  scene.background = new THREE.Color(isDarkMode ? backgroundColorDark : backgroundColor);
+  document.body.style.backgroundColor = isDarkMode ? backgroundColorDark : backgroundColor;
 }
