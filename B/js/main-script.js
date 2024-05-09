@@ -221,7 +221,6 @@ const trolleyVals = {
   name: "trolley",
 };
 
-
 const cableVals = {
   width: 0.2 * UNIT,
   depth: 0.2 * UNIT,
@@ -235,7 +234,6 @@ const cableVals = {
   name: "cable",
 };
 
-
 const clawBlockVals = {
   width: 1 * UNIT,
   depth: 1 * UNIT,
@@ -247,7 +245,6 @@ const clawBlockVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
   name: "clawBlock",
 };
-
 
 const upperClawVals1 = {
   width: 0.5 * UNIT,
@@ -529,7 +526,6 @@ const trolleyClawStructureVals = {
   positionZ: 0 * UNIT,
 };
 
-
 const clawStructureVals = {
   positionX: 0 * UNIT,
   positionY: -6 * UNIT,
@@ -577,7 +573,6 @@ const trolleyClawStructureTranslation = {
   max: 12 * UNIT,
   translationDirection: 0,
 };
-
 
 const cableTranslation = {
   step: 0.5 * UNIT,
@@ -1652,10 +1647,18 @@ function animate() {
 function onResize() {
   "use strict";
   renderer.setSize(window.innerWidth, window.innerHeight);
-
   if (window.innerHeight > 0 && window.innerWidth > 0) {
-    currentCamera.aspect = window.innerWidth / window.innerHeight;
-    currentCamera.updateProjectionMatrix();
+    cameras.forEach((camera) => {
+      if (camera.isPerspectiveCamera) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+      } else {
+        camera.left = -window.innerWidth / 2;
+        camera.right = window.innerWidth / 2;
+        camera.top = window.innerHeight / 2;
+        camera.bottom = -window.innerHeight / 2;
+      }
+      camera.updateProjectionMatrix();
+    });
   }
 }
 
@@ -1961,8 +1964,12 @@ function updateToggleSwitch() {
 }
 
 function updateBackgroundColor() {
-  scene.background = new THREE.Color(isDarkMode ? backgroundColorDark : backgroundColor);
-  document.body.style.backgroundColor = isDarkMode ? backgroundColorDark : backgroundColor;
+  scene.background = new THREE.Color(
+    isDarkMode ? backgroundColorDark : backgroundColor
+  );
+  document.body.style.backgroundColor = isDarkMode
+    ? backgroundColorDark
+    : backgroundColor;
 }
 
 init();
