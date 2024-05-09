@@ -626,7 +626,8 @@ let randomCube,
   randomDodecahedron,
   randomIcosahedron,
   randomTorus,
-  randomTorusKnot;
+  randomTorusKnot,
+  bin;
 
 /////////////////////
 /* GOTO: CREATE SCENE(S) */
@@ -932,7 +933,7 @@ function createCrane() {
 function createBin() {
   "use strict";
 
-  let bin = new THREE.Group();
+  bin = new THREE.Group();
   const binFirstWall = createBinFirstWall();
   const binSecondWall = createBinSecondWall();
   const binThirdWall = createBinThirdWall();
@@ -1459,6 +1460,7 @@ function checkCollisionSphereMethod(object1, object2) {
       (object1Pos.z - object2Pos.z) ** 2
   ) {
     // collision detected
+    //isColliding = true;
   } else {
     // no collision
   }
@@ -1480,31 +1482,14 @@ function checkCollision(object1, object2) {
 function handleCollisions() {
   "use strict";
   const period = Math.PI * 2; // rotation period, use to compare angles above a full rotation (e.g. have 450 degrees == 90 degrees)
+  let angleDifference;
+  let angle;
   function mod(n, m) {
     return ((n % m) + m) % m;
   }
 
   switch (animationStage) {
-    case 0: // close claw if open
-      if (clawRotation1.rotationDirection === 0) {
-        clawRotation1.rotationDirection = -1;
-        clawRotation2.rotationDirection = 1;
-      }
-      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
-      // check if claw has been closed
-      if (clawUpperPivot1.rotation.z === -Math.PI / 3) {
-        clawRotation1.rotationDirection = 0;
-        animationStage = 1;
-      }
-      break;
-    case 1: // open claw if closed
+    case 0: // open claw if closed
       if (clawRotation1.rotationDirection === 0) {
         clawRotation1.rotationDirection = 1;
         clawRotation2.rotationDirection = -1;
@@ -1520,15 +1505,15 @@ function handleCollisions() {
       rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
       // check if claw has opened
       if (clawUpperPivot1.rotation.z === 0) {
-        animationStage = 2;
+        animationStage = 1;
         clawRotation1.rotationDirection = 0;
       }
       break;
-    case 2: // move upper structure to be aligned with the object randomCube
-      let angle = -Math.atan2(randomCube.position.z, randomCube.position.x);
+    case 1: // move upper structure to be aligned with the object randomCube
+      angle = -Math.atan2(randomCube.position.z, randomCube.position.x);
 
       // Calculate the angle difference in -MATH.PI to MATH.PI
-      let angleDifference =
+      angleDifference =
         angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
 
       upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
@@ -1536,12 +1521,96 @@ function handleCollisions() {
 
       if (Math.abs(angleDifference) < 0.01) {
         upperStructureRotation.rotationDirection = 0;
-        animationStage = 3;
+        animationStage = 2;
       }
 
       break;
+    case 2: // close claw if open
+      if (clawRotation1.rotationDirection === 0) {
+        clawRotation1.rotationDirection = -1;
+        clawRotation2.rotationDirection = 1;
+      }
+      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
+      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
+      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
+      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
+      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      // check if claw has been closed
+      if (clawUpperPivot1.rotation.z === -Math.PI / 3) {
+        clawRotation1.rotationDirection = 0;
+        animationStage = 3;
+      }
+      break;
 
-    case 3: // move trolley to the object randomCube
+    case 3: // move cable and claw up halfway
+      console.log("stage 3");
+      if (cableTranslation.translationDirection === 0) {
+        cableTranslation.translationDirection = -1;
+        clawTranslation.translationDirection = -1;
+        cableScale.scaleDirection = -1;
+
+      }
+      translateObject(
+        trolleyClawStructure,
+        trolleyClawStructureTranslation,
+        0,
+        AXIS.X
+      );
+      scaleObject(cable, cableScale, AXIS.Y);
+      translateObject(claw, clawTranslation, 0, AXIS.Y);
+      sceneObjects.get("cube").position.y = claw.position.y + 13.5 * UNIT;
+
+      // move on when cable is halfway
+      console.log(cable.scale.y);
+      if (cable.scale.y <= 0.5 && claw.position.y <= 0.5 * UNIT) {
+        cableTranslation.translationDirection = 0;
+        clawTranslation.translationDirection = 0;
+        cableScale.scaleDirection = 0;
+        animationStage = 4;
+      }
+      
+      break;
+      case 4: // move upperStructure to the bin
+        angle = -Math.atan2(binBottomVals.positionZ, binBottomVals.positionX);
+      
+        // Calculate the angle difference in -MATH.PI to MATH.PI
+        angleDifference =
+          angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
+      
+        upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
+        rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
+        let cube = sceneObjects.get("cube"); 
+        const cubePivot = new THREE.Object3D();
+
+        /* // Set the position of the pivot to the center of the cube
+        cubePivot.position.set(0, 0, 0);
+
+        // Add the cube as a child of the pivot
+        cubePivot.add(cube);
+
+        // Now, you can use cubePivot as the pivot point for rotation
+        // For example, rotating cubePivot will also rotate the cube around its center
+
+        // Add the pivot to the scene
+        scene.add(cubePivot);
+        sceneObjects.set("cubePivot", cubePivot);
+
+        // Rotate the pivot to make the cube follow upperStructure
+        let pivot = sceneObjects.get("cubePivot");
+        pivot.rotation.y = -upperStructure.rotation.y; */
+
+
+        if (Math.abs(angleDifference) < 0.01) {
+          upperStructureRotation.rotationDirection = 0;
+          animationStage = 5;
+        }
+        break;
+
+    case 5: // open claw
+      console.log("stage 5");
       break;
   }
 }
