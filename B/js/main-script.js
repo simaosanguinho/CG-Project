@@ -161,6 +161,7 @@ const baseVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
+  name: "base",
 };
 
 const towerVals = {
@@ -172,6 +173,7 @@ const towerVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  name: "tower",
 };
 
 const cabVals = {
@@ -183,6 +185,7 @@ const cabVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+  name: "cab",
 };
 
 const jibVals = {
@@ -194,6 +197,7 @@ const jibVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  name: "jib",
 };
 
 const upperTowerVals = {
@@ -205,6 +209,7 @@ const upperTowerVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  name: "upperTower",
 };
 
 const counterWeightVals = {
@@ -216,6 +221,7 @@ const counterWeightVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  name: "counterWeight",
 };
 
 const trolleyClawStructureVals = {
@@ -233,6 +239,7 @@ const trolleyVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  name: "trolley",
 };
 
 const cableVals = {
@@ -245,6 +252,7 @@ const cableVals = {
   scale: 0.45,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
+  name: "cable",
 };
 
 const clawStructureVals = {
@@ -262,6 +270,7 @@ const clawBlockVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
+  name: "clawBlock",
 };
 
 const upperClawVals1 = {
@@ -273,6 +282,7 @@ const upperClawVals1 = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  name: "upperClaw1",
 };
 
 const lowerClawVals1 = {
@@ -284,6 +294,7 @@ const lowerClawVals1 = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "lowerClaw1",
 };
 
 const clawEdgeVals1 = {
@@ -292,6 +303,7 @@ const clawEdgeVals1 = {
   positionZ: 0.25 * UNIT,
   type: Primitives.PYRAMID,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "clawEdge1",
 };
 
 const upperClawVals2 = {
@@ -303,6 +315,7 @@ const upperClawVals2 = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  name: "upperClaw2",
 };
 
 const lowerClawVals2 = {
@@ -314,6 +327,7 @@ const lowerClawVals2 = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "lowerClaw2",
 };
 
 const clawEdgeVals2 = {
@@ -322,6 +336,7 @@ const clawEdgeVals2 = {
   positionZ: -0.25 * UNIT,
   type: Primitives.PYRAMID,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "clawEdge2",
 };
 
 const upperClawVals3 = {
@@ -333,6 +348,7 @@ const upperClawVals3 = {
   positionZ: -0.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  name: "upperClaw3",
 };
 
 const lowerClawVals3 = {
@@ -344,6 +360,7 @@ const lowerClawVals3 = {
   positionZ: -0.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "lowerClaw3",
 };
 
 const clawEdgeVals3 = {
@@ -352,6 +369,7 @@ const clawEdgeVals3 = {
   positionZ: -0.5 * UNIT,
   type: Primitives.PYRAMID,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "clawEdge3",
 };
 
 const upperClawVals4 = {
@@ -363,6 +381,7 @@ const upperClawVals4 = {
   positionZ: 0.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
+  name: "upperClaw4",
 };
 
 const lowerClawVals4 = {
@@ -374,6 +393,7 @@ const lowerClawVals4 = {
   positionZ: 0.25 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "lowerClaw4",
 };
 
 const clawEdgeVals4 = {
@@ -382,6 +402,7 @@ const clawEdgeVals4 = {
   positionZ: 0.5 * UNIT,
   type: Primitives.PYRAMID,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "clawEdge4",
 };
 
 const frontPendantVals = {
@@ -393,6 +414,7 @@ const frontPendantVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
+  name: "frontPendant",
 };
 
 const rearPendantVals = {
@@ -404,6 +426,7 @@ const rearPendantVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
+  name: "rearPendant",
 };
 
 const binFirstWallVals = {
@@ -415,6 +438,7 @@ const binFirstWallVals = {
   positionZ: 8 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "binFirstWall",
 };
 
 const binSecondWallVals = {
@@ -426,6 +450,7 @@ const binSecondWallVals = {
   positionZ: 6 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  name: "binSecondWall",
 };
 
 const binThirdWallVals = {
@@ -437,6 +462,7 @@ const binThirdWallVals = {
   positionZ: 8 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "binThirdWall",
 };
 
 const binFourthWallVals = {
@@ -448,6 +474,7 @@ const binFourthWallVals = {
   positionZ: 10 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  name: "binFourthWall",
 };
 
 const binBottomVals = {
@@ -459,6 +486,7 @@ const binBottomVals = {
   positionZ: 8 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
+  name: "binBottom",
 };
 
 const cubeVals = {
@@ -470,6 +498,7 @@ const cubeVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.cyan }),
+  name: "cube",
 };
 
 const dodecahedronVals = {
@@ -479,6 +508,7 @@ const dodecahedronVals = {
   positionZ: 0 * UNIT,
   type: Primitives.DODECAHEDRON,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  name: "dodecahedron",
 };
 
 const icosahedronVals = {
@@ -488,6 +518,7 @@ const icosahedronVals = {
   positionZ: 0 * UNIT,
   type: Primitives.ICOSAHEDRON,
   material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+  name: "icosahedron",
 };
 
 const torusVals = {
@@ -500,6 +531,7 @@ const torusVals = {
   positionZ: 0 * UNIT,
   type: Primitives.TORUS,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "torus",
 };
 
 const torusKnotVals = {
@@ -512,6 +544,7 @@ const torusKnotVals = {
   positionZ: 0 * UNIT,
   type: Primitives.TORUS_KNOT,
   material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  name: "torusKnot",
 };
 
 // Adjust rotation speed
@@ -591,6 +624,7 @@ const clawTranslation = {
 //////////////////////
 const cameras = [];
 let objectsToUpdate = [];
+let sceneObjects = new Map();
 let upperStructure, cable, trolleyClawStructure;
 let clawLower1, clawLower2, clawLower3, clawLower4;
 let clawUpper1, clawUpper2, clawUpper3, clawUpper4;
@@ -756,6 +790,7 @@ function createObject(objectVals) {
     object.add(line); */
 
   objectsToUpdate.push(object);
+  sceneObjects.set(objectVals.name, object);
   return object;
 }
 
@@ -1380,7 +1415,69 @@ function randomizePosition(object) {
 /* GOTO: CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
+  ("use strict");
+  checkCollisionClawWithRandomObject();
+}
+
+function checkCollisionClawWithRandomObject() {
   "use strict";
+  let clawEdge4 = sceneObjects.get("clawEdge4");
+  let clawEdge3 = sceneObjects.get("clawEdge3");
+  let clawEdge2 = sceneObjects.get("clawEdge2");
+  let clawEdge1 = sceneObjects.get("clawEdge1");
+
+  let cube = sceneObjects.get("cube");
+  let dodecahedron = sceneObjects.get("dodecahedron");
+  let icosahedron = sceneObjects.get("icosahedron");
+  let torus = sceneObjects.get("torus");
+  let torusKnot = sceneObjects.get("torusKnot");
+
+  checkCollisionSphereMethod(clawEdge4, cube);
+  checkCollisionSphereMethod(clawEdge4, dodecahedron);
+  checkCollisionSphereMethod(clawEdge4, icosahedron);
+  checkCollisionSphereMethod(clawEdge4, torus);
+  checkCollisionSphereMethod(clawEdge4, torusKnot);
+
+  checkCollisionSphereMethod(clawEdge3, cube);
+  checkCollisionSphereMethod(clawEdge3, dodecahedron);
+  checkCollisionSphereMethod(clawEdge3, icosahedron);
+  checkCollisionSphereMethod(clawEdge3, torus);
+  checkCollisionSphereMethod(clawEdge3, torusKnot);
+
+  checkCollisionSphereMethod(clawEdge2, cube);
+  checkCollisionSphereMethod(clawEdge2, dodecahedron);
+  checkCollisionSphereMethod(clawEdge2, icosahedron);
+  checkCollisionSphereMethod(clawEdge2, torus);
+  checkCollisionSphereMethod(clawEdge2, torusKnot);
+
+  checkCollisionSphereMethod(clawEdge1, cube);
+  checkCollisionSphereMethod(clawEdge1, dodecahedron);
+  checkCollisionSphereMethod(clawEdge1, icosahedron);
+  checkCollisionSphereMethod(clawEdge1, torus);
+  checkCollisionSphereMethod(clawEdge1, torusKnot);
+}
+
+function checkCollisionSphereMethod(object1, object2) {
+  "use strict";
+  // get world position of the object
+  const object1Pos = new THREE.Vector3();
+  object1.getWorldPosition(object1Pos);
+  const object2Pos = new THREE.Vector3();
+  object2.getWorldPosition(object2Pos);
+
+  // compute bouding sphere
+  object1.children[0].geometry.computeBoundingSphere();
+  object2.children[0].geometry.computeBoundingSphere();
+
+  // get the radius of the bounding sphere
+  const radius1 = object1.children[0].geometry.boundingSphere.radius;
+  const radius2 = object2.children[0].geometry.boundingSphere.radius;
+
+  if ((radius1 + radius2)**2 >= (object1Pos.x - object2Pos.x)**2 + (object1Pos.y - object2Pos.y)**2 + (object1Pos.z - object2Pos.z)**2) {
+    console.log("COLLISION DETECTED");
+  } else {
+    console.log("NO COLLISION");
+  }
 }
 
 function checkCollision(object1, object2) {
@@ -1477,6 +1574,7 @@ function handleCollisions() {
 ////////////
 function update() {
   "use strict";
+  checkCollisions();
   if (isAnimating) {
     // checkCollisions();
     // handleCollisions();
