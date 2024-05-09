@@ -537,7 +537,7 @@ const clawRotation2 = {
 };
 
 const trolleyClawStructureTranslation = {
-  step: 0.5 * UNIT,
+  step: 0.1 * UNIT,
   min: 2.7 * UNIT,
   max: 12 * UNIT,
   translationDirection: 0,
@@ -551,7 +551,7 @@ const cableClawTranslation = {
 };
 
 const cableScale = {
-  step: 0.019,
+  step: 0.0095,
   min: 0.2,
   max: 1,
   scaleDirection: 0,
@@ -565,7 +565,7 @@ const cableTranslation = {
 };
 
 const clawTranslation = {
-  step: 0.25 * UNIT,
+  step: 0.125 * UNIT,
   min: -13 * UNIT,
   max: -2.5 * UNIT,
   translationDirection: 0,
