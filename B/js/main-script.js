@@ -1679,11 +1679,10 @@ function init() {
 
   render();
 
-  // add event listeners
+  //event listeners
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
   window.addEventListener("resize", onResize);
-
   darkModeButton.addEventListener("click", toggleDarkMode);
 }
 
@@ -2029,7 +2028,6 @@ function updateWireframe() {
 /////////////////////////
 /* GOTO: DARKMODE     */
 ///////////////////////
-darkModeButton.addEventListener("click", toggleDarkMode);
 
 function toggleDarkMode() {
   isDarkMode = !isDarkMode;
