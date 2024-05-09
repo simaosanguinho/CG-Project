@@ -549,7 +549,7 @@ const torusKnotVals = {
 
 // Adjust rotation speed
 const upperStructureRotation = {
-  step: rotationUnit/4,
+  step: rotationUnit / 4,
   min: -Math.PI / 2,
   max: Math.PI * 2,
   rotationDirection: 0,
@@ -618,7 +618,6 @@ const clawTranslation = {
   translationDirection: 0,
 };
 
-
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
@@ -636,11 +635,22 @@ let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
 let isDarkMode = false;
-let qPressed = false, aPressed = false, wPressed = false, sPressed = false, ePressed = false, dPressed = false, rPressed = false, fPressed = false;
+let qPressed = false,
+  aPressed = false,
+  wPressed = false,
+  sPressed = false,
+  ePressed = false,
+  dPressed = false,
+  rPressed = false,
+  fPressed = false;
 const darkModeButton = document.getElementById("darkModeButton");
 let isColliding = false;
 let animationStage = 0;
-let randomCube, randomDodecahedron, randomIcosahedron, randomTorus, randomTorusKnot;
+let randomCube,
+  randomDodecahedron,
+  randomIcosahedron,
+  randomTorus,
+  randomTorusKnot;
 
 /////////////////////
 /* GOTO: CREATE SCENE(S) */
@@ -689,9 +699,6 @@ function createPrespectiveCamera(cameraValue, location) {
     location.add(camera);
     camera.lookAt(0, -1, 0);
     // make the cmaera always face the oposite direction of origin
-
-    
-
   }
 }
 
@@ -789,7 +796,6 @@ function createObject(objectVals) {
   
     object.add(line); */
 
-  objectsToUpdate.push(object);
   sceneObjects.set(objectVals.name, object);
   return object;
 }
@@ -842,33 +848,35 @@ function rotateObject(object, rotationVals, axis, infinite) {
   switch (axis) {
     case AXIS.X:
       object.rotation.x = myClamp(
-        object.rotation.x + rotationVals.rotationDirection * rotationVals.step * delta,
+        object.rotation.x +
+          rotationVals.rotationDirection * rotationVals.step * delta,
         rotationVals.min,
         rotationVals.max,
-        infinite,
+        infinite
       );
       break;
 
     case AXIS.Y:
       object.rotation.y = myClamp(
-        object.rotation.y + rotationVals.rotationDirection * rotationVals.step * delta,
+        object.rotation.y +
+          rotationVals.rotationDirection * rotationVals.step * delta,
         rotationVals.min,
         rotationVals.max,
-        infinite,
+        infinite
       );
       break;
 
     case AXIS.Z:
       object.rotation.z = myClamp(
-        object.rotation.z + rotationVals.rotationDirection * rotationVals.step * delta,
+        object.rotation.z +
+          rotationVals.rotationDirection * rotationVals.step * delta,
         rotationVals.min,
         rotationVals.max,
-        infinite,
+        infinite
       );
       break;
 
     default:
-      console.log("Axis not found");
   }
 }
 
@@ -877,39 +885,56 @@ function translateObject(object, objectValues, offset, axis) {
   // TODO: confirm translation on Y and Z axis
   switch (axis) {
     case AXIS.X:
-      if(objectValues.translationDirection === -1) {
-        object.position.x = Math.min(object.position.x + objectValues.step * delta, objectValues.max + offset);
+      if (objectValues.translationDirection === -1) {
+        object.position.x = Math.min(
+          object.position.x + objectValues.step * delta,
+          objectValues.max + offset
+        );
         break;
       }
       if (objectValues.translationDirection === 1) {
-        object.position.x = Math.max(object.position.x - objectValues.step * delta, objectValues.min + offset);
+        object.position.x = Math.max(
+          object.position.x - objectValues.step * delta,
+          objectValues.min + offset
+        );
         break;
       }
-      
+
       break;
     case AXIS.Y:
-      if(objectValues.translationDirection === -1) {
-        object.position.y = Math.min(object.position.y + objectValues.step * delta, objectValues.max + offset);
+      if (objectValues.translationDirection === -1) {
+        object.position.y = Math.min(
+          object.position.y + objectValues.step * delta,
+          objectValues.max + offset
+        );
         break;
       }
       if (objectValues.translationDirection === 1) {
-        object.position.y = Math.max(object.position.y - objectValues.step * delta, objectValues.min + offset);
+        object.position.y = Math.max(
+          object.position.y - objectValues.step * delta,
+          objectValues.min + offset
+        );
         break;
       }
       break;
     case AXIS.Z:
-      if(objectValues.translationDirection === -1) {
-        object.position.z = Math.min(object.position.z + objectValues.step * delta, objectValues.max + offset);
+      if (objectValues.translationDirection === -1) {
+        object.position.z = Math.min(
+          object.position.z + objectValues.step * delta,
+          objectValues.max + offset
+        );
         break;
       }
       if (objectValues.translationDirection === 1) {
-        object.position.z = Math.max(object.position.z - objectValues.step * delta, objectValues.min + offset);
+        object.position.z = Math.max(
+          object.position.z - objectValues.step * delta,
+          objectValues.min + offset
+        );
         break;
       }
       break;
 
     default:
-      console.log("Invalid axis");
   }
 }
 
@@ -918,20 +943,24 @@ function scaleObject(object, scaleValues, axis) {
 
   switch (axis) {
     case AXIS.Y:
-      if (scaleValues.scaleDirection === -1) {  // scale down
-        object.scale.y = Math.max(object.scale.y - scaleValues.step * delta, scaleValues.min);
+      if (scaleValues.scaleDirection === -1) {
+        // scale down
+        object.scale.y = Math.max(
+          object.scale.y - scaleValues.step * delta,
+          scaleValues.min
+        );
         break;
       }
-      if (scaleValues.scaleDirection === 1) { // scale up
-        object.scale.y = Math.min(object.scale.y + scaleValues.step * delta, scaleValues.max);
+      if (scaleValues.scaleDirection === 1) {
+        // scale up
+        object.scale.y = Math.min(
+          object.scale.y + scaleValues.step * delta,
+          scaleValues.max
+        );
         break;
       }
       break;
-    }
-}
-  
-function getObjectsToUpdate() {
-  return objectsToUpdate;
+  }
 }
 
 function createCrane() {
@@ -1006,14 +1035,17 @@ function createFiveRandomObjects() {
         break;
     }
     randomizePosition(object);
-    // check collision
-    for (let j = 0; j < objectsToUpdate.length; j++) {
-      // check if not the same object
-      if (checkCollision(object, objectsToUpdate[j])) {
-        randomizePosition(object);
-        j = 0; // restart loop
+
+    let randomPositionCollision = false;
+    do {
+      randomPositionCollision = false;
+      for (let [key, value] of sceneObjects) {
+        if (checkCollision(object, value)) {
+          randomizePosition(object);
+          randomPositionCollision = true;
+        }
       }
-    }
+    } while (randomPositionCollision);
     scene.add(object);
   }
 }
@@ -1380,7 +1412,7 @@ function createDodecahedron() {
 function createIcosahedron() {
   "use strict";
   randomIcosahedron = createObject(icosahedronVals);
-  return randomIcosahedron
+  return randomIcosahedron;
 }
 
 function createTorus() {
@@ -1473,10 +1505,15 @@ function checkCollisionSphereMethod(object1, object2) {
   const radius1 = object1.children[0].geometry.boundingSphere.radius;
   const radius2 = object2.children[0].geometry.boundingSphere.radius;
 
-  if ((radius1 + radius2)**2 >= (object1Pos.x - object2Pos.x)**2 + (object1Pos.y - object2Pos.y)**2 + (object1Pos.z - object2Pos.z)**2) {
-    console.log("COLLISION DETECTED");
+  if (
+    (radius1 + radius2) ** 2 >=
+    (object1Pos.x - object2Pos.x) ** 2 +
+      (object1Pos.y - object2Pos.y) ** 2 +
+      (object1Pos.z - object2Pos.z) ** 2
+  ) {
+    // collision detected
   } else {
-    console.log("NO COLLISION");
+    // no collision
   }
 }
 
@@ -1497,76 +1534,70 @@ function handleCollisions() {
   "use strict";
 
   const period = Math.PI * 2; // rotation period, use to compare angles above a full rotation (e.g. have 450 degrees == 90 degrees)
-    function mod(n, m) {
-        return ((n % m) + m) % m;
-    }
+  function mod(n, m) {
+    return ((n % m) + m) % m;
+  }
 
-    switch(animationStage) {
-        case 0: // close claw if open
-            console.log("stage 0");
-            if(clawRotation1.rotationDirection === 0) {
-                clawRotation1.rotationDirection = -1;
-                clawRotation2.rotationDirection = 1;
-            }
-            rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-            rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-            rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-            rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-            rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-            rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-            rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-            rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
-            // check if claw has been closed
-            console.log(clawUpperPivot1.rotation.z);
-            console.log("CUBEEE" + randomCube.position.x);
-            if(clawUpperPivot1.rotation.z === -Math.PI / 3) {
-              clawRotation1.rotationDirection = 0;
-              animationStage = 1;
-            }
-            break;
-        case 1: // open claw if closed
-            console.log("stage 1");
+  switch (animationStage) {
+    case 0: // close claw if open
+      if (clawRotation1.rotationDirection === 0) {
+        clawRotation1.rotationDirection = -1;
+        clawRotation2.rotationDirection = 1;
+      }
+      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
+      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
+      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
+      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
+      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      // check if claw has been closed
+      if (clawUpperPivot1.rotation.z === -Math.PI / 3) {
+        clawRotation1.rotationDirection = 0;
+        animationStage = 1;
+      }
+      break;
+    case 1: // open claw if closed
+      if (clawRotation1.rotationDirection === 0) {
+        clawRotation1.rotationDirection = 1;
+        clawRotation2.rotationDirection = -1;
+      }
 
-            if(clawRotation1.rotationDirection === 0) {
-                clawRotation1.rotationDirection = 1;
-                clawRotation2.rotationDirection = -1;
-            }
-            
-            rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-            rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-            rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-            rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-            rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-            rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-            rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-            rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
-            // check if claw has opened
-            if(clawUpperPivot1.rotation.z === 0) {
-                animationStage = 2;
-                clawRotation1.rotationDirection = 0;
-            }
-            break;
-        case 2: // move upper structure to be aligned with the object randomCube
-            let angle = -Math.atan2(randomCube.position.z, randomCube.position.x);
+      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
+      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
+      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
+      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
+      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      // check if claw has opened
+      if (clawUpperPivot1.rotation.z === 0) {
+        animationStage = 2;
+        clawRotation1.rotationDirection = 0;
+      }
+      break;
+    case 2: // move upper structure to be aligned with the object randomCube
+      let angle = -Math.atan2(randomCube.position.z, randomCube.position.x);
 
-            // Calculate the angle difference in -MATH.PI to MATH.PI
-            let angleDifference = angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
-            
-            upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
-            rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
+      // Calculate the angle difference in -MATH.PI to MATH.PI
+      let angleDifference =
+        angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
 
-            if(Math.abs(angleDifference) < 0.01) {
-                upperStructureRotation.rotationDirection = 0;
-                animationStage = 3;
-            }
-            
-            break;
+      upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
+      rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
 
-        case 3: // move trolley to the object randomCube
-            console.log("stage 3");
-            break;
+      if (Math.abs(angleDifference) < 0.01) {
+        upperStructureRotation.rotationDirection = 0;
+        animationStage = 3;
+      }
 
-        }
+      break;
+
+    case 3: // move trolley to the object randomCube
+      break;
+  }
 }
 
 ////////////
@@ -1581,11 +1612,11 @@ function update() {
     return;
   }
 
-  if(!isColliding) {
+  if (!isColliding) {
     rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
     // update the orientation of camera 6
-    cameras[5].rotation.z = -(upperStructure.rotation.z + Math.PI/2);
-    
+    cameras[5].rotation.z = -(upperStructure.rotation.z + Math.PI / 2);
+
     rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
     rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
     rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
@@ -1595,7 +1626,12 @@ function update() {
     rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
     rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
 
-    translateObject(trolleyClawStructure, trolleyClawStructureTranslation, 0, AXIS.X);
+    translateObject(
+      trolleyClawStructure,
+      trolleyClawStructureTranslation,
+      0,
+      AXIS.X
+    );
     scaleObject(cable, cableScale, AXIS.Y);
     translateObject(claw, clawTranslation, 0, AXIS.Y);
   } else {
@@ -1718,7 +1754,7 @@ function onKeyDown(e) {
 
     case 81 || 113: // Q or q
       makeButtonActive("Q");
-      if(aPressed) {
+      if (aPressed) {
         upperStructureRotation.rotationDirection = 0;
       } else {
         upperStructureRotation.rotationDirection = 1;
@@ -1727,7 +1763,7 @@ function onKeyDown(e) {
       break;
     case 65 || 97: // A or a
       makeButtonActive("A");
-      if(qPressed) {
+      if (qPressed) {
         upperStructureRotation.rotationDirection = 0;
       } else {
         upperStructureRotation.rotationDirection = -1;
@@ -1736,7 +1772,7 @@ function onKeyDown(e) {
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
-      if(sPressed) {
+      if (sPressed) {
         trolleyClawStructureTranslation.translationDirection = 0;
       } else {
         trolleyClawStructureTranslation.translationDirection = -1;
@@ -1745,7 +1781,7 @@ function onKeyDown(e) {
       break;
     case 83 || 115: // S or s
       makeButtonActive("S");
-      if(wPressed) {
+      if (wPressed) {
         trolleyClawStructureTranslation.translationDirection = 0;
       } else {
         trolleyClawStructureTranslation.translationDirection = 1;
@@ -1754,7 +1790,7 @@ function onKeyDown(e) {
       break;
     case 69 || 101: // E or e
       makeButtonActive("E"); // up
-      if(dPressed) {
+      if (dPressed) {
         cableTranslation.translationDirection = 0;
         clawTranslation.translationDirection = 0;
         cableScale.scaleDirection = 0;
@@ -1766,8 +1802,8 @@ function onKeyDown(e) {
       ePressed = true;
       break;
     case 68 || 100: // D or d
-      makeButtonActive("D");  // down
-      if(ePressed) {
+      makeButtonActive("D"); // down
+      if (ePressed) {
         cableTranslation.translationDirection = 0;
         clawTranslation.translationDirection = 0;
         cableScale.scaleDirection = 0;
@@ -1780,7 +1816,7 @@ function onKeyDown(e) {
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
-      if(fPressed) {
+      if (fPressed) {
         lowerClawRotation1.rotationDirection = 0;
         lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
@@ -1795,7 +1831,7 @@ function onKeyDown(e) {
       break;
     case 70 || 102: // F or f
       makeButtonActive("F");
-      if(rPressed) {
+      if (rPressed) {
         lowerClawRotation1.rotationDirection = 0;
         lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
@@ -1852,7 +1888,7 @@ function onKeyUp(e) {
 
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
-      if(aPressed) {
+      if (aPressed) {
         upperStructureRotation.rotationDirection = -1;
       } else {
         upperStructureRotation.rotationDirection = 0;
@@ -1860,9 +1896,9 @@ function onKeyUp(e) {
       qPressed = false;
       break;
 
-      case 65 || 97: // A or a
+    case 65 || 97: // A or a
       makeButtonInactive("A");
-      if(qPressed) {
+      if (qPressed) {
         upperStructureRotation.rotationDirection = 1;
       } else {
         upperStructureRotation.rotationDirection = 0;
@@ -1872,17 +1908,17 @@ function onKeyUp(e) {
 
     case 87 || 119: // W or w
       makeButtonInactive("W");
-      if(sPressed) {
+      if (sPressed) {
         trolleyClawStructureTranslation.translationDirection = -1;
       } else {
         trolleyClawStructureTranslation.translationDirection = 0;
-      } 
+      }
       wPressed = false;
       break;
 
     case 83 || 115: // S or s
       makeButtonInactive("S");
-      if(wPressed) {
+      if (wPressed) {
         trolleyClawStructureTranslation.translationDirection = 1;
       } else {
         trolleyClawStructureTranslation.translationDirection = 0;
@@ -1892,7 +1928,7 @@ function onKeyUp(e) {
 
     case 69 || 101: // E or e
       makeButtonInactive("E");
-      if(dPressed) {
+      if (dPressed) {
         cableTranslation.translationDirection = 1;
         clawTranslation.translationDirection = 1;
         cableScale.scaleDirection = 1;
@@ -1906,7 +1942,7 @@ function onKeyUp(e) {
 
     case 68 || 100: // D or d
       makeButtonInactive("D");
-      if(ePressed) {
+      if (ePressed) {
         cableTranslation.translationDirection = -1;
         clawTranslation.translationDirection = -1;
         cableScale.scaleDirection = -1;
@@ -1920,7 +1956,7 @@ function onKeyUp(e) {
 
     case 82 || 114: // R or r
       makeButtonInactive("R");
-      if(fPressed) {
+      if (fPressed) {
         lowerClawRotation1.rotationDirection = -1;
         lowerClawRotation2.rotationDirection = 1;
         clawRotation1.rotationDirection = -1;
@@ -1935,8 +1971,8 @@ function onKeyUp(e) {
       break;
 
     case 70 || 102: // F or f
-      makeButtonInactive("F");  
-      if(rPressed) {
+      makeButtonInactive("F");
+      if (rPressed) {
         lowerClawRotation1.rotationDirection = 1;
         lowerClawRotation2.rotationDirection = -1;
         clawRotation1.rotationDirection = 1;
@@ -1985,7 +2021,7 @@ function makeButtonInactive(key) {
 let isWireframe = false;
 
 function updateWireframe() {
-  getObjectsToUpdate().forEach((object) => {
+  sceneObjects.forEach((object) => {
     object.children[0].material.wireframe = isWireframe;
   });
 }
