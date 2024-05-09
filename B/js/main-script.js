@@ -2038,11 +2038,7 @@ function toggleDarkMode() {
 }
 
 function updateToggleSwitch() {
-  if (isDarkMode) {
-    darkModeButton.classList.add("on");
-  } else {
-    darkModeButton.classList.remove("on");
-  }
+  darkModeButton.classList.toggle("on");
 }
 
 function updateBackgroundColor() {
