@@ -12,9 +12,8 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#eaf6ff"; // #eaf6ff
+const backgroundColor = "#eaf6ff";
 
-// Background color for dark mode
 const backgroundColorDark = "#344c5e";
 
 const fov = 70;
@@ -121,7 +120,7 @@ const cameraValues = [
 ];
 1;
 
-const colorsRegular = {
+const colors = {
   white: 0xeff1f5,
   black: 0x4c4f69,
   red: 0xd20f39,
@@ -131,20 +130,6 @@ const colorsRegular = {
   cyan: 0x04a5e5,
   magenta: 0xdd7878,
 };
-
-// saving my eyes
-const colorsDark = {
-  white: 0xbac2de,
-  black: 0x11111b,
-  red: 0x181825,
-  green: 0x1e1e2e,
-  blue: 0x313244,
-  yellow: 0x45475a,
-  cyan: 0x585b70,
-  magenta: 0x6c7086,
-};
-
-const colors = colorsRegular; // default colors
 
 const cranePosition = {
   positionX: 0 * UNIT,
@@ -224,12 +209,6 @@ const counterWeightVals = {
   name: "counterWeight",
 };
 
-const trolleyClawStructureVals = {
-  positionX: 11.5 * UNIT,
-  positionY: 14.85 * UNIT,
-  positionZ: 0 * UNIT,
-};
-
 const trolleyVals = {
   width: 2 * UNIT,
   depth: 1 * UNIT,
@@ -241,6 +220,7 @@ const trolleyVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.magenta }),
   name: "trolley",
 };
+
 
 const cableVals = {
   width: 0.2 * UNIT,
@@ -255,11 +235,6 @@ const cableVals = {
   name: "cable",
 };
 
-const clawStructureVals = {
-  positionX: 0 * UNIT,
-  positionY: -6 * UNIT,
-  positionZ: 0 * UNIT,
-};
 
 const clawBlockVals = {
   width: 1 * UNIT,
@@ -272,6 +247,7 @@ const clawBlockVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.black }),
   name: "clawBlock",
 };
+
 
 const upperClawVals1 = {
   width: 0.5 * UNIT,
@@ -547,7 +523,19 @@ const torusKnotVals = {
   name: "torusKnot",
 };
 
-// Adjust rotation speed
+const trolleyClawStructureVals = {
+  positionX: 11.5 * UNIT,
+  positionY: 14.85 * UNIT,
+  positionZ: 0 * UNIT,
+};
+
+
+const clawStructureVals = {
+  positionX: 0 * UNIT,
+  positionY: -6 * UNIT,
+  positionZ: 0 * UNIT,
+};
+
 const upperStructureRotation = {
   step: rotationUnit / 4,
   min: -Math.PI / 2,
@@ -590,19 +578,6 @@ const trolleyClawStructureTranslation = {
   translationDirection: 0,
 };
 
-const cableClawTranslation = {
-  step: 0.5 * UNIT,
-  min: -7 * UNIT,
-  max: 5 * UNIT,
-  translationDirection: 0,
-};
-
-const cableScale = {
-  step: 0.0095,
-  min: 0.2,
-  max: 1,
-  scaleDirection: 0,
-};
 
 const cableTranslation = {
   step: 0.5 * UNIT,
@@ -618,11 +593,17 @@ const clawTranslation = {
   translationDirection: 0,
 };
 
+const cableScale = {
+  step: 0.0095,
+  min: 0.2,
+  max: 1,
+  scaleDirection: 0,
+};
+
 //////////////////////
 /* GOTO: GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
-let objectsToUpdate = [];
 let sceneObjects = new Map();
 let upperStructure, cable, trolleyClawStructure;
 let clawLower1, clawLower2, clawLower3, clawLower4;
@@ -721,10 +702,6 @@ function createOrtographicCamera(cameraValue) {
   cameras.push(camera);
 }
 
-/////////////////////
-/* GOTO: CREATE LIGHT(S) */
-/////////////////////
-
 ////////////////////////
 /* GOTO: CREATE OBJECT3D(S) */
 ////////////////////////
@@ -785,17 +762,7 @@ function createObject(objectVals) {
       break;
   }
 
-  // TODO: ADD MATERIAL
-  const mesh = new THREE.Mesh(geometry, objectVals.material);
-  object.add(mesh);
-
-  /* let edges = new THREE.EdgesGeometry(mesh.geometry);
-    let line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff }));
-    // increase the size of the edges
-    line.scale.set(1.1, 1.1, 1.1);
-  
-    object.add(line); */
-
+  object.add(new THREE.Mesh(geometry, objectVals.material));
   sceneObjects.set(objectVals.name, object);
   return object;
 }
@@ -820,31 +787,25 @@ function setScaleOnAxis(object, vals, axis) {
 
 function resetSteps() {
   "use strict";
-
   upperStructure.userData.step = 0;
 }
 
 function myClamp(value, min, max, infinite) {
   "use strict";
-
   if (infinite) {
     return value;
   }
-
   if (value < min) {
     return min;
   }
-
   if (value >= max) {
     return max;
   }
-
   return value;
 }
 
 function rotateObject(object, rotationVals, axis, infinite) {
   "use strict";
-
   switch (axis) {
     case AXIS.X:
       object.rotation.x = myClamp(
@@ -855,7 +816,6 @@ function rotateObject(object, rotationVals, axis, infinite) {
         infinite
       );
       break;
-
     case AXIS.Y:
       object.rotation.y = myClamp(
         object.rotation.y +
@@ -865,7 +825,6 @@ function rotateObject(object, rotationVals, axis, infinite) {
         infinite
       );
       break;
-
     case AXIS.Z:
       object.rotation.z = myClamp(
         object.rotation.z +
@@ -875,14 +834,12 @@ function rotateObject(object, rotationVals, axis, infinite) {
         infinite
       );
       break;
-
     default:
   }
 }
 
 function translateObject(object, objectValues, offset, axis) {
   "use strict";
-  // TODO: confirm translation on Y and Z axis
   switch (axis) {
     case AXIS.X:
       if (objectValues.translationDirection === -1) {
@@ -899,7 +856,6 @@ function translateObject(object, objectValues, offset, axis) {
         );
         break;
       }
-
       break;
     case AXIS.Y:
       if (objectValues.translationDirection === -1) {
@@ -933,14 +889,12 @@ function translateObject(object, objectValues, offset, axis) {
         break;
       }
       break;
-
     default:
   }
 }
 
 function scaleObject(object, scaleValues, axis) {
   "use strict";
-
   switch (axis) {
     case AXIS.Y:
       if (scaleValues.scaleDirection === -1) {
@@ -965,7 +919,6 @@ function scaleObject(object, scaleValues, axis) {
 
 function createCrane() {
   "use strict";
-
   let crane = new THREE.Group();
   let lowerStructure = createLowerStructure();
   upperStructure = createUpperStructure();
@@ -1169,7 +1122,6 @@ function createClaw() {
 
 function createTrolleyClawStructure() {
   "use strict";
-
   trolleyClawStructure = new THREE.Group();
   const trolley = createTrolley();
   cableClaw = new THREE.Group();
@@ -1532,7 +1484,6 @@ function checkCollision(object1, object2) {
 ///////////////////////
 function handleCollisions() {
   "use strict";
-
   const period = Math.PI * 2; // rotation period, use to compare angles above a full rotation (e.g. have 450 degrees == 90 degrees)
   function mod(n, m) {
     return ((n % m) + m) % m;
@@ -1652,7 +1603,6 @@ function render() {
 ////////////////////////////////
 function init() {
   "use strict";
-
   renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
@@ -1660,9 +1610,7 @@ function init() {
   document.body.appendChild(renderer.domElement);
 
   createScene();
-
   createCameras();
-
   currentCamera = cameras[3];
 
   // create object functions
@@ -1691,11 +1639,8 @@ function init() {
 /////////////////////
 function animate() {
   "use strict";
-
   delta = CLOCK.getDelta() * DELTA_MULT;
-
   update();
-
   render();
 
   requestAnimationFrame(animate);
@@ -1719,38 +1664,31 @@ function onResize() {
 ///////////////////////
 function onKeyDown(e) {
   "use strict";
-
   switch (e.keyCode) {
     case 49: //1
       currentCamera = cameras[0];
       makeButtonActive("1");
       break;
-
     case 50: //2
       currentCamera = cameras[1];
       makeButtonActive("2");
       break;
-
     case 51: //3
       currentCamera = cameras[2];
       makeButtonActive("3");
       break;
-
     case 52: //4
       currentCamera = cameras[3];
       makeButtonActive("4");
       break;
-
     case 53: //5
       currentCamera = cameras[4];
       makeButtonActive("5");
       break;
-
     case 54: //6
       currentCamera = cameras[5];
       makeButtonActive("6");
       break;
-
     case 81 || 113: // Q or q
       makeButtonActive("Q");
       if (aPressed) {
@@ -1848,7 +1786,6 @@ function onKeyDown(e) {
       updateWireframe();
       makeButtonActive("7");
       break;
-
     case 32: //space - show axes
       axes.visible = !axes.visible;
       break;
@@ -1860,7 +1797,6 @@ function onKeyDown(e) {
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
-
   switch (e.keyCode) {
     case 49: //1
       makeButtonInactive("1");
@@ -1868,23 +1804,18 @@ function onKeyUp(e) {
     case 50: //2
       makeButtonInactive("2");
       break;
-
     case 51: //3
       makeButtonInactive("3");
       break;
-
     case 52: //4
       makeButtonInactive("4");
       break;
-
     case 53: //5
       makeButtonInactive("5");
       break;
-
     case 54: //6
       makeButtonInactive("6");
       break;
-
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
       if (aPressed) {
@@ -1894,7 +1825,6 @@ function onKeyUp(e) {
       }
       qPressed = false;
       break;
-
     case 65 || 97: // A or a
       makeButtonInactive("A");
       if (qPressed) {
@@ -1904,7 +1834,6 @@ function onKeyUp(e) {
       }
       aPressed = false;
       break;
-
     case 87 || 119: // W or w
       makeButtonInactive("W");
       if (sPressed) {
@@ -1914,7 +1843,6 @@ function onKeyUp(e) {
       }
       wPressed = false;
       break;
-
     case 83 || 115: // S or s
       makeButtonInactive("S");
       if (wPressed) {
@@ -1924,7 +1852,6 @@ function onKeyUp(e) {
       }
       sPressed = false;
       break;
-
     case 69 || 101: // E or e
       makeButtonInactive("E");
       if (dPressed) {
@@ -1938,7 +1865,6 @@ function onKeyUp(e) {
       }
       ePressed = false;
       break;
-
     case 68 || 100: // D or d
       makeButtonInactive("D");
       if (ePressed) {
@@ -1952,7 +1878,6 @@ function onKeyUp(e) {
       }
       dPressed = false;
       break;
-
     case 82 || 114: // R or r
       makeButtonInactive("R");
       if (fPressed) {
@@ -1968,7 +1893,6 @@ function onKeyUp(e) {
       }
       rPressed = false;
       break;
-
     case 70 || 102: // F or f
       makeButtonInactive("F");
       if (rPressed) {
