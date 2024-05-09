@@ -396,14 +396,25 @@ const binFirstWallVals = {
   width: 4 * UNIT,
   depth: 4 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 8 * UNIT,
+  positionX: 6 * UNIT,
   positionY: 2 * UNIT,
-  positionZ: 10 * UNIT,
+  positionZ: 8 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
 const binSecondWallVals = {
+  width: 4 * UNIT,
+  depth: 4 * UNIT,
+  height: 0.2 * UNIT,
+  positionX: 8 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 6 * UNIT,
+  type: Primitives.CUBE,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+};
+
+const binThirdWallVals = {
   width: 4 * UNIT,
   depth: 4 * UNIT,
   height: 0.2 * UNIT,
@@ -414,24 +425,13 @@ const binSecondWallVals = {
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
 
-const binThirdWallVals = {
-  width: 4 * UNIT,
-  depth: 4 * UNIT,
-  height: 0.2 * UNIT,
-  positionX: 12 * UNIT,
-  positionY: 2 * UNIT,
-  positionZ: 10 * UNIT,
-  type: Primitives.CUBE,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
-};
-
 const binFourthWallVals = {
   width: 4 * UNIT,
   depth: 4 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 10 * UNIT,
+  positionX: 8 * UNIT,
   positionY: 2 * UNIT,
-  positionZ: 12 * UNIT,
+  positionZ: 10 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
 };
@@ -440,9 +440,9 @@ const binBottomVals = {
   width: 4 * UNIT,
   depth: 4 * UNIT,
   height: 0.2 * UNIT,
-  positionX: 10 * UNIT,
+  positionX: 8 * UNIT,
   positionY: 0 * UNIT,
-  positionZ: 10 * UNIT,
+  positionZ: 8 * UNIT,
   type: Primitives.CUBE,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
 };
