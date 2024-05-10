@@ -1683,9 +1683,6 @@ function init() {
   createCrane();
   createBin();
   createRandomObjects();
-  // grid
-  const gridHelper = new THREE.GridHelper(1000, 100);
-  scene.add(gridHelper);
 
   resetSteps();
 
