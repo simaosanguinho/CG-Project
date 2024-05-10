@@ -1,8 +1,5 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { VRButton } from "three/addons/webxr/VRButton.js";
-import * as Stats from "three/addons/libs/stats.module.js";
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+
 //////////////////////
 /* GOTO: CONSTANTS  */
 //////////////////////
@@ -612,7 +609,6 @@ let clawLowerPivot1, clawLowerPivot2, clawLowerPivot3, clawLowerPivot4;
 let claw;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
-let isAnimating;
 let isDarkMode = false;
 let qPressed = false,
   aPressed = false,
@@ -1538,7 +1534,6 @@ function handleCollisions() {
       console.log(object.children[0].geometry.boundingSphere.radius);
       object.position.set(0, -object.children[0].geometry.boundingSphere.radius,0);
       
-
       // move on when cable is halfway
       console.log(cable.scale.y);
       if (cable.scale.y <= 0.5 && claw.position.y <= 0.5 * UNIT) {
