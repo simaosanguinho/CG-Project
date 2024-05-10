@@ -24,6 +24,8 @@ const rotationUnit = Math.PI / 80;
 
 const maxViewDistance = 10000;
 
+const nRandomObjects = 5;
+
 const AXIS = {
   X: "x",
   Y: "y",
@@ -961,11 +963,11 @@ function createLowerStructure() {
   return group;
 }
 
-function createFiveRandomObjects() {
+function createRandomObjects() {
   "use strict";
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < nRandomObjects; i++) {
     let object;
-    switch (i) {
+    switch (i % 5) {
       case 0:
         object = createCube();
         break;
@@ -1680,7 +1682,7 @@ function init() {
   // create object functions
   createCrane();
   createBin();
-  createFiveRandomObjects();
+  createRandomObjects();
   // grid
   const gridHelper = new THREE.GridHelper(1000, 100);
   scene.add(gridHelper);
