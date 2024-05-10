@@ -1409,22 +1409,27 @@ function checkCollisions() {
 
 function checkCollisionClawWithRandomObject() {
   "use strict";
+
+  if (isColliding != null) {
+    return;
+  }
+
   let clawEdge1 = sceneObjects.get("clawEdge1");
   let clawEdge2 = sceneObjects.get("clawEdge2");
   let clawEdge3 = sceneObjects.get("clawEdge3");
   let clawEdge4 = sceneObjects.get("clawEdge4");
 
-  let objectList = [];
-  objectList.push(sceneObjects.get("cube"));
-  objectList.push(sceneObjects.get("dodecahedron"));
-  objectList.push(sceneObjects.get("icosahedron"));
-  objectList.push(sceneObjects.get("torus"));
-  objectList.push(sceneObjects.get("torusKnot"));
+  let randomObjectList = [];
+  randomObjectList.push(sceneObjects.get("cube"));
+  randomObjectList.push(sceneObjects.get("dodecahedron"));
+  randomObjectList.push(sceneObjects.get("icosahedron"));
+  randomObjectList.push(sceneObjects.get("torus"));
+  randomObjectList.push(sceneObjects.get("torusKnot"));
 
-  checkClawCollision(clawEdge1, objectList);
-  checkClawCollision(clawEdge2, objectList);
-  checkClawCollision(clawEdge3, objectList);
-  checkClawCollision(clawEdge4, objectList);
+  checkClawCollision(clawEdge1, randomObjectList);
+  checkClawCollision(clawEdge2, randomObjectList);
+  checkClawCollision(clawEdge3, randomObjectList);
+  checkClawCollision(clawEdge4, randomObjectList);
 }
 
 function checkCollisionSphereMethod(object1, object2) {
@@ -1495,7 +1500,7 @@ function handleCollisions(objectName) {
         clawRotation2.rotationDirection = -1;
       }
 
-      rotateClaw();
+      openCloseClaw();
       // check if claw has opened
       if (clawUpperPivot1.rotation.z === 0) {
         animationStage = 1;
@@ -1564,7 +1569,7 @@ function handleCollisions(objectName) {
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
       }
-      rotateClaw();
+      openCloseClaw();
       // check if claw has been closed
       if (clawUpperPivot1.rotation.z === -Math.PI / 3) {
         clawRotation1.rotationDirection = 0;
@@ -1743,12 +1748,12 @@ function handleCollisions(objectName) {
 function update() {
   "use strict";
 
-  if (!isColliding) {
+  if (isColliding === null) {
     rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
     // update the orientation of camera 6
     cameras[5].rotation.z = -(upperStructure.rotation.z + Math.PI / 2);
 
-    rotateClaw();
+    openCloseClaw();
 
     translateObject(
       trolleyClawStructure,
@@ -2147,7 +2152,7 @@ function updateBackgroundColor() {
 //////////////////////
 /* GOTO: CLAW UTILS */
 //////////////////////
-function rotateClaw() {
+function openCloseClaw() {
   rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
   rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
   rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
