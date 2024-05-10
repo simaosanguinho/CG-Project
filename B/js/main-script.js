@@ -1462,7 +1462,7 @@ function checkCollisionSphereMethod(object1, object2) {
       (object1Pos.z - object2Pos.z) ** 2
   ) {
     // collision detected
-    //isColliding = true;
+    isColliding = true;
   } else {
     // no collision
   }
@@ -1489,6 +1489,8 @@ function handleCollisions() {
   function mod(n, m) {
     return ((n % m) + m) % m;
   }
+
+  let object = sceneObjects.get("cube");
 
   switch (animationStage) {
     case 0: // open claw if closed
@@ -1543,6 +1545,7 @@ function handleCollisions() {
       // check if claw has been closed
       if (clawUpperPivot1.rotation.z === -Math.PI / 3) {
         clawRotation1.rotationDirection = 0;
+        upperStructure.add(object);
         animationStage = 3;
       }
       break;
@@ -1563,7 +1566,10 @@ function handleCollisions() {
       );
       scaleObject(cable, cableScale, AXIS.Y);
       translateObject(claw, clawTranslation, 0, AXIS.Y);
-      sceneObjects.get("cube").position.y = claw.position.y + 13.5 * UNIT;
+      claw.add(object);
+      console.log(object.children[0].geometry.boundingSphere.radius);
+      object.position.set(0, -object.children[0].geometry.boundingSphere.radius,0);
+      
 
       // move on when cable is halfway
       console.log(cable.scale.y);
@@ -1584,9 +1590,6 @@ function handleCollisions() {
       
         upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
         rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
-        let cube = sceneObjects.get("cube"); 
-        const cubePivot = new THREE.Object3D();
-
         /* // Set the position of the pivot to the center of the cube
         cubePivot.position.set(0, 0, 0);
 
@@ -1622,12 +1625,6 @@ function handleCollisions() {
 ////////////
 function update() {
   "use strict";
-  checkCollisions();
-  if (isAnimating) {
-    // checkCollisions();
-    // handleCollisions();
-    return;
-  }
 
   if (!isColliding) {
     rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
@@ -1686,10 +1683,6 @@ function init() {
 
   resetSteps();
 
-  isAnimating = false;
-
-  render();
-
   //event listeners
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
@@ -1703,6 +1696,7 @@ function init() {
 function animate() {
   "use strict";
   delta = CLOCK.getDelta() * DELTA_MULT;
+  checkCollisions();
   update();
   render();
 
