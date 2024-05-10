@@ -1472,6 +1472,16 @@ function checkCollisionBoxMethod(object1, object2) {
   return box1.intersectsBox(box2);
 }
 
+function resetMotionDirections() {
+  "use strict";
+  upperStructureRotation.rotationDirection = 0;
+  clawRotation1.rotationDirection = 0;
+  clawRotation2.rotationDirection = 0;
+  trolleyClawStructureTranslation.translationDirection = 0;
+  cableTranslation.translationDirection = 0;
+  clawTranslation.translationDirection = 0;
+  cableScale.scaleDirection = 0;
+}
 ///////////////////////
 /* GOTO: HANDLE COLLISIONS */
 ///////////////////////
@@ -1483,6 +1493,8 @@ function handleCollisions(objectName) {
   function mod(n, m) {
     return ((n % m) + m) % m;
   }
+
+  resetMotionDirections();
   let object = sceneObjects.get(objectName);
   let clawBlockPos = new THREE.Vector3();
   let objDist, clawDist, binDist;
@@ -1523,6 +1535,7 @@ function handleCollisions(objectName) {
       break;
 
     case 2: // align trolley with the object
+      console.log("aligning trolley with object");
       clawBlockPos = sceneObjects
         .get("clawBlock")
         .getWorldPosition(clawBlockPos);
@@ -1563,6 +1576,7 @@ function handleCollisions(objectName) {
       break;
 
     case 3: // close claw if open
+      console.log("closing claw");
       if (clawRotation1.rotationDirection === 0) {
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
@@ -1584,7 +1598,9 @@ function handleCollisions(objectName) {
       break;
 
     case 4: // move cable and claw up halfway
+      console.log("moving cable and claw up halfway");
       if (cableTranslation.translationDirection === 0) {
+        console.log("cable translation direction is 0");
         cableTranslation.translationDirection = -1;
         clawTranslation.translationDirection = -1;
         cableScale.scaleDirection = -1;
@@ -1734,6 +1750,7 @@ function handleCollisions(objectName) {
         cableScale.scaleDirection = 0;
         isColliding = null;
         animationStage = 0;
+        resetMotionDirections();  
       }
       break;
   }
@@ -1868,7 +1885,7 @@ function onKeyDown(e) {
       break;
     case 81 || 113: // Q or q
       makeButtonActive("Q");
-      if (animationStage != 0) {
+      if (isColliding != null) {
         break;
       }
       if (keysPressed.get("A")) {
@@ -1880,7 +1897,7 @@ function onKeyDown(e) {
       break;
     case 65 || 97: // A or a
       makeButtonActive("A");
-      if (animationStage != 0) {
+      if (isColliding != null) {
         break;
       }
       if (keysPressed.get("Q")) {
@@ -1892,7 +1909,7 @@ function onKeyDown(e) {
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("S")) {
@@ -1904,7 +1921,7 @@ function onKeyDown(e) {
       break;
     case 83 || 115: // S or s
       makeButtonActive("S");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("W")) {
@@ -1916,7 +1933,7 @@ function onKeyDown(e) {
       break;
     case 69 || 101: // E or e
       makeButtonActive("E"); // up
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("D")) {
@@ -1932,7 +1949,7 @@ function onKeyDown(e) {
       break;
     case 68 || 100: // D or d
       makeButtonActive("D"); // down
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("E")) {
@@ -1948,7 +1965,7 @@ function onKeyDown(e) {
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("F")) {
@@ -1966,7 +1983,7 @@ function onKeyDown(e) {
       break;
     case 70 || 102: // F or f
       makeButtonActive("F");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("R")) {
@@ -2019,7 +2036,7 @@ function onKeyUp(e) {
       break;
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("A")) {
@@ -2031,7 +2048,7 @@ function onKeyUp(e) {
       break;
     case 65 || 97: // A or a
       makeButtonInactive("A");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("Q")) {
@@ -2043,7 +2060,7 @@ function onKeyUp(e) {
       break;
     case 87 || 119: // W or w
       makeButtonInactive("W");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("S")) {
@@ -2055,7 +2072,7 @@ function onKeyUp(e) {
       break;
     case 83 || 115: // S or s
       makeButtonInactive("S");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("W")) {
@@ -2067,7 +2084,7 @@ function onKeyUp(e) {
       break;
     case 69 || 101: // E or e
       makeButtonInactive("E");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("D")) {
@@ -2083,7 +2100,7 @@ function onKeyUp(e) {
       break;
     case 68 || 100: // D or d
       makeButtonInactive("D");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("E")) {
@@ -2099,7 +2116,7 @@ function onKeyUp(e) {
       break;
     case 82 || 114: // R or r
       makeButtonInactive("R");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("F")) {
@@ -2117,7 +2134,7 @@ function onKeyUp(e) {
       break;
     case 70 || 102: // F or f
       makeButtonInactive("F");
-      if (animationStage != 0) {
+      if (isColliding != null) {
           break;
         }
       if (keysPressed.get("R")) {
