@@ -1,8 +1,5 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { VRButton } from "three/addons/webxr/VRButton.js";
-import * as Stats from "three/addons/libs/stats.module.js";
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+
 //////////////////////
 /* GOTO: CONSTANTS  */
 //////////////////////
@@ -23,6 +20,8 @@ const minViewDistance = 1;
 const rotationUnit = Math.PI / 80;
 
 const maxViewDistance = 10000;
+
+const nRandomObjects = 5;
 
 const AXIS = {
   X: "x",
@@ -656,10 +655,10 @@ function createCameras() {
   createOrtographicCamera(cameraValues[1]);
   createOrtographicCamera(cameraValues[2]);
   createOrtographicCamera(cameraValues[3]);
-  createPrespectiveCamera(cameraValues[4], null);
+  createPerspectiveCamera(cameraValues[4], null);
 }
 
-function createPrespectiveCamera(cameraValue, location) {
+function createPerspectiveCamera(cameraValue, location) {
   "use strict";
   camera = new THREE.PerspectiveCamera(
     fov,
@@ -836,6 +835,7 @@ function rotateObject(object, rotationVals, axis, infinite) {
     default:
   }
 }
+  
 
 function translateObject(object, objectValues, offset, axis) {
   "use strict";
@@ -963,11 +963,11 @@ function createLowerStructure() {
   return group;
 }
 
-function createFiveRandomObjects() {
+function createRandomObjects() {
   "use strict";
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < nRandomObjects; i++) {
     let object;
-    switch (i) {
+    switch (i % 5) {
       case 0:
         object = createCube();
         object.name = "cube";
@@ -997,7 +997,7 @@ function createFiveRandomObjects() {
     do {
       randomPositionCollision = false;
       for (let [key, value] of sceneObjects) {
-        if (checkCollision(object, value)) {
+        if (checkCollisionBoxMethod(object, value)) {
           randomizePosition(object);
           randomPositionCollision = true;
         }
@@ -1048,7 +1048,7 @@ function createClaw() {
 
   const clawBlock = createClawBlock();
   claw.add(clawBlock);
-  createPrespectiveCamera(cameraValues[5], clawBlock);
+  createPerspectiveCamera(cameraValues[5], clawBlock);
 
   /* CLAW 1 */
 
@@ -1403,50 +1403,28 @@ function randomizePosition(object) {
 /* GOTO: CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
-  ("use strict");
+  "use strict";
   checkCollisionClawWithRandomObject();
 }
 
 function checkCollisionClawWithRandomObject() {
   "use strict";
-
-  if (isColliding != null) {
-    return;
-  }
-  let clawEdge4 = sceneObjects.get("clawEdge4");
-  let clawEdge3 = sceneObjects.get("clawEdge3");
-  let clawEdge2 = sceneObjects.get("clawEdge2");
   let clawEdge1 = sceneObjects.get("clawEdge1");
+  let clawEdge2 = sceneObjects.get("clawEdge2");
+  let clawEdge3 = sceneObjects.get("clawEdge3");
+  let clawEdge4 = sceneObjects.get("clawEdge4");
 
-  let cube = sceneObjects.get("cube");
-  let dodecahedron = sceneObjects.get("dodecahedron");
-  let icosahedron = sceneObjects.get("icosahedron");
-  let torus = sceneObjects.get("torus");
-  let torusKnot = sceneObjects.get("torusKnot");
+  let objectList = [];
+  objectList.push(sceneObjects.get("cube"));
+  objectList.push(sceneObjects.get("dodecahedron"));
+  objectList.push(sceneObjects.get("icosahedron"));
+  objectList.push(sceneObjects.get("torus"));
+  objectList.push(sceneObjects.get("torusKnot"));
 
-  checkCollisionSphereMethod(clawEdge4, cube);
-  checkCollisionSphereMethod(clawEdge4, dodecahedron);
-  checkCollisionSphereMethod(clawEdge4, icosahedron);
-  checkCollisionSphereMethod(clawEdge4, torus);
-  checkCollisionSphereMethod(clawEdge4, torusKnot);
-
-  checkCollisionSphereMethod(clawEdge3, cube);
-  checkCollisionSphereMethod(clawEdge3, dodecahedron);
-  checkCollisionSphereMethod(clawEdge3, icosahedron);
-  checkCollisionSphereMethod(clawEdge3, torus);
-  checkCollisionSphereMethod(clawEdge3, torusKnot);
-
-  checkCollisionSphereMethod(clawEdge2, cube);
-  checkCollisionSphereMethod(clawEdge2, dodecahedron);
-  checkCollisionSphereMethod(clawEdge2, icosahedron);
-  checkCollisionSphereMethod(clawEdge2, torus);
-  checkCollisionSphereMethod(clawEdge2, torusKnot);
-
-  checkCollisionSphereMethod(clawEdge1, cube);
-  checkCollisionSphereMethod(clawEdge1, dodecahedron);
-  checkCollisionSphereMethod(clawEdge1, icosahedron);
-  checkCollisionSphereMethod(clawEdge1, torus);
-  checkCollisionSphereMethod(clawEdge1, torusKnot);
+  checkClawCollision(clawEdge1, objectList);
+  checkClawCollision(clawEdge2, objectList);
+  checkClawCollision(clawEdge3, objectList);
+  checkClawCollision(clawEdge4, objectList);
 }
 
 function checkCollisionSphereMethod(object1, object2) {
@@ -1481,7 +1459,7 @@ function checkCollisionSphereMethod(object1, object2) {
   }
 }
 
-function checkCollision(object1, object2) {
+function checkCollisionBoxMethod(object1, object2) {
   "use strict";
   if (object1 === object2) {
     return false;
@@ -1517,14 +1495,7 @@ function handleCollisions(objectName) {
         clawRotation2.rotationDirection = -1;
       }
 
-      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      rotateClaw();
       // check if claw has opened
       if (clawUpperPivot1.rotation.z === 0) {
         animationStage = 1;
@@ -1549,21 +1520,25 @@ function handleCollisions(objectName) {
       break;
 
     case 2: // align trolley with the object
-      clawBlockPos = sceneObjects.get("clawBlock").getWorldPosition(clawBlockPos);
+      clawBlockPos = sceneObjects
+        .get("clawBlock")
+        .getWorldPosition(clawBlockPos);
 
-      objDist = Math.sqrt((objectPos.x * objectPos.x) + (objectPos.z * objectPos.z));
-      clawDist = Math.sqrt((clawBlockPos.x * clawBlockPos.x) + (clawBlockPos.z * clawBlockPos.z));
+      objDist = Math.sqrt(
+        objectPos.x * objectPos.x + objectPos.z * objectPos.z
+      );
+      clawDist = Math.sqrt(
+        clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z
+      );
 
-      if(objDist < clawDist){
+      if (objDist < clawDist) {
         trolleyClawStructureTranslation.translationDirection = 1;
-      }
-      else{
+      } else {
         trolleyClawStructureTranslation.translationDirection = -1;
       }
 
       // invert direction when coordinates are negative????? - check this
-      
-        
+
       translateObject(
         trolleyClawStructure,
         trolleyClawStructureTranslation,
@@ -1571,35 +1546,37 @@ function handleCollisions(objectName) {
         AXIS.X
       );
 
-      clawBlockPos = sceneObjects.get("clawBlock").getWorldPosition(clawBlockPos);
-      clawDist = Math.sqrt(clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z);
-      
-      if (Math.abs((objDist - clawDist)) < 0.1 * UNIT) {
+      clawBlockPos = sceneObjects
+        .get("clawBlock")
+        .getWorldPosition(clawBlockPos);
+      clawDist = Math.sqrt(
+        clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z
+      );
+
+      if (Math.abs(objDist - clawDist) < 0.1 * UNIT) {
         trolleyClawStructureTranslation.translationDirection = 0;
         animationStage = 3;
       }
       break;
-      
+
     case 3: // close claw if open
       if (clawRotation1.rotationDirection === 0) {
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
       }
-      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      rotateClaw();
       // check if claw has been closed
       if (clawUpperPivot1.rotation.z === -Math.PI / 3) {
         clawRotation1.rotationDirection = 0;
+        animationStage = 3;
         upperStructure.add(object);
         claw.add(object);
-        object.position.set(0, -object.children[0].geometry.boundingSphere.radius,0);
-        
+        object.position.set(
+          0,
+          -object.children[0].geometry.boundingSphere.radius,
+          0
+        );
+
         animationStage = 4;
       }
       break;
@@ -1609,7 +1586,6 @@ function handleCollisions(objectName) {
         cableTranslation.translationDirection = -1;
         clawTranslation.translationDirection = -1;
         cableScale.scaleDirection = -1;
-
       }
       translateObject(
         trolleyClawStructure,
@@ -1620,8 +1596,11 @@ function handleCollisions(objectName) {
       scaleObject(cable, cableScale, AXIS.Y);
       translateObject(claw, clawTranslation, 0, AXIS.Y);
       claw.add(object);
-      object.position.set(0, -object.children[0].geometry.boundingSphere.radius,0);
-      
+      object.position.set(
+        0,
+        -object.children[0].geometry.boundingSphere.radius,
+        0
+      );
 
       // move on when cable is halfway
       if (cable.scale.y <= 0.5 && claw.position.y <= 0.5 * UNIT) {
@@ -1630,47 +1609,60 @@ function handleCollisions(objectName) {
         cableScale.scaleDirection = 0;
         animationStage = 5;
       }
-      
+
       break;
     case 5: // move upperStructure to the bin
-        angle = -Math.atan2(binBottomVals.positionZ, binBottomVals.positionX);
-      
-        angleDifference =
-          angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
-      
-        upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
-        rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
+      angle = -Math.atan2(binBottomVals.positionZ, binBottomVals.positionX);
 
-        if (Math.abs(angleDifference) < 0.01) {
-          upperStructureRotation.rotationDirection = 0;
-          animationStage = 6;
-        }
-        break;
+      angleDifference =
+        angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
+
+      upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
+      rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
+
+      if (Math.abs(angleDifference) < 0.01) {
+        upperStructureRotation.rotationDirection = 0;
+        animationStage = 6;
+      }
+      break;
     case 6: // move trolley to the bin
-      binDist = Math.sqrt((binBottomVals.positionX * binBottomVals.positionX) + (binBottomVals.positionZ * binBottomVals.positionZ));
-      clawDist = Math.sqrt((clawBlockPos.x * clawBlockPos.x) + (clawBlockPos.z * clawBlockPos.z));
+      binDist = Math.sqrt(
+        binBottomVals.positionX * binBottomVals.positionX +
+          binBottomVals.positionZ * binBottomVals.positionZ
+      );
+      clawDist = Math.sqrt(
+        clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z
+      );
 
       object.getWorldPosition(objectPos);
-      clawBlockPos = sceneObjects.get("clawBlock").getWorldPosition(clawBlockPos);
+      clawBlockPos = sceneObjects
+        .get("clawBlock")
+        .getWorldPosition(clawBlockPos);
 
-      if(objectPos.z < binBottomVals.positionZ && objectPos.x < binBottomVals.positionX){
+      if (
+        objectPos.z < binBottomVals.positionZ &&
+        objectPos.x < binBottomVals.positionX
+      ) {
         trolleyClawStructureTranslation.translationDirection = -1;
-      }
-      else{
+      } else {
         trolleyClawStructureTranslation.translationDirection = 1;
       }
-        
+
       translateObject(
         trolleyClawStructure,
         trolleyClawStructureTranslation,
         0,
         AXIS.X
       );
-      clawBlockPos = sceneObjects.get("clawBlock").getWorldPosition(clawBlockPos);
+      clawBlockPos = sceneObjects
+        .get("clawBlock")
+        .getWorldPosition(clawBlockPos);
 
       // check if trolley has reached the bin
-      clawDist = Math.sqrt(clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z);
-      if ( Math.abs((binDist - clawDist)) < 0.3 * UNIT) {
+      clawDist = Math.sqrt(
+        clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z
+      );
+      if (Math.abs(binDist - clawDist) < 0.3 * UNIT) {
         trolleyClawStructureTranslation.translationDirection = 0;
         animationStage = 7;
       }
@@ -1685,7 +1677,11 @@ function handleCollisions(objectName) {
       translateObject(claw, clawTranslation, 0, AXIS.Y);
       scaleObject(cable, cableScale, AXIS.Y);
       claw.add(object);
-      object.position.set(0, -object.children[0].geometry.boundingSphere.radius,0);
+      object.position.set(
+        0,
+        -object.children[0].geometry.boundingSphere.radius,
+        0
+      );
       // check if object has reached the bin
       if (claw.position.y === clawTranslation.min) {
         cableTranslation.translationDirection = 0;
@@ -1728,7 +1724,7 @@ function handleCollisions(objectName) {
       }
       translateObject(claw, clawTranslation, 0, AXIS.Y);
       scaleObject(cable, cableScale, AXIS.Y);
-      
+
       // check if cable is halfway up
       if (cable.scale.y <= 0.5 && claw.position.y <= 0.5 * UNIT) {
         cableTranslation.translationDirection = 0;
@@ -1738,7 +1734,6 @@ function handleCollisions(objectName) {
         isColliding = null;
       }
       break;
-      
   }
 }
 
@@ -1753,14 +1748,7 @@ function update() {
     // update the orientation of camera 6
     cameras[5].rotation.z = -(upperStructure.rotation.z + Math.PI / 2);
 
-    rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-    rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-    rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-    rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-    rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-    rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-    rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-    rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+    rotateClaw();
 
     translateObject(
       trolleyClawStructure,
@@ -1801,10 +1789,7 @@ function init() {
   // create object functions
   createCrane();
   createBin();
-  createFiveRandomObjects();
-  // grid
-  const gridHelper = new THREE.GridHelper(1000, 100);
-  scene.add(gridHelper);
+  createRandomObjects();
 
   resetSteps();
 
@@ -2157,6 +2142,26 @@ function updateBackgroundColor() {
   document.body.style.backgroundColor = isDarkMode
     ? backgroundColorDark
     : backgroundColor;
+}
+
+//////////////////////
+/* GOTO: CLAW UTILS */
+//////////////////////
+function rotateClaw() {
+  rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
+  rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+  rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
+  rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+  rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
+  rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+  rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
+  rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+}
+
+function checkClawCollision(clawEdge, objectList) {
+  for (let object of objectList) {
+    checkCollisionSphereMethod(clawEdge, object);
+  }
 }
 
 init();
