@@ -246,6 +246,7 @@ const clawBlockVals = {
   name: "clawBlock",
 };
 
+// CLAW 1 - EAST
 const upperClawVals1 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -279,6 +280,7 @@ const clawEdgeVals1 = {
   name: "clawEdge1",
 };
 
+// CLAW 2 - WEST
 const upperClawVals2 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -312,6 +314,7 @@ const clawEdgeVals2 = {
   name: "clawEdge2",
 };
 
+// CLAW 3 - NORTH
 const upperClawVals3 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -345,6 +348,7 @@ const clawEdgeVals3 = {
   name: "clawEdge3",
 };
 
+// CLAW 4 - SOUTH
 const upperClawVals4 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -601,12 +605,9 @@ const cableScale = {
 const cameras = [];
 let sceneObjects = new Map();
 let upperStructure, cable, trolleyClawStructure;
-let clawLower1, clawLower2, clawLower3, clawLower4;
-let clawUpper1, clawUpper2, clawUpper3, clawUpper4;
 let clawUpperPivot1, clawUpperPivot2, clawUpperPivot3, clawUpperPivot4;
 let clawLowerPivot1, clawLowerPivot2, clawLowerPivot3, clawLowerPivot4;
-let cableClaw;
-let claw, claw1, claw2, claw3, claw4;
+let claw;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
 let isAnimating;
@@ -1042,15 +1043,15 @@ function createClaw() {
   claw.add(clawBlock);
   createPrespectiveCamera(cameraValues[5], clawBlock);
 
-  /* CLAW 1 */
+  /* CLAW 1 - EAST */
 
-  claw1 = new THREE.Group();
-  clawUpper1 = new THREE.Group();
+  const claw1 = new THREE.Group();
+  const clawUpper1 = new THREE.Group();
   clawUpper1.add(createClawUpper(upperClawVals1));
   clawUpperPivot1 = new THREE.Group();
   clawUpperPivot1.add(clawUpper1);
   clawUpperPivot1.position.set(0.5 * UNIT, 0, 0);
-  clawLower1 = new THREE.Group();
+  const clawLower1 = new THREE.Group();
   clawLower1.add(groupLowerClaw(1));
   clawLowerPivot1 = new THREE.Group();
   clawLowerPivot1.add(clawLower1);
@@ -1059,16 +1060,15 @@ function createClaw() {
   claw1.add(clawUpperPivot1);
   claw.add(claw1);
 
-  /* CLAW 2 */
+  /* CLAW 2 - WEST */
 
-  claw2 = new THREE.Group();
-
-  clawUpper2 = new THREE.Group();
+  const claw2 = new THREE.Group();
+  const clawUpper2 = new THREE.Group();
   clawUpper2.add(createClawUpper(upperClawVals2));
   clawUpperPivot2 = new THREE.Group();
   clawUpperPivot2.add(clawUpper2);
   clawUpperPivot2.position.set(-0.5 * UNIT, 0, 0);
-  clawLower2 = new THREE.Group();
+  const clawLower2 = new THREE.Group();
   clawLower2.add(groupLowerClaw(2));
   clawLowerPivot2 = new THREE.Group();
   clawLowerPivot2.add(clawLower2);
@@ -1077,15 +1077,15 @@ function createClaw() {
   claw2.add(clawUpperPivot2);
   claw.add(claw2);
 
-  /* CLAW 3 */
+  /* CLAW 3 - NORTH */
 
-  claw3 = new THREE.Group();
-  clawUpper3 = new THREE.Group();
+  const claw3 = new THREE.Group();
+  const clawUpper3 = new THREE.Group();
   clawUpper3.add(createClawUpper(upperClawVals3));
   clawUpperPivot3 = new THREE.Group();
   clawUpperPivot3.add(clawUpper3);
   clawUpperPivot3.position.set(0, 0, -0.5 * UNIT);
-  clawLower3 = new THREE.Group();
+  const clawLower3 = new THREE.Group();
   clawLower3.add(groupLowerClaw(3));
   clawLowerPivot3 = new THREE.Group();
   clawLowerPivot3.add(clawLower3);
@@ -1095,15 +1095,15 @@ function createClaw() {
   claw3.add(clawUpperPivot3);
   claw.add(claw3);
 
-  /* CLAW 4 */
+  /* CLAW 4 - SOUTH */
 
-  claw4 = new THREE.Group();
-  clawUpper4 = new THREE.Group();
+  const claw4 = new THREE.Group();
+  const clawUpper4 = new THREE.Group();
   clawUpper4.add(createClawUpper(upperClawVals4));
   clawUpperPivot4 = new THREE.Group();
   clawUpperPivot4.add(clawUpper4);
   clawUpperPivot4.position.set(0, 0, 0.5 * UNIT);
-  clawLower4 = new THREE.Group();
+  const clawLower4 = new THREE.Group();
   clawLower4.add(groupLowerClaw(4));
   clawLowerPivot4 = new THREE.Group();
   clawLowerPivot4.add(clawLower4);
@@ -1120,7 +1120,7 @@ function createTrolleyClawStructure() {
   "use strict";
   trolleyClawStructure = new THREE.Group();
   const trolley = createTrolley();
-  cableClaw = new THREE.Group();
+  const cableClaw = new THREE.Group();
   const cable = createCable();
   setScaleOnAxis(cable, cableVals.scale, AXIS.Y);
   const claw = createClaw();
