@@ -246,6 +246,7 @@ const clawBlockVals = {
   name: "clawBlock",
 };
 
+// CLAW 1 - EAST
 const upperClawVals1 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -279,6 +280,7 @@ const clawEdgeVals1 = {
   name: "clawEdge1",
 };
 
+// CLAW 2 - WEST
 const upperClawVals2 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -312,6 +314,7 @@ const clawEdgeVals2 = {
   name: "clawEdge2",
 };
 
+// CLAW 3 - NORTH
 const upperClawVals3 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -345,6 +348,7 @@ const clawEdgeVals3 = {
   name: "clawEdge3",
 };
 
+// CLAW 4 - SOUTH
 const upperClawVals4 = {
   width: 0.5 * UNIT,
   depth: 0.5 * UNIT,
@@ -1042,7 +1046,7 @@ function createClaw() {
   claw.add(clawBlock);
   createPrespectiveCamera(cameraValues[5], clawBlock);
 
-  /* CLAW 1 */
+  /* CLAW 1 - EAST */
 
   claw1 = new THREE.Group();
   clawUpper1 = new THREE.Group();
@@ -1059,7 +1063,7 @@ function createClaw() {
   claw1.add(clawUpperPivot1);
   claw.add(claw1);
 
-  /* CLAW 2 */
+  /* CLAW 2 - WEST */
 
   claw2 = new THREE.Group();
 
@@ -1077,7 +1081,7 @@ function createClaw() {
   claw2.add(clawUpperPivot2);
   claw.add(claw2);
 
-  /* CLAW 3 */
+  /* CLAW 3 - NORTH */
 
   claw3 = new THREE.Group();
   clawUpper3 = new THREE.Group();
@@ -1095,7 +1099,7 @@ function createClaw() {
   claw3.add(clawUpperPivot3);
   claw.add(claw3);
 
-  /* CLAW 4 */
+  /* CLAW 4 - SOUTH */
 
   claw4 = new THREE.Group();
   clawUpper4 = new THREE.Group();
