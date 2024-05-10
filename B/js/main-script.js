@@ -610,16 +610,19 @@ let clawLowerPivot1, clawLowerPivot2, clawLowerPivot3, clawLowerPivot4;
 let claw;
 let currentCamera;
 let camera, scene, renderer, delta, axes;
-let isAnimating;
 let isDarkMode = false;
-let qPressed = false,
-  aPressed = false,
-  wPressed = false,
-  sPressed = false,
-  ePressed = false,
-  dPressed = false,
-  rPressed = false,
-  fPressed = false;
+let keysPressed = new Map(
+  Object.entries({
+    Q: false,
+    A: false,
+    W: false,
+    S: false,
+    E: false,
+    D: false,
+    R: false,
+    F: false,
+  })
+);
 const darkModeButton = document.getElementById("darkModeButton");
 let isColliding = false;
 let animationStage = 0;
@@ -1795,43 +1798,43 @@ function onKeyDown(e) {
       break;
     case 81 || 113: // Q or q
       makeButtonActive("Q");
-      if (aPressed) {
+      if (keysPressed.get("A")) {
         upperStructureRotation.rotationDirection = 0;
       } else {
         upperStructureRotation.rotationDirection = 1;
       }
-      qPressed = true;
+      keysPressed.set("Q", true);
       break;
     case 65 || 97: // A or a
       makeButtonActive("A");
-      if (qPressed) {
+      if (keysPressed.get("Q")) {
         upperStructureRotation.rotationDirection = 0;
       } else {
         upperStructureRotation.rotationDirection = -1;
       }
-      aPressed = true;
+      keysPressed.set("A", true);
       break;
     case 87 || 119: // W or w
       makeButtonActive("W");
-      if (sPressed) {
+      if (keysPressed.get("S")) {
         trolleyClawStructureTranslation.translationDirection = 0;
       } else {
         trolleyClawStructureTranslation.translationDirection = -1;
       }
-      wPressed = true;
+      keysPressed.set("W", true);
       break;
     case 83 || 115: // S or s
       makeButtonActive("S");
-      if (wPressed) {
+      if (keysPressed.get("W")) {
         trolleyClawStructureTranslation.translationDirection = 0;
       } else {
         trolleyClawStructureTranslation.translationDirection = 1;
       }
-      sPressed = true;
+      keysPressed.set("S", true);
       break;
     case 69 || 101: // E or e
       makeButtonActive("E"); // up
-      if (dPressed) {
+      if (keysPressed.get("D")) {
         cableTranslation.translationDirection = 0;
         clawTranslation.translationDirection = 0;
         cableScale.scaleDirection = 0;
@@ -1840,11 +1843,11 @@ function onKeyDown(e) {
         clawTranslation.translationDirection = -1;
         cableScale.scaleDirection = -1;
       }
-      ePressed = true;
+      keysPressed.set("E", true);
       break;
     case 68 || 100: // D or d
       makeButtonActive("D"); // down
-      if (ePressed) {
+      if (keysPressed.get("E")) {
         cableTranslation.translationDirection = 0;
         clawTranslation.translationDirection = 0;
         cableScale.scaleDirection = 0;
@@ -1853,11 +1856,11 @@ function onKeyDown(e) {
         clawTranslation.translationDirection = 1;
         cableScale.scaleDirection = 1;
       }
-      dPressed = true;
+      keysPressed.set("D", true);
       break;
     case 82 || 114: // R or r
       makeButtonActive("R");
-      if (fPressed) {
+      if (keysPressed.get("F")) {
         lowerClawRotation1.rotationDirection = 0;
         lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
@@ -1868,11 +1871,11 @@ function onKeyDown(e) {
         clawRotation1.rotationDirection = 1;
         clawRotation2.rotationDirection = -1;
       }
-      rPressed = true;
+      keysPressed.set("R", true);
       break;
     case 70 || 102: // F or f
       makeButtonActive("F");
-      if (rPressed) {
+      if (keysPressed.get("R")) {
         lowerClawRotation1.rotationDirection = 0;
         lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
@@ -1883,7 +1886,7 @@ function onKeyDown(e) {
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
       }
-      fPressed = true;
+      keysPressed.set("F", true);
       break;
     case 55: // 7
       isWireframe = !isWireframe;
@@ -1922,43 +1925,43 @@ function onKeyUp(e) {
       break;
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
-      if (aPressed) {
+      if (keysPressed.get("A")) {
         upperStructureRotation.rotationDirection = -1;
       } else {
         upperStructureRotation.rotationDirection = 0;
       }
-      qPressed = false;
+      keysPressed.set("Q", false);
       break;
     case 65 || 97: // A or a
       makeButtonInactive("A");
-      if (qPressed) {
+      if (keysPressed.get("Q")) {
         upperStructureRotation.rotationDirection = 1;
       } else {
         upperStructureRotation.rotationDirection = 0;
       }
-      aPressed = false;
+      keysPressed.set("A", false);
       break;
     case 87 || 119: // W or w
       makeButtonInactive("W");
-      if (sPressed) {
+      if (keysPressed.get("S")) {
         trolleyClawStructureTranslation.translationDirection = -1;
       } else {
         trolleyClawStructureTranslation.translationDirection = 0;
       }
-      wPressed = false;
+      keysPressed.set("W", false);
       break;
     case 83 || 115: // S or s
       makeButtonInactive("S");
-      if (wPressed) {
+      if (keysPressed.get("W")) {
         trolleyClawStructureTranslation.translationDirection = 1;
       } else {
         trolleyClawStructureTranslation.translationDirection = 0;
       }
-      sPressed = false;
+      keysPressed.set("S", false);
       break;
     case 69 || 101: // E or e
       makeButtonInactive("E");
-      if (dPressed) {
+      if (keysPressed.get("D")) {
         cableTranslation.translationDirection = 1;
         clawTranslation.translationDirection = 1;
         cableScale.scaleDirection = 1;
@@ -1967,11 +1970,11 @@ function onKeyUp(e) {
         clawTranslation.translationDirection = 0;
         cableScale.scaleDirection = 0;
       }
-      ePressed = false;
+      keysPressed.set("E", false);
       break;
     case 68 || 100: // D or d
       makeButtonInactive("D");
-      if (ePressed) {
+      if (keysPressed.get("E")) {
         cableTranslation.translationDirection = -1;
         clawTranslation.translationDirection = -1;
         cableScale.scaleDirection = -1;
@@ -1980,11 +1983,11 @@ function onKeyUp(e) {
         clawTranslation.translationDirection = 0;
         cableScale.scaleDirection = 0;
       }
-      dPressed = false;
+      keysPressed.set("D", false);
       break;
     case 82 || 114: // R or r
       makeButtonInactive("R");
-      if (fPressed) {
+      if (keysPressed.get("F")) {
         lowerClawRotation1.rotationDirection = -1;
         lowerClawRotation2.rotationDirection = 1;
         clawRotation1.rotationDirection = -1;
@@ -1995,11 +1998,11 @@ function onKeyUp(e) {
         clawRotation1.rotationDirection = 0;
         clawRotation2.rotationDirection = 0;
       }
-      rPressed = false;
+      keysPressed.set("R", false);
       break;
     case 70 || 102: // F or f
       makeButtonInactive("F");
-      if (rPressed) {
+      if (keysPressed.get("R")) {
         lowerClawRotation1.rotationDirection = 1;
         lowerClawRotation2.rotationDirection = -1;
         clawRotation1.rotationDirection = 1;
@@ -2010,7 +2013,7 @@ function onKeyUp(e) {
         clawRotation1.rotationDirection = 0;
         clawRotation2.rotationDirection = 0;
       }
-      fPressed = false;
+      keysPressed.set("F", false);
       break;
     case 55: // 7
       makeButtonInactive("7");
