@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
-//////////////////////
-/* GOTO: CONSTANTS  */
+///////////////////////
+/*    CONSTANTS      */
 //////////////////////
 const UNIT = 20;
 
@@ -538,20 +538,6 @@ const upperStructureRotation = {
   rotationDirection: 0,
 };
 
-const lowerClawRotation1 = {
-  step: rotationUnit,
-  min: -Math.PI / 3,
-  max: 0,
-  rotationDirection: 0,
-};
-
-const lowerClawRotation2 = {
-  step: rotationUnit,
-  min: 0,
-  max: Math.PI / 3,
-  rotationDirection: 0,
-};
-
 const clawRotation1 = {
   step: rotationUnit,
   min: -Math.PI / 3,
@@ -595,7 +581,7 @@ const cableScale = {
 };
 
 //////////////////////
-/* GOTO: GLOBAL VARIABLES */
+/* GLOBAL VARIABLES */
 //////////////////////
 const cameras = [];
 let sceneObjects = new Map();
@@ -632,7 +618,7 @@ let randomCube,
   bin;
 
 /////////////////////
-/* GOTO: CREATE SCENE(S) */
+/* CREATE SCENE(S) */
 /////////////////////
 function createScene() {
   "use strict";
@@ -647,7 +633,7 @@ function createScene() {
 }
 
 //////////////////////
-/* GOTO: CREATE CAMERA(S) */
+/* CREATE CAMERA(S) */
 //////////////////////
 function createCameras() {
   "use strict";
@@ -673,11 +659,9 @@ function createPerspectiveCamera(cameraValue, location) {
 
   cameras.push(camera);
 
-  // TODO: if there is a location besides origin - CAMERA 6
   if (location) {
     location.add(camera);
     camera.lookAt(0, -1, 0);
-    // make the cmaera always face the oposite direction of origin
   }
 }
 
@@ -701,7 +685,7 @@ function createOrtographicCamera(cameraValue) {
 }
 
 ////////////////////////
-/* GOTO: CREATE OBJECT3D(S) */
+/* CREATE OBJECT3D(S) */
 ////////////////////////
 
 function createObject(objectVals) {
@@ -1398,7 +1382,7 @@ function randomizePosition(object) {
 }
 
 //////////////////////
-/* GOTO: CHECK COLLISIONS */
+/* CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
   "use strict";
@@ -1483,12 +1467,12 @@ function resetMotionDirections() {
   cableScale.scaleDirection = 0;
 }
 ///////////////////////
-/* GOTO: HANDLE COLLISIONS */
+/* HANDLE COLLISIONS */
 ///////////////////////
 function handleCollisions(objectName) {
   "use strict";
-  const period = Math.PI * 2; // rotation period, use to compare angles above a full rotation (e.g. have 450 degrees == 90 degrees)
-  let angleDifference;
+  const period = Math.PI * 2; // rotation period
+  let angleDifference, simmetricAngle;
   let angle;
   function mod(n, m) {
     return ((n % m) + m) % m;
@@ -1520,14 +1504,13 @@ function handleCollisions(objectName) {
     case 1: // move upper structure to be aligned with the object
       angle = -Math.atan2(objectPos.z, objectPos.x);
 
-      // Calculate the angle difference in -MATH.PI to MATH.PI
-      angleDifference =
-        angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
+      angleDifference = angle - upperStructure.rotation.y;
+      angleDifference = mod(angleDifference + Math.PI, period) - Math.PI;
 
       upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
       rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
 
-      if (Math.abs(angleDifference) < 0.02) {
+      if (angleDifference < 0.01) {
         upperStructureRotation.rotationDirection = 0;
         animationStage = 2;
       }
@@ -1535,7 +1518,6 @@ function handleCollisions(objectName) {
       break;
 
     case 2: // align trolley with the object
-      console.log("aligning trolley with object");
       clawBlockPos = sceneObjects
         .get("clawBlock")
         .getWorldPosition(clawBlockPos);
@@ -1553,8 +1535,6 @@ function handleCollisions(objectName) {
         trolleyClawStructureTranslation.translationDirection = -1;
       }
 
-      // invert direction when coordinates are negative????? - check this
-
       translateObject(
         trolleyClawStructure,
         trolleyClawStructureTranslation,
@@ -1569,14 +1549,13 @@ function handleCollisions(objectName) {
         clawBlockPos.x * clawBlockPos.x + clawBlockPos.z * clawBlockPos.z
       );
 
-      if (Math.abs(objDist - clawDist) < 0.1 * UNIT) {
+      if (Math.abs(objDist - clawDist) < 0.2 * UNIT) {
         trolleyClawStructureTranslation.translationDirection = 0;
         animationStage = 3;
       }
       break;
 
     case 3: // close claw if open
-      console.log("closing claw");
       if (clawRotation1.rotationDirection === 0) {
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
@@ -1598,9 +1577,7 @@ function handleCollisions(objectName) {
       break;
 
     case 4: // move cable and claw up halfway
-      console.log("moving cable and claw up halfway");
       if (cableTranslation.translationDirection === 0) {
-        console.log("cable translation direction is 0");
         cableTranslation.translationDirection = -1;
         clawTranslation.translationDirection = -1;
         cableScale.scaleDirection = -1;
@@ -1715,14 +1692,7 @@ function handleCollisions(objectName) {
         clawRotation2.rotationDirection = -1;
       }
 
-      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
-      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
-      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
-      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      openCloseClaw();
       // check if claw has opened
       if (clawUpperPivot1.rotation.z === 0) {
         clawRotation1.rotationDirection = 0;
@@ -1750,14 +1720,14 @@ function handleCollisions(objectName) {
         cableScale.scaleDirection = 0;
         isColliding = null;
         animationStage = 0;
-        resetMotionDirections();  
+        resetMotionDirections();
       }
       break;
   }
 }
 
 ////////////
-/* GOTO: UPDATE */
+/* UPDATE */
 ////////////
 function update() {
   "use strict";
@@ -1783,7 +1753,7 @@ function update() {
 }
 
 /////////////
-/* GOTO: DISPLAY */
+/* DISPLAY */
 /////////////
 function render() {
   "use strict";
@@ -1791,7 +1761,7 @@ function render() {
 }
 
 ////////////////////////////////
-/* GOTO: INITIALIZE ANIMATION CYCLE */
+/* INITIALIZE ANIMATION CYCLE */
 ////////////////////////////////
 function init() {
   "use strict";
@@ -1820,7 +1790,7 @@ function init() {
 }
 
 /////////////////////
-/* GOTO: ANIMATION CYCLE */
+/* ANIMATION CYCLE */
 /////////////////////
 function animate() {
   "use strict";
@@ -1833,7 +1803,7 @@ function animate() {
 }
 
 ////////////////////////////
-/* GOTO: RESIZE WINDOW CALLBACK */
+/* RESIZE WINDOW CALLBACK */
 ////////////////////////////
 function onResize() {
   "use strict";
@@ -1910,8 +1880,8 @@ function onKeyDown(e) {
     case 87 || 119: // W or w
       makeButtonActive("W");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("S")) {
         trolleyClawStructureTranslation.translationDirection = 0;
       } else {
@@ -1922,8 +1892,8 @@ function onKeyDown(e) {
     case 83 || 115: // S or s
       makeButtonActive("S");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("W")) {
         trolleyClawStructureTranslation.translationDirection = 0;
       } else {
@@ -1934,8 +1904,8 @@ function onKeyDown(e) {
     case 69 || 101: // E or e
       makeButtonActive("E"); // up
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("D")) {
         cableTranslation.translationDirection = 0;
         clawTranslation.translationDirection = 0;
@@ -1950,8 +1920,8 @@ function onKeyDown(e) {
     case 68 || 100: // D or d
       makeButtonActive("D"); // down
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("E")) {
         cableTranslation.translationDirection = 0;
         clawTranslation.translationDirection = 0;
@@ -1966,16 +1936,12 @@ function onKeyDown(e) {
     case 82 || 114: // R or r
       makeButtonActive("R");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("F")) {
-        lowerClawRotation1.rotationDirection = 0;
-        lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
         clawRotation2.rotationDirection = 0;
       } else {
-        lowerClawRotation1.rotationDirection = 1;
-        lowerClawRotation2.rotationDirection = -1;
         clawRotation1.rotationDirection = 1;
         clawRotation2.rotationDirection = -1;
       }
@@ -1984,16 +1950,12 @@ function onKeyDown(e) {
     case 70 || 102: // F or f
       makeButtonActive("F");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("R")) {
-        lowerClawRotation1.rotationDirection = 0;
-        lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
         clawRotation2.rotationDirection = 0;
       } else {
-        lowerClawRotation1.rotationDirection = -1;
-        lowerClawRotation2.rotationDirection = 1;
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
       }
@@ -2011,7 +1973,7 @@ function onKeyDown(e) {
 }
 
 ///////////////////////
-/* GOTO: KEY UP CALLBACK */
+/* KEY UP CALLBACK */
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
@@ -2037,8 +1999,8 @@ function onKeyUp(e) {
     case 81 || 113: // Q or q
       makeButtonInactive("Q");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("A")) {
         upperStructureRotation.rotationDirection = -1;
       } else {
@@ -2049,8 +2011,8 @@ function onKeyUp(e) {
     case 65 || 97: // A or a
       makeButtonInactive("A");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("Q")) {
         upperStructureRotation.rotationDirection = 1;
       } else {
@@ -2061,8 +2023,8 @@ function onKeyUp(e) {
     case 87 || 119: // W or w
       makeButtonInactive("W");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("S")) {
         trolleyClawStructureTranslation.translationDirection = -1;
       } else {
@@ -2073,8 +2035,8 @@ function onKeyUp(e) {
     case 83 || 115: // S or s
       makeButtonInactive("S");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("W")) {
         trolleyClawStructureTranslation.translationDirection = 1;
       } else {
@@ -2085,8 +2047,8 @@ function onKeyUp(e) {
     case 69 || 101: // E or e
       makeButtonInactive("E");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("D")) {
         cableTranslation.translationDirection = 1;
         clawTranslation.translationDirection = 1;
@@ -2101,8 +2063,8 @@ function onKeyUp(e) {
     case 68 || 100: // D or d
       makeButtonInactive("D");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("E")) {
         cableTranslation.translationDirection = -1;
         clawTranslation.translationDirection = -1;
@@ -2117,16 +2079,12 @@ function onKeyUp(e) {
     case 82 || 114: // R or r
       makeButtonInactive("R");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("F")) {
-        lowerClawRotation1.rotationDirection = -1;
-        lowerClawRotation2.rotationDirection = 1;
         clawRotation1.rotationDirection = -1;
         clawRotation2.rotationDirection = 1;
       } else {
-        lowerClawRotation1.rotationDirection = 0;
-        lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
         clawRotation2.rotationDirection = 0;
       }
@@ -2135,16 +2093,12 @@ function onKeyUp(e) {
     case 70 || 102: // F or f
       makeButtonInactive("F");
       if (isColliding != null) {
-          break;
-        }
+        break;
+      }
       if (keysPressed.get("R")) {
-        lowerClawRotation1.rotationDirection = 1;
-        lowerClawRotation2.rotationDirection = -1;
         clawRotation1.rotationDirection = 1;
         clawRotation2.rotationDirection = -1;
       } else {
-        lowerClawRotation1.rotationDirection = 0;
-        lowerClawRotation2.rotationDirection = 0;
         clawRotation1.rotationDirection = 0;
         clawRotation2.rotationDirection = 0;
       }
@@ -2157,7 +2111,7 @@ function onKeyUp(e) {
 }
 
 ///////////////////////
-/* GOTO: Heads-Up Display  */
+/* Heads-Up Display  */
 ///////////////////////
 
 function makeButtonActive(key) {
@@ -2176,8 +2130,8 @@ function makeButtonInactive(key) {
   }
 }
 
-////////////////////////
-/* GOTO: WIREFRAME */
+/////////////////////////
+/*      WIREFRAME     */
 ///////////////////////
 
 let isWireframe = false;
@@ -2189,7 +2143,7 @@ function updateWireframe() {
 }
 
 /////////////////////////
-/* GOTO: DARKMODE     */
+/*      DARKMODE      */
 ///////////////////////
 
 function toggleDarkMode() {
@@ -2211,18 +2165,18 @@ function updateBackgroundColor() {
     : backgroundColor;
 }
 
-//////////////////////
-/* GOTO: CLAW UTILS */
+////////////////////////
+/*    CLAW UTILS     */
 //////////////////////
 function openCloseClaw() {
   rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
-  rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+  rotateObject(clawLowerPivot1, clawRotation1, AXIS.Z, false);
   rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
-  rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+  rotateObject(clawLowerPivot2, clawRotation2, AXIS.Z, false);
   rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
-  rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+  rotateObject(clawLowerPivot3, clawRotation1, AXIS.X, false);
   rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
-  rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+  rotateObject(clawLowerPivot4, clawRotation2, AXIS.X, false);
 }
 
 function checkClawCollision(clawEdge, objectList) {
