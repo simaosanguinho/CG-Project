@@ -114,7 +114,7 @@ const cameraValues = [
   [1000, 0, 0],
   [0, 0, 1000],
   [0, 1000, 0],
-  [2000, 1000, 3000],
+  [1000, 1000, 1000],
   [1000, 1000, 1000],
   [0, 0, 0],
 ];
@@ -1488,6 +1488,7 @@ function handleCollisions() {
   }
 
   let object = sceneObjects.get("cube");
+  let clawBlockPos = new THREE.Vector3();
 
   switch (animationStage) {
     case 0: // open claw if closed
@@ -1578,41 +1579,79 @@ function handleCollisions() {
       }
       
       break;
-      case 4: // move upperStructure to the bin
+    case 4: // move upperStructure to the bin
         angle = -Math.atan2(binBottomVals.positionZ, binBottomVals.positionX);
       
-        // Calculate the angle difference in -MATH.PI to MATH.PI
         angleDifference =
           angle - (mod(upperStructure.rotation.y + Math.PI, period) - Math.PI);
       
         upperStructureRotation.rotationDirection = angleDifference > 0 ? 1 : -1;
         rotateObject(upperStructure, upperStructureRotation, AXIS.Y, true);
-        /* // Set the position of the pivot to the center of the cube
-        cubePivot.position.set(0, 0, 0);
-
-        // Add the cube as a child of the pivot
-        cubePivot.add(cube);
-
-        // Now, you can use cubePivot as the pivot point for rotation
-        // For example, rotating cubePivot will also rotate the cube around its center
-
-        // Add the pivot to the scene
-        scene.add(cubePivot);
-        sceneObjects.set("cubePivot", cubePivot);
-
-        // Rotate the pivot to make the cube follow upperStructure
-        let pivot = sceneObjects.get("cubePivot");
-        pivot.rotation.y = -upperStructure.rotation.y; */
-
 
         if (Math.abs(angleDifference) < 0.01) {
           upperStructureRotation.rotationDirection = 0;
           animationStage = 5;
         }
         break;
-
-    case 5: // open claw
+    case 5: // move trolley to the bin
       console.log("stage 5");
+
+      const objectPos = new THREE.Vector3();
+      object.getWorldPosition(objectPos);
+      clawBlockPos = sceneObjects.get("clawBlock").getWorldPosition(clawBlockPos);
+
+
+  
+      if(objectPos.z < binBottomVals.positionZ && objectPos.x < binBottomVals.positionX){
+        trolleyClawStructureTranslation.translationDirection = -1;
+      }
+      else{
+        trolleyClawStructureTranslation.translationDirection = 1;
+      }
+        
+      
+      translateObject(
+        trolleyClawStructure,
+        trolleyClawStructureTranslation,
+        0,
+        AXIS.X
+      );
+      clawBlockPos = sceneObjects.get("clawBlock").getWorldPosition(clawBlockPos);
+      console.log(clawBlockPos);
+      console.log(binBottomVals.positionX, binBottomVals.positionZ);
+
+      // check if trolley has reached the bin
+      let diffX = Math.abs(clawBlockPos.x - binBottomVals.positionX);
+      let diffZ = Math.abs(clawBlockPos.z - binBottomVals.positionZ);
+
+      console.log(diffX, diffZ);
+
+      if (diffX < (0.1 * UNIT) && (diffZ < 0.1 * UNIT)) {
+        trolleyClawStructureTranslation.translationDirection = 0;
+        animationStage = 6;
+      }
+      break;
+
+    case 6: // open claw
+      console.log("stage 6");
+      if (clawRotation1.rotationDirection === 0) {
+        clawRotation1.rotationDirection = 1;
+        clawRotation2.rotationDirection = -1;
+      }
+
+      rotateObject(clawUpperPivot1, clawRotation1, AXIS.Z, false);
+      rotateObject(clawLowerPivot1, lowerClawRotation1, AXIS.Z, false);
+      rotateObject(clawUpperPivot2, clawRotation2, AXIS.Z, false);
+      rotateObject(clawLowerPivot2, lowerClawRotation2, AXIS.Z, false);
+      rotateObject(clawUpperPivot3, clawRotation1, AXIS.X, false);
+      rotateObject(clawLowerPivot3, lowerClawRotation1, AXIS.X, false);
+      rotateObject(clawUpperPivot4, clawRotation2, AXIS.X, false);
+      rotateObject(clawLowerPivot4, lowerClawRotation2, AXIS.X, false);
+      // check if claw has opened
+      if (clawUpperPivot1.rotation.z === 0) {
+        animationStage = 6;
+        clawRotation1.rotationDirection = 0;
+      }
       break;
   }
 }
