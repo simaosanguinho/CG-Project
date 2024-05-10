@@ -1454,10 +1454,9 @@ function checkCollisionSphereMethod(object1, object2) {
   const radius2 = object2.children[0].geometry.boundingSphere.radius;
 
   if (
-    (radius1 + radius2) ** 2 >=
-    (object1Pos.x - object2Pos.x) ** 2 +
-      (object1Pos.y - object2Pos.y) ** 2 +
-      (object1Pos.z - object2Pos.z) ** 2
+    (radius1 + radius2) >=
+    // distanceTo does the sqrt of distanceToSquared
+    object1Pos.distanceTo(object2Pos)
   ) {
     // collision detected
     isColliding = true;
