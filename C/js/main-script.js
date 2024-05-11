@@ -7,7 +7,7 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 //////////////////////
 /* GLOBAL VARIABLES */
 //////////////////////
-const UNIT = 80;
+const UNIT = 90;
 
 const CLOCK = new THREE.Clock();
 
@@ -24,7 +24,7 @@ const maxViewDistance = 10000;
 const cameras = [];
 let sceneObjects = new Map();
 let renderer, scene, camera, axes, delta;
-let merryGoRound;
+let merryGoRound, innerRing, middleRing, outerRing;
 
 const cameraValues = [
   [1000, 1000, 1000],
@@ -109,6 +109,16 @@ const merryGoRoundRotationVals = {
 	rotationAxis: AXIS.Y,
 	rotationDirection: 1,
 };
+
+const innerRingTranslationVals = {
+	step: 0.5,
+	translationAxis: AXIS.Y,
+	inMotion: 0,
+	translationDirection: -1,
+	min: innerRingVals.positionY - innerRingVals.height / 2 + 0.6 * UNIT,
+	max: innerRingVals.positionY,
+};
+
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -228,6 +238,61 @@ function rotateObject(object, rotationVals, axis, infinite) {
   }
 }
 
+function translateObject(object, objectValues, offset, axis) {
+  "use strict";
+  switch (axis) {
+    case AXIS.X:
+      if (objectValues.translationDirection === -1) {
+        object.position.x = Math.min(
+          object.position.x + objectValues.step * delta,
+          objectValues.max + offset
+        );
+        break;
+      }
+      if (objectValues.translationDirection === 1) {
+        object.position.x = Math.max(
+          object.position.x - objectValues.step * delta,
+          objectValues.min + offset
+        );
+        break;
+      }
+      break;
+    case AXIS.Y:
+      if (objectValues.translationDirection === -1) {
+        object.position.y = Math.min(
+          object.position.y + objectValues.step * delta,
+          objectValues.max + offset
+        );
+        break;
+      }
+      if (objectValues.translationDirection === 1) {
+        object.position.y = Math.max(
+          object.position.y - objectValues.step * delta,
+          objectValues.min + offset
+        );
+        break;
+      }
+      break;
+    case AXIS.Z:
+      if (objectValues.translationDirection === -1) {
+        object.position.z = Math.min(
+          object.position.z + objectValues.step * delta,
+          objectValues.max + offset
+        );
+        break;
+      }
+      if (objectValues.translationDirection === 1) {
+        object.position.z = Math.max(
+          object.position.z - objectValues.step * delta,
+          objectValues.min + offset
+        );
+        break;
+      }
+      break;
+    default:
+  }
+}
+
 function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
 	// Create a shape representing the ring
 	const shape = new THREE.Shape();
@@ -306,25 +371,25 @@ function createBase() {
 		baseCylinderVals.positionY,
 		baseCylinderVals.positionZ
 	);
-	return base;
-}
-
-function createInnerRing() {
-  const innerRing = createObject(innerRingVals);
-  innerRing.position.set(
-    innerRingVals.positionX,
-    innerRingVals.positionY,
-    innerRingVals.positionZ
-  );
 
 	// create cube on top of inner ring - DEBUG
 	/* const cube = new THREE.Mesh(
 		new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
 		new THREE.MeshBasicMaterial({ color: colors.white })
 	);
-	cube.position.set(0, innerRingVals.height / 2, 0);
-	innerRing.add(cube); */
-	
+	cube.position.set(0, 3 * UNIT, 0);
+	base.add(cube); */
+
+	return base;
+}
+
+function createInnerRing() {
+  innerRing = createObject(innerRingVals);
+  innerRing.position.set(
+    innerRingVals.positionX,
+    innerRingVals.positionY,
+    innerRingVals.positionZ
+  );
 
 	return innerRing;	
 }
@@ -387,8 +452,34 @@ function update() {
   "use strict";
 
 	rotateObject(merryGoRound, merryGoRoundRotationVals, merryGoRoundRotationVals.rotationAxis, true);
-	console.log(merryGoRound.rotation.y);
+	//	console.log(merryGoRound.rotation.y);
+
+	moveRingsUpDown();
 }
+
+function moveRingsUpDown() {
+  if (innerRingTranslationVals.inMotion === 1) {
+    // Check if the inner ring is already at its minimum or maximum position
+    if (
+      innerRing.position.y <=
+        innerRingTranslationVals.min ||
+      innerRing.position.y >=
+        innerRingTranslationVals.max
+    ) {
+      // Change the translation direction when reaching the limits
+      innerRingTranslationVals.translationDirection *= -1;
+    }
+
+    // Translate the inner ring
+    translateObject(
+      innerRing,
+      innerRingTranslationVals,
+      merryGoRound.position.y,
+      innerRingTranslationVals.translationAxis
+    );
+  }
+}
+
 
 /////////////
 /* DISPLAY */
@@ -423,6 +514,9 @@ function init() {
   createMerryGoRound();
 
   //resetSteps();
+
+	window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("keyup", onKeyUp);     
 }
 
 /////////////////////
@@ -450,17 +544,14 @@ function onKeyDown(e) {
   "use strict";
   switch (e.keyCode) {
     case 49: //1
-      currentCamera = cameras[0];
-      makeButtonActive("1");
+			console.log("inner ring moving");
+			innerRingTranslationVals.inMotion = 1;
       break;
-    case 55: // 7
-      isWireframe = !isWireframe;
-      updateWireframe();
-      makeButtonActive("7");
+		case 32: //space - show axes
+		  console.log("show axes");
       break;
-    case 32: //space - show axes
-      axes.visible = !axes.visible;
-      break;
+		default:
+			break;
   }
 }
 ///////////////////////
@@ -468,6 +559,13 @@ function onKeyDown(e) {
 ///////////////////////
 function onKeyUp(e) {
   "use strict";
+  switch (e.keyCode) {
+    case 49: //1
+			innerRingTranslationVals.inMotion = 0;
+      break;
+		default:
+			break;
+	}
 }
 
 init();
