@@ -24,6 +24,7 @@ const maxViewDistance = 10000;
 const cameras = [];
 let sceneObjects = new Map();
 let renderer, scene, camera, axes, delta;
+let merryGoRound;
 
 const cameraValues = [
   [1000, 1000, 1000],
@@ -62,6 +63,19 @@ const baseCylinderVals = {
   type: Primitives.CYLINDER,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
   name: "base",
+};
+
+const innerRingVals = {
+  innerRadius: 1.5 * UNIT,
+  outerRadius: 3 * UNIT,
+  thetaSegments: 1000,
+	height: 3 * UNIT,	
+  positionX: 0 * UNIT,
+  positionY: 3 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.RING,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "innerRing",
 };
 /////////////////////
 /* CREATE SCENE(S) */
@@ -134,6 +148,46 @@ function createOrtographicCamera(cameraValue) {
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
+function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
+	// Create a shape representing the ring
+	const shape = new THREE.Shape();
+
+	// Define the outer ring
+	shape.moveTo(outerRadius, 0);
+	for (let i = 1; i <= thetaSegments; i++) {
+			const theta = (i / thetaSegments) * Math.PI * 2;
+			const x = Math.cos(theta) * outerRadius;
+			const y = Math.sin(theta) * outerRadius;
+			shape.lineTo(x, y);
+	}
+
+	// Define the inner ring
+	shape.moveTo(innerRadius, 0);
+	for (let i = 1; i <= thetaSegments; i++) {
+			const theta = (i / thetaSegments) * Math.PI * 2;
+			const x = Math.cos(theta) * innerRadius;
+			const y = Math.sin(theta) * innerRadius;
+			shape.lineTo(x, y);
+	}
+
+	// Create extrude settings
+	const extrudeSettings = {
+			steps: 1,
+			depth: height,
+			bevelEnabled: false,
+	};
+	// Create the extruded geometry
+	const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+
+	// Rotate the geometry by 90 degrees
+	geometry.rotateX(Math.PI / 2);
+
+
+	return geometry;
+}
+
+
+
 function createObject(objectVals) {
   "use strict";
 
@@ -142,21 +196,22 @@ function createObject(objectVals) {
   let geometry;
 
   switch (objectVals.type) {
-    case Primitives.CUBE:
-      geometry = new THREE.BoxGeometry(
-        objectVals.width,
-        objectVals.height,
-        objectVals.depth
-      );
+    case Primitives.RING:
+			geometry = createRingGeometry(
+				objectVals.innerRadius,
+				objectVals.outerRadius,
+				objectVals.height,
+				objectVals.thetaSegments
+			);
       break;
     case Primitives.CYLINDER:
-        geometry = new THREE.CylinderGeometry(
-            objectVals.width,
-            objectVals.width,
-            objectVals.height
-        );
-        break;
-      
+      geometry = new THREE.CylinderGeometry(
+        objectVals.width,
+        objectVals.width,
+        objectVals.height
+      );
+      break;
+
     default:
       break;
   }
@@ -166,11 +221,28 @@ function createObject(objectVals) {
   return object;
 }
 
-function createMerryGoRound() {
-    const base = createObject(baseCylinderVals);
-    base.position.set(baseCylinderVals.positionX, baseCylinderVals.positionY, baseCylinderVals.positionZ);
-    scene.add(base);
+function createInnerRing() {
+  const innerRing = createObject(innerRingVals);
+  merryGoRound.add(innerRing);
+  innerRing.position.set(
+    innerRingVals.positionX,
+    innerRingVals.positionY,
+    innerRingVals.positionZ
+  );
+}
 
+function createMerryGoRound() {
+  merryGoRound = new THREE.Object3D();
+  const base = createObject(baseCylinderVals);
+	const innerRing = createInnerRing(innerRingVals);
+
+  merryGoRound.add(base);
+  base.position.set(
+    baseCylinderVals.positionX,
+    baseCylinderVals.positionY,
+    baseCylinderVals.positionZ
+  );
+  scene.add(merryGoRound);
 }
 
 //////////////////////
