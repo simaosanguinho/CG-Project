@@ -247,6 +247,16 @@ function createObject(objectVals) {
   return object;
 }
 
+function createBase() {
+	const base = createObject(baseCylinderVals);
+	base.position.set(
+		baseCylinderVals.positionX,
+		baseCylinderVals.positionY,
+		baseCylinderVals.positionZ
+	);
+	return base;
+}
+
 function createInnerRing() {
   const innerRing = createObject(innerRingVals);
   innerRing.position.set(
@@ -281,7 +291,7 @@ function createOuterRing() {
 
 function createMerryGoRound() {
   merryGoRound = new THREE.Object3D();
-  const base = createObject(baseCylinderVals);
+  const base = createBase(baseCylinderVals);	
 	const innerRing = createInnerRing(innerRingVals);
 	const middleRing = createMiddleRing(middleRingVals);
 	const outerRing = createOuterRing(outerRingVals);
@@ -291,11 +301,6 @@ function createMerryGoRound() {
 	merryGoRound.add(middleRing);
 	merryGoRound.add(outerRing);
 
-  base.position.set(
-    baseCylinderVals.positionX,
-    baseCylinderVals.positionY,
-    baseCylinderVals.positionZ
-  );
   scene.add(merryGoRound);
 }
 
