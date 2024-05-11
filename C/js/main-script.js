@@ -91,6 +91,19 @@ const middleRingVals = {
 	name: "middleRing",
 };
 
+const outerRingVals = {
+	innerRadius: 4.5 * UNIT,
+	outerRadius: 6 * UNIT,
+	thetaSegments: 1000,
+	height: 1 * UNIT,
+	positionX: 0 * UNIT,
+	positionY: 1 * UNIT,
+	positionZ: 0 * UNIT,
+	type: Primitives.RING,
+	material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+	name: "outerRing",
+};
+
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -255,16 +268,29 @@ function createMiddleRing() {
 	return middleRing;
 }
 
+function createOuterRing() {
+	const outerRing = createObject(outerRingVals);
+	merryGoRound.add(outerRing);
+	outerRing.position.set(
+		outerRingVals.positionX,
+		outerRingVals.positionY,
+		outerRingVals.positionZ
+	);
+	return outerRing;
+}
 
 function createMerryGoRound() {
   merryGoRound = new THREE.Object3D();
   const base = createObject(baseCylinderVals);
 	const innerRing = createInnerRing(innerRingVals);
 	const middleRing = createMiddleRing(middleRingVals);
+	const outerRing = createOuterRing(outerRingVals);
 
   merryGoRound.add(base);
 	merryGoRound.add(innerRing);
 	merryGoRound.add(middleRing);
+	merryGoRound.add(outerRing);
+
   base.position.set(
     baseCylinderVals.positionX,
     baseCylinderVals.positionY,
