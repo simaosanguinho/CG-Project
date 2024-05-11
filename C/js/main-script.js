@@ -7,7 +7,7 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 //////////////////////
 /* GLOBAL VARIABLES */
 //////////////////////
-const UNIT = 20;
+const UNIT = 80;
 
 const CLOCK = new THREE.Clock();
 
@@ -31,29 +31,52 @@ const cameraValues = [
 ];
 
 const AXIS = {
-    X: "x",
-    Y: "y",
-    Z: "z",
-  };
-  
-  const Primitives = {
-    RING: "ring",
-    CYLINDER: "cylinder",
-  };
+  X: "x",
+  Y: "y",
+  Z: "z",
+};
+
+const Primitives = {
+  RING: "ring",
+  CYLINDER: "cylinder",
+};
+
+const colors = {
+  white: 0xeff1f5,
+  black: 0x4c4f69,
+  red: 0xd20f39,
+  green: 0x40a02b,
+  blue: 0x1e66f5,
+  yellow: 0xdf8e1d,
+  cyan: 0x04a5e5,
+  magenta: 0xdd7878,
+};
+
+const baseCylinderVals = {
+  width: 1.75 * UNIT,
+  depth: 1.75 * UNIT,
+  height: 4 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 2 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.CYLINDER,
+  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  name: "base",
+};
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
 function createScene() {
-    "use strict";
-  
-    scene = new THREE.Scene();
-  
-    // set the background color of the scene
-    scene.background = new THREE.Color(backgroundColor);
-    // add axes to the scene
-    axes = new THREE.AxesHelper(10000);
-    scene.add(axes);
-  }
+  "use strict";
+
+  scene = new THREE.Scene();
+
+  // set the background color of the scene
+  scene.background = new THREE.Color(backgroundColor);
+  // add axes to the scene
+  axes = new THREE.AxesHelper(10000);
+  scene.add(axes);
+}
 
 //////////////////////
 /* CREATE CAMERA(S) */
@@ -112,34 +135,43 @@ function createOrtographicCamera(cameraValue) {
 /* CREATE OBJECT3D(S) */
 ////////////////////////
 function createObject(objectVals) {
-    "use strict";
-  
-    const object = new THREE.Object3D();
-  
-    let geometry;
-  
-    switch (objectVals.type) {
-      case Primitives.CUBE:
-        geometry = new THREE.BoxGeometry(
-          objectVals.width,
-          objectVals.height,
-          objectVals.depth
+  "use strict";
+
+  const object = new THREE.Object3D();
+
+  let geometry;
+
+  switch (objectVals.type) {
+    case Primitives.CUBE:
+      geometry = new THREE.BoxGeometry(
+        objectVals.width,
+        objectVals.height,
+        objectVals.depth
+      );
+      break;
+    case Primitives.CYLINDER:
+        geometry = new THREE.CylinderGeometry(
+            objectVals.width,
+            objectVals.width,
+            objectVals.height
         );
         break;
-        case Primitives.SPHERE:
-        geometry = new THREE.SphereGeometry(
-          objectVals.radius,
-          objectVals.widthSegments,
-          objectVals.heightSegments
-        );
-      default:
-        break;
-    }
-  
-    object.add(new THREE.Mesh(geometry, objectVals.material));
-    sceneObjects.set(objectVals.name, object);
-    return object;
+      
+    default:
+      break;
   }
+
+  object.add(new THREE.Mesh(geometry, objectVals.material));
+  sceneObjects.set(objectVals.name, object);
+  return object;
+}
+
+function createMerryGoRound() {
+    const base = createObject(baseCylinderVals);
+    base.position.set(baseCylinderVals.positionX, baseCylinderVals.positionY, baseCylinderVals.positionZ);
+    scene.add(base);
+
+}
 
 //////////////////////
 /* CHECK COLLISIONS */
@@ -160,7 +192,6 @@ function handleCollisions() {
 ////////////
 function update() {
   "use strict";
-
 }
 
 /////////////
@@ -169,7 +200,7 @@ function update() {
 function render() {
   "use strict";
 
-    renderer.render(scene, camera);
+  renderer.render(scene, camera);
 }
 
 ////////////////////////////////
@@ -187,11 +218,13 @@ function init() {
   createCameras();
 
   // create object functions
-  let cube = new THREE.Mesh(
-    new THREE.BoxGeometry(20*UNIT, 20*UNIT, 20*UNIT),
+  /* let cube = new THREE.Mesh(
+    new THREE.BoxGeometry(20 * UNIT, 20 * UNIT, 20 * UNIT),
     new THREE.MeshNormalMaterial()
   );
-    scene.add(cube);
+  scene.add(cube); */
+
+  createMerryGoRound();
 
   //resetSteps();
 }
