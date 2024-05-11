@@ -119,6 +119,15 @@ const innerRingTranslationVals = {
 	max: innerRingVals.positionY,
 };
 
+const middleRingTranslationVals = {
+	step: 0.5,
+	translationAxis: AXIS.Y,
+	inMotion: 0,
+	translationDirection: -1,
+	min: middleRingVals.positionY - middleRingVals.height / 2 + 0.1*UNIT,
+	max: middleRingVals.positionY,
+};
+
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -395,7 +404,7 @@ function createInnerRing() {
 }
 
 function createMiddleRing() {
-	const middleRing = createObject(middleRingVals);
+	middleRing = createObject(middleRingVals);
 	merryGoRound.add(middleRing);
 	middleRing.position.set(
 		middleRingVals.positionX,
@@ -406,7 +415,7 @@ function createMiddleRing() {
 }
 
 function createOuterRing() {
-	const outerRing = createObject(outerRingVals);
+	outerRing = createObject(outerRingVals);
 	merryGoRound.add(outerRing);
 	outerRing.position.set(
 		outerRingVals.positionX,
@@ -456,6 +465,7 @@ function update() {
 
 	// move Rings up and down
 	moveInnerRing();
+	moveMiddleRing();
 }
 
 function moveInnerRing() {
@@ -479,6 +489,29 @@ function moveInnerRing() {
       innerRingTranslationVals.translationAxis
     );
   }
+}
+
+function moveMiddleRing() {
+	if (middleRingTranslationVals.inMotion === 1) {
+		// Check if the middle ring is already at its minimum or maximum position
+		if (
+			middleRing.position.y <=
+				middleRingTranslationVals.min ||
+			middleRing.position.y >=
+				middleRingTranslationVals.max
+		) {
+			// Change the translation direction when reaching the limits
+			middleRingTranslationVals.translationDirection *= -1;
+		}
+
+		// Translate the middle ring
+		translateObject(
+			middleRing,
+			middleRingTranslationVals,
+			merryGoRound.position.y,
+			middleRingTranslationVals.translationAxis
+		);
+	}
 }
 
 /////////////
@@ -544,9 +577,11 @@ function onKeyDown(e) {
   "use strict";
   switch (e.keyCode) {
     case 49: //1
-			console.log("inner ring moving");
 			innerRingTranslationVals.inMotion = 1;
       break;
+		case 50: //2
+			middleRingTranslationVals.inMotion = 1;
+			break;
 		case 32: //space - show axes
 		  console.log("show axes");
       break;
@@ -563,6 +598,9 @@ function onKeyUp(e) {
     case 49: //1
 			innerRingTranslationVals.inMotion = 0;
       break;
+		case 50: //2
+			middleRingTranslationVals.inMotion = 0;
+			break;
 		default:
 			break;
 	}
