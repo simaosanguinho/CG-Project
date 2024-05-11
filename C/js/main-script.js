@@ -111,7 +111,7 @@ const merryGoRoundRotationVals = {
 };
 
 const innerRingTranslationVals = {
-	step: 0.5,
+	step: 1,
 	translationAxis: AXIS.Y,
 	inMotion: 0,
 	translationDirection: -1,
@@ -120,12 +120,21 @@ const innerRingTranslationVals = {
 };
 
 const middleRingTranslationVals = {
-	step: 0.5,
+	step: 1,
 	translationAxis: AXIS.Y,
 	inMotion: 0,
 	translationDirection: -1,
 	min: middleRingVals.positionY - middleRingVals.height / 2 + 0.1*UNIT,
 	max: middleRingVals.positionY,
+};
+
+const outerRingTranslationVals = {
+	step: 1,
+	translationAxis: AXIS.Y,
+	inMotion: 0,
+	translationDirection: -1,
+	min: outerRingVals.positionY - outerRingVals.height / 2 + 0.1*UNIT,
+	max: outerRingVals.positionY,
 };
 
 /////////////////////
@@ -440,6 +449,7 @@ function createMerryGoRound() {
   scene.add(merryGoRound);
 }
 
+
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
@@ -466,6 +476,7 @@ function update() {
 	// move Rings up and down
 	moveInnerRing();
 	moveMiddleRing();
+	moveOuterRing();
 }
 
 function moveInnerRing() {
@@ -510,6 +521,29 @@ function moveMiddleRing() {
 			middleRingTranslationVals,
 			merryGoRound.position.y,
 			middleRingTranslationVals.translationAxis
+		);
+	}
+}
+
+function moveOuterRing() {
+	if (outerRingTranslationVals.inMotion === 1) {
+		// Check if the outer ring is already at its minimum or maximum position
+		if (
+			outerRing.position.y <=
+				outerRingTranslationVals.min ||
+			outerRing.position.y >=
+				outerRingTranslationVals.max
+		) {
+			// Change the translation direction when reaching the limits
+			outerRingTranslationVals.translationDirection *= -1;
+		}
+
+		// Translate the outer ring
+		translateObject(
+			outerRing,
+			outerRingTranslationVals,
+			merryGoRound.position.y,
+			outerRingTranslationVals.translationAxis
 		);
 	}
 }
@@ -582,6 +616,9 @@ function onKeyDown(e) {
 		case 50: //2
 			middleRingTranslationVals.inMotion = 1;
 			break;
+		case 51: //3
+			outerRingTranslationVals.inMotion = 1;
+			break;
 		case 32: //space - show axes
 		  console.log("show axes");
       break;
@@ -600,6 +637,9 @@ function onKeyUp(e) {
       break;
 		case 50: //2
 			middleRingTranslationVals.inMotion = 0;
+			break;
+		case 51: //3
+			outerRingTranslationVals.inMotion = 0;
 			break;
 		default:
 			break;
