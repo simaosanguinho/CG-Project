@@ -454,11 +454,12 @@ function update() {
 	rotateObject(merryGoRound, merryGoRoundRotationVals, merryGoRoundRotationVals.rotationAxis, true);
 	//	console.log(merryGoRound.rotation.y);
 
-	moveRingsUpDown();
+	// move Rings up and down
+	moveInnerRing();
 }
 
-function moveRingsUpDown() {
-  if (innerRingTranslationVals.inMotion === 1) {
+function moveInnerRing() {
+	if (innerRingTranslationVals.inMotion === 1) {
     // Check if the inner ring is already at its minimum or maximum position
     if (
       innerRing.position.y <=
@@ -479,7 +480,6 @@ function moveRingsUpDown() {
     );
   }
 }
-
 
 /////////////
 /* DISPLAY */
