@@ -13,7 +13,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#eaf6ff";
+const backgroundColor = "#0d131f"
 
 const fov = 70;
 
@@ -104,6 +104,11 @@ const outerRingVals = {
 	name: "outerRing",
 };
 
+const merryGoRoundRotationVals = {
+	step: 0.01,
+	rotationAxis: AXIS.Y,
+	rotationDirection: 1,
+};
 /////////////////////
 /* CREATE SCENE(S) */
 /////////////////////
@@ -175,6 +180,54 @@ function createOrtographicCamera(cameraValue) {
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
+function myClamp(value, min, max, infinite) {
+  "use strict";
+  if (infinite) {
+    return value;
+  }
+  if (value < min) {
+    return min;
+  }
+  if (value >= max) {
+    return max;
+  }
+  return value;
+}
+
+function rotateObject(object, rotationVals, axis, infinite) {
+  "use strict";
+  switch (axis) {
+    case AXIS.X:
+      object.rotation.x = myClamp(
+        object.rotation.x +
+          rotationVals.rotationDirection * rotationVals.step * delta,
+        rotationVals.min,
+        rotationVals.max,
+        infinite
+      );
+      break;
+    case AXIS.Y:
+      object.rotation.y = myClamp(
+        object.rotation.y +
+          rotationVals.rotationDirection * rotationVals.step * delta,
+        rotationVals.min,
+        rotationVals.max,
+        infinite
+      );
+      break;
+    case AXIS.Z:
+      object.rotation.z = myClamp(
+        object.rotation.z +
+          rotationVals.rotationDirection * rotationVals.step * delta,
+        rotationVals.min,
+        rotationVals.max,
+        infinite
+      );
+      break;
+    default:
+  }
+}
+
 function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
 	// Create a shape representing the ring
 	const shape = new THREE.Shape();
@@ -212,7 +265,6 @@ function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
 
 	return geometry;
 }
-
 
 function createObject(objectVals) {
   "use strict";
@@ -264,6 +316,16 @@ function createInnerRing() {
     innerRingVals.positionY,
     innerRingVals.positionZ
   );
+
+	// create cube on top of inner ring - DEBUG
+	/* const cube = new THREE.Mesh(
+		new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
+		new THREE.MeshBasicMaterial({ color: colors.white })
+	);
+	cube.position.set(0, innerRingVals.height / 2, 0);
+	innerRing.add(cube); */
+	
+
 	return innerRing;	
 }
 
@@ -323,6 +385,9 @@ function handleCollisions() {
 ////////////
 function update() {
   "use strict";
+
+	rotateObject(merryGoRound, merryGoRoundRotationVals, merryGoRoundRotationVals.rotationAxis, true);
+	console.log(merryGoRound.rotation.y);
 }
 
 /////////////
@@ -383,8 +448,21 @@ function onResize() {
 ///////////////////////
 function onKeyDown(e) {
   "use strict";
+  switch (e.keyCode) {
+    case 49: //1
+      currentCamera = cameras[0];
+      makeButtonActive("1");
+      break;
+    case 55: // 7
+      isWireframe = !isWireframe;
+      updateWireframe();
+      makeButtonActive("7");
+      break;
+    case 32: //space - show axes
+      axes.visible = !axes.visible;
+      break;
+  }
 }
-
 ///////////////////////
 /* KEY UP CALLBACK */
 ///////////////////////
