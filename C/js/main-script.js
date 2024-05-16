@@ -3,6 +3,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+import image from './images/image.png';
+
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -13,7 +15,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#0d131f"
+const backgroundColor = "#ffffff" // #0d131f
 
 const fov = 70;
 
@@ -449,6 +451,22 @@ function createMerryGoRound() {
   scene.add(merryGoRound);
 }
 
+function createSkyBox() {
+  "use strict";
+
+  var textureLoader = new THREE.TextureLoader();
+  var texture = textureLoader.load(image);
+
+  var geometry = new THREE.SphereGeometry(20 * UNIT, 20 * UNIT, 20 * UNIT);
+  geometry.thetaLength = Math.PI / 2;
+  var material = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+  });
+  var sphere = new THREE.Mesh(geometry, material);
+  scene.add(sphere);
+}
+
 
 //////////////////////
 /* CHECK COLLISIONS */
@@ -578,6 +596,7 @@ function init() {
   );
   scene.add(cube); */
 
+  createSkyBox();
   createMerryGoRound();
 
   //resetSteps();
