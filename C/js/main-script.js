@@ -4,6 +4,7 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from './images/image.png';
+import { positionGeometry } from "three/examples/jsm/nodes/Nodes.js";
 
 
 //////////////////////
@@ -60,7 +61,7 @@ const baseCylinderVals = {
   depth: 1.75 * UNIT,
   height: 4 * UNIT,
   positionX: 0 * UNIT,
-  positionY: 2 * UNIT,
+  positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
   material: new THREE.MeshBasicMaterial({ color: colors.green }),
@@ -73,7 +74,7 @@ const innerRingVals = {
   thetaSegments: 1000,
 	height: 3 * UNIT,	
   positionX: 0 * UNIT,
-  positionY: 3 * UNIT,
+  positionY: 3.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
   material: new THREE.MeshBasicMaterial({ color: colors.red }),
@@ -86,7 +87,7 @@ const middleRingVals = {
 	thetaSegments: 1000,
 	height: 2 * UNIT,	
 	positionX: 0 * UNIT,
-	positionY: 2 * UNIT,
+	positionY: 2.5 * UNIT,
 	positionZ: 0 * UNIT,
 	type: Primitives.RING,
 	material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
@@ -99,7 +100,7 @@ const outerRingVals = {
 	thetaSegments: 1000,
 	height: 1 * UNIT,
 	positionX: 0 * UNIT,
-	positionY: 1 * UNIT,
+	positionY: 1.5 * UNIT,
 	positionZ: 0 * UNIT,
 	type: Primitives.RING,
 	material: new THREE.MeshBasicMaterial({ color: colors.blue }),
@@ -437,7 +438,7 @@ function createOuterRing() {
 }
 
 function createMerryGoRound() {
-  merryGoRound = new THREE.Object3D();
+  merryGoRound = new THREE.Group();
   const base = createBase(baseCylinderVals);	
 	const innerRing = createInnerRing(innerRingVals);
 	const middleRing = createMiddleRing(middleRingVals);
