@@ -457,17 +457,15 @@ function createSkyBox() {
 
   var textureLoader = new THREE.TextureLoader();
   var texture = textureLoader.load(image);
-
-  var geometry = new THREE.SphereGeometry(20 * UNIT, 20 * UNIT, 20 * UNIT);
-  geometry.thetaLength = Math.PI / 2;
+  var geometry = new THREE.SphereGeometry(20 * UNIT, 32, 16, 0, Math.PI * 2, 1.5, 1.64);
   var material = new THREE.MeshBasicMaterial({
     map: texture,
     side: THREE.DoubleSide,
   });
   var sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
+  sphere.rotation.x = Math.PI;
 }
-
 
 //////////////////////
 /* CHECK COLLISIONS */
