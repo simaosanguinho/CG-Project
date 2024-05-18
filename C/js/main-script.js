@@ -225,6 +225,12 @@ function createPerspectiveCamera(cameraValue, location) {
   }
 }
 
+function resetCamera() {
+  camera.position.set(cameraValues[0][0], cameraValues[0][1], cameraValues[0][2]);
+  camera.lookAt(scene.position);
+
+}
+
 /////////////////////
 /* CREATE LIGHT(S) */
 /////////////////////
@@ -730,11 +736,12 @@ function init() {
   createMerryGoRound();
   createMobiusStrip();
 
-  addNoClipControls();
+  
   //resetSteps();
 
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
+  addNoClipControls();
 }
 
 /////////////////////
@@ -793,8 +800,10 @@ function onKeyDown(e) {
     case 76 || 108:
       moveDown = true;
       break;
-    case 32: //space - show axes
-      console.log("show axes");
+    case 48: // 0
+      // return to initial position camera
+      resetCamera();
+      controls.unlock();
       break;
     default:
       break;
