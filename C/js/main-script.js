@@ -7,6 +7,7 @@ import image from "./images/image.png";
 import { positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 import { createMobiusStripVertices } from "./mobius-strip-vertices";
+import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -225,9 +226,12 @@ function createPerspectiveCamera(cameraValue, location) {
 }
 
 function resetCamera() {
-  camera.position.set(cameraValues[0][0], cameraValues[0][1], cameraValues[0][2]);
+  camera.position.set(
+    cameraValues[0][0],
+    cameraValues[0][1],
+    cameraValues[0][2]
+  );
   camera.lookAt(scene.position);
-
 }
 
 /////////////////////
@@ -551,6 +555,20 @@ function createSkyBox() {
   var sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
   sphere.rotation.x = Math.PI;
+}
+
+//////////////////////
+/* PARAMETRIC OBJECTS */
+//////////////////////
+function hyperbolicParaboloid(u, v, target) {
+  const a = 1,
+    b = 1;
+  u = (u - 0.5) * 2;
+  v = (v - 0.5) * 2;
+  const x = u;
+  const y = v;
+  const z = (u * u) / (a * a) - (v * v) / (b * b);
+  target.set(x, y, z);
 }
 
 //////////////////////
