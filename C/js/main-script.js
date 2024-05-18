@@ -68,13 +68,13 @@ const Primitives = {
   MOBIUS_STRIP: "mobiusStrip",
 };
 
-const directionalLightValues = {
+const directionalLightVals = {
   color: colors.white,
   intensity: 2,
   position: [1 * UNIT, 6 * UNIT, 1 * UNIT],
 };
 
-const ambientLightValues = {
+const ambientLightVals = {
   color: colors.orange,
   intensity: 0.5,
 };
@@ -236,13 +236,13 @@ function resetCamera() {
 function createDirectionalLight() {
   "use strict";
   const light = new THREE.DirectionalLight(
-    directionalLightValues.color,
-    directionalLightValues.intensity
+    directionalLightVals.color,
+    directionalLightVals.intensity
   );
   light.position.set(
-    directionalLightValues.position[0],
-    directionalLightValues.position[1],
-    directionalLightValues.position[2]
+    directionalLightVals.position[0],
+    directionalLightVals.position[1],
+    directionalLightVals.position[2]
   );
   scene.add(light);
   globalLights.set("directionalLight", light);
@@ -251,8 +251,8 @@ function createDirectionalLight() {
 function createAmbientLight(color, intensity) {
   "use strict";
   const light = new THREE.AmbientLight(
-    ambientLightValues.color,
-    ambientLightValues.intensity
+    ambientLightVals.color,
+    ambientLightVals.intensity
   );
   scene.add(light);
   globalLights.set("ambientLight", light);
