@@ -653,7 +653,40 @@ function romanSurface(u, v, target) {
   target.set(x, y, z);
 }
 
+const parametricFunctions = [
+  hyperbolicParaboloid,
+  torus,
+  kleinBottle,
+  catenoid,
+  helicoid,
+  enneperSurface,
+  boySurface,
+  romanSurface,
+];
 
+function createInnerRingParametricObjects() {
+  const innerRing = sceneObjects.get("innerRing");
+  // place the parametric objects on the inner ring, equally spaced
+  const numObjects = parametricFunctions.length;
+  const radius = innerRingVals.outerRadius;
+  const height = innerRingVals.height;
+  const thetaSegments = innerRingVals.thetaSegments;
+  const step = (Math.PI * 2) / numObjects;
+  for (let i = 0; i < numObjects; i++) {
+    const object = new THREE.Object3D();
+    const geometry = new ParametricGeometry(parametricFunctions[i], 100, 100);
+    const material = new THREE.MeshBasicMaterial({ color: colors.white });
+    object.add(new THREE.Mesh(geometry, material));
+    object.position.set(
+      radius * Math.cos(i * step),
+      height / 8,
+      radius * Math.sin(i * step)
+    );
+    // scale up
+    object.scale.set(5, 5, 5);
+    innerRing.add(object);
+  }
+}
 
 //////////////////////
 /* CHECK COLLISIONS */
