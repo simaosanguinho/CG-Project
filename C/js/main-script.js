@@ -25,6 +25,7 @@ const maxViewDistance = 10000;
 
 const cameras = [];
 let sceneObjects = new Map();
+let globalLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 
@@ -56,6 +57,11 @@ const directionalLightValues = {
   color: colors.white,
   intensity: 2,
   position: [1 * UNIT, 6 * UNIT, 1 * UNIT],
+};
+
+const ambientLightValues = {
+  color: colors.orange,
+  intensity: 0.5,
 };
 
 const baseCylinderVals = {
@@ -201,6 +207,23 @@ function createDirectionalLight() {
     directionalLightValues.position[2]
   );
   scene.add(light);
+  globalLights.set("directionalLight", light);
+}
+
+function createAmbientLight(color, intensity) {
+  "use strict";
+  const light = new THREE.AmbientLight(
+    ambientLightValues.color,
+    ambientLightValues.intensity
+  );
+  scene.add(light);
+  globalLights.set("ambientLight", light);
+}
+
+function createLights() {
+  "use strict";
+  createDirectionalLight();
+  createAmbientLight();
 }
 
 ////////////////////////
@@ -588,7 +611,7 @@ function init() {
 
   createScene();
   createCameras();
-  createDirectionalLight();
+  createLights();
 
   // create object functions
   /* let cube = new THREE.Mesh(
