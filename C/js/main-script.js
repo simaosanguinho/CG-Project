@@ -622,6 +622,15 @@ function helicoid(u, v, target) {
   target.set(x, y, z);
 }
 
+function enneperSurface(u, v, target) {
+  u = (u - 0.5) * 4;
+  v = (v - 0.5) * 4;
+  const x = u - u ** 3 / 3 + u * v ** 2;
+  const y = v - v ** 3 / 3 + v * u ** 2;
+  const z = u ** 2 - v ** 2;
+  target.set(x, y, z);
+}
+
 
 
 //////////////////////
