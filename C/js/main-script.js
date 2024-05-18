@@ -612,6 +612,16 @@ function catenoid(u, v, target) {
   target.set(x, y, z);
 }
 
+function helicoid(u, v, target) {
+  const a = 1;
+  u = (u - 0.5) * 4;
+  v = v * Math.PI * 2;
+  const x = u * Math.cos(v);
+  const y = u * Math.sin(v);
+  const z = a * v;
+  target.set(x, y, z);
+}
+
 
 
 //////////////////////
