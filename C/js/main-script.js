@@ -23,11 +23,26 @@ const minViewDistance = 1;
 
 const maxViewDistance = 10000;
 
+const colors = {
+  white: 0xeff1f5,
+  black: 0x4c4f69,
+  red: 0xd20f39,
+  green: 0x40a02b,
+  blue: 0x1e66f5,
+  yellow: 0xdf8e1d,
+  cyan: 0x04a5e5,
+  magenta: 0xdd7878,
+};
+
 const cameras = [];
 let sceneObjects = new Map();
 let globalLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
+let meshLambertMaterial = new THREE.MeshLambertMaterial({ color: colors.green });
+let meshPhongMaterial = new THREE.MeshPhongMaterial({ color: colors.red });
+let meshToonMaterial = new THREE.MeshToonMaterial({ color: colors.yellow });
+let meshNormalMaterial = new THREE.MeshNormalMaterial();
 
 const cameraValues = [[1000, 1000, 1000]];
 
@@ -40,17 +55,6 @@ const AXIS = {
 const Primitives = {
   RING: "ring",
   CYLINDER: "cylinder",
-};
-
-const colors = {
-  white: 0xeff1f5,
-  black: 0x4c4f69,
-  red: 0xd20f39,
-  green: 0x40a02b,
-  blue: 0x1e66f5,
-  yellow: 0xdf8e1d,
-  cyan: 0x04a5e5,
-  magenta: 0xdd7878,
 };
 
 const directionalLightValues = {
@@ -72,7 +76,8 @@ const baseCylinderVals = {
   positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
-  material: new THREE.MeshLambertMaterial({ color: colors.green }),
+  //material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  material : meshLambertMaterial,
   name: "base",
 };
 
@@ -85,20 +90,22 @@ const innerRingVals = {
   positionY: 3.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  material: new THREE.MeshLambertMaterial({ color: colors.red }),
+  //material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: meshPhongMaterial,
   name: "innerRing",
 };
 
 const middleRingVals = {
-  innerRadius: 3 * UNIT,
-  outerRadius: 4.5 * UNIT,
-  thetaSegments: 1000,
-  height: 2 * UNIT,
-  positionX: 0 * UNIT,
-  positionY: 2.5 * UNIT,
-  positionZ: 0 * UNIT,
-  type: Primitives.RING,
-  material: new THREE.MeshLambertMaterial({ color: colors.yellow }),
+	innerRadius: 3 * UNIT,
+	outerRadius: 4.5 * UNIT,
+	thetaSegments: 1000,
+	height: 2 * UNIT,	
+	positionX: 0 * UNIT,
+	positionY: 2.5 * UNIT,
+	positionZ: 0 * UNIT,
+	type: Primitives.RING,
+	//material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+	material: meshToonMaterial,
   name: "middleRing",
 };
 
@@ -111,7 +118,8 @@ const outerRingVals = {
   positionY: 1.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  material: new THREE.MeshLambertMaterial({ color: colors.blue }),
+  // material: new THREE.MeshLambertMaterial({ color: colors.blue }),
+  material: meshNormalMaterial,
   name: "outerRing",
 };
 
