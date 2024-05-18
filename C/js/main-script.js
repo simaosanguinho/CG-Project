@@ -54,7 +54,7 @@ const colors = {
 
 const directionalLightValues = {
   color: colors.white,
-  intensity: 1,
+  intensity: 2,
   position: [1 * UNIT, 6 * UNIT, 1 * UNIT],
 };
 
