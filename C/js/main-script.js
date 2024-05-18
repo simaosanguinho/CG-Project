@@ -4,7 +4,7 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
-import { lights, positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
+import { color, lights, positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
@@ -53,16 +53,17 @@ let parametricObjects = new Map();
 let mobiusStripLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
-let meshLambertMaterial = new THREE.MeshLambertMaterial({
-  color: colors.green,
-});
+let meshBasicMaterial = new THREE.MeshBasicMaterial({ color: colors.magenta });
+let meshLambertMaterial = new THREE.MeshLambertMaterial({ color: colors.green });
 let meshPhongMaterial = new THREE.MeshPhongMaterial({ color: colors.red });
 let meshToonMaterial = new THREE.MeshToonMaterial({ color: colors.yellow });
 let meshNormalMaterial = new THREE.MeshNormalMaterial();
+let latestMaterial = "gouraud";
+let isShadingActive = true;
 
-/////////////////////
+//////////////////////
 /* OBJECT VARIABLES */
-/////////////////////
+//////////////////////
 
 const cameraValues = [[1000, 1000, 1000]];
 
@@ -106,7 +107,8 @@ const baseCylinderVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
   //material: new THREE.MeshBasicMaterial({ color: colors.green }),
-  material: meshLambertMaterial,
+  color: colors.green,
+  material: new THREE.MeshLambertMaterial({ color: colors.green }),
   name: "base",
 };
 
@@ -120,7 +122,8 @@ const innerRingVals = {
   positionZ: 0 * UNIT,
   type: Primitives.RING,
   //material: new THREE.MeshBasicMaterial({ color: colors.red }),
-  material: meshPhongMaterial,
+  color: colors.red,
+  material: new THREE.MeshLambertMaterial({ color: colors.red }),
   name: "innerRing",
 };
 
@@ -134,7 +137,8 @@ const middleRingVals = {
   positionZ: 0 * UNIT,
   type: Primitives.RING,
   //material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
-  material: meshToonMaterial,
+  color: colors.yellow,
+  material: new THREE.MeshLambertMaterial({ color: colors.yellow }),
   name: "middleRing",
 };
 
@@ -148,7 +152,8 @@ const outerRingVals = {
   positionZ: 0 * UNIT,
   type: Primitives.RING,
   // material: new THREE.MeshLambertMaterial({ color: colors.blue }),
-  material: meshNormalMaterial,
+  color: colors.blue,
+  material: new THREE.MeshLambertMaterial({ color: colors.blue }),
   name: "outerRing",
 };
 
@@ -161,7 +166,8 @@ const mobiusStripVals = {
   positionY: 9 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.MOBIUS_STRIP,
-  material: meshToonMaterial,
+  color: colors.yellow,
+  material: new THREE.MeshLambertMaterial({ color: colors.yellow }),
   name: "mobiusStrip",
 };
 
@@ -846,6 +852,56 @@ function createRingParametricObjects(ring, ringVals) {
 }
 
 //////////////////////
+/* TOGGLE MATERIALS */
+//////////////////////
+
+function changeMaterials(material) {
+  latestMaterial = material;
+  switch (material) {
+    case "gouraud":
+      sceneObjects.forEach((object) => {
+        let c = object.children[0].material.color;
+        console.log(c);
+        object.children[0].material = new THREE.MeshLambertMaterial({ color: c });
+      });
+      break;
+    case "phong":
+      sceneObjects.forEach((object) => {
+        let c = object.children[0].material.color;
+        object.children[0].material = new THREE.MeshPhongMaterial({ color: c });
+      });
+      break;
+    case "cartoon":
+      sceneObjects.forEach((object) => {
+        let c = object.children[0].material.color;
+        object.children[0].material = new THREE.MeshToonMaterial({ color: c });
+      });
+      break;
+    case "normal":
+      sceneObjects.forEach((object) => {
+        let c = object.children[0].material.color;
+        object.children[0].material = new THREE.MeshNormalMaterial();
+        object.children[0].material.color = c;
+      });
+      break;
+    default:
+      console.log("Material not found");
+      break;
+  }
+}
+
+function deactivateShading() {
+  sceneObjects.forEach((object) => {
+    let c = object.children[0].material.color;
+    object.children[0].material = new THREE.MeshBasicMaterial({ color: c });
+  });
+}
+
+function activateShading() {
+  changeMaterials(latestMaterial);
+}
+
+//////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
@@ -1101,10 +1157,32 @@ function onKeyDown(e) {
     case 83 || 115: // s or S
       turnOffMobiusStripLights();
       break;
+    case 81 || 113: // q or Q
+      changeMaterials("gouraud");
+      break;
+    case 87 || 119: // w or W
+      changeMaterials("phong");
+      break;
+    case 69 || 101: // e or E
+      changeMaterials("cartoon");
+      break;
+    case 82 || 114: // r or R
+      changeMaterials("normal");
+      break;
+    case 84 || 116: // t or T
+      if (isShadingActive) {
+        deactivateShading();
+        isShadingActive = false;
+      } else {
+        activateShading();
+        isShadingActive = true;
+      }
+      break;
     default:
       break;
   }
 }
+
 ///////////////////////
 /* KEY UP CALLBACK */
 ///////////////////////
