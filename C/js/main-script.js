@@ -571,6 +571,19 @@ function hyperbolicParaboloid(u, v, target) {
   target.set(x, y, z);
 }
 
+function torus(u, v, target) {
+  const R = 1,
+    r = 0.3;
+  u = u * Math.PI * 2;
+  v = v * Math.PI * 2;
+  const x = (R + r * Math.cos(v)) * Math.cos(u);
+  const y = (R + r * Math.cos(v)) * Math.sin(u);
+  const z = r * Math.sin(v);
+  target.set(x, y, z);
+}
+
+
+
 //////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
@@ -752,8 +765,8 @@ function init() {
   createSkyBox();
   createMerryGoRound();
   createMobiusStrip();
+  createInnerRingParametricObjects();
 
-  
   //resetSteps();
 
   window.addEventListener("keydown", onKeyDown);
