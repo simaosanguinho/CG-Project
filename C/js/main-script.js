@@ -272,7 +272,7 @@ function createAmbientLight(color, intensity) {
   globalLights.set("ambientLight", light);
 }
 
-function createPointLight(positionVals) {
+function createPointLight(positionVals, index) {
   "use strict";
   const light = new THREE.PointLight(
     pointLightVals.color,
@@ -281,30 +281,15 @@ function createPointLight(positionVals) {
     2
   );
 
-  // Position the light at the top of the base cylinder
-  // const baseHeight = baseCylinderVals.height;
-  /* light.position.set(
-    baseCylinderVals.positionX,
-    baseCylinderVals.positionY + baseHeight,
-    baseCylinderVals.positionZ
-  ); */
   light.position.set(
     positionVals[0],
     positionVals[1],
     positionVals[2]
   );
 
-  /* const lightSphere = new THREE.Mesh(
-    new THREE.SphereGeometry(UNIT / 10, 16, 8),
-    new THREE.MeshBasicMaterial({ color: pointLightVals.color })
-  );
-  lightSphere.position.copy(light.position);
-  scene.add(lightSphere);
- */
-
   mobiusStripStructure.add(light);
   // mobiusStripStructure.add(lightSphere);
-  mobiusStripLights.set("pointLightAtBaseTop", light);
+  mobiusStripLights.set(index, light);
 }
 
 function createLights() {
@@ -597,7 +582,8 @@ function createMobiusStrip() {
   
   // Add point ligths to the mobius strip
   pointLightLocations.forEach((point) => {
-    createPointLight(point);
+    // send also index of point to create a unique name for the light
+    createPointLight(point, pointLightLocations.indexOf(point));
   });
 
   mobiusStripStructure.rotation.x += Math.PI / 2;
