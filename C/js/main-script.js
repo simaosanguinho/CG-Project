@@ -687,7 +687,7 @@ function createRingParametricObjects(ring, ringVals) {
     object.add(new THREE.Mesh(geometry, material));
     object.position.set(
       radius * Math.cos(i * step) * 0.85,
-      height / 8,
+      height / UNIT + 0.4 * UNIT,
       radius * Math.sin(i * step) * 0.85
     );
 
