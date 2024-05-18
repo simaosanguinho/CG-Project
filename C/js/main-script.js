@@ -644,6 +644,15 @@ function boySurface(u, v, target) {
   target.set(x, y, z);
 }
 
+function romanSurface(u, v, target) {
+  u = (u - 0.5) * Math.PI * 2;
+  v = (v - 0.5) * Math.PI * 2;
+  const x = Math.cos(u) * Math.sin(v);
+  const y = Math.sin(u) * Math.sin(v);
+  const z = Math.cos(u) * Math.cos(v);
+  target.set(x, y, z);
+}
+
 
 
 //////////////////////
