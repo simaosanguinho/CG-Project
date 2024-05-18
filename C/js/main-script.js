@@ -66,7 +66,7 @@ const baseCylinderVals = {
   positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
-  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  material: new THREE.MeshLambertMaterial({ color: colors.green }),
   name: "base",
 };
 
@@ -79,7 +79,7 @@ const innerRingVals = {
   positionY: 3.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshLambertMaterial({ color: colors.red }),
   name: "innerRing",
 };
 
@@ -92,7 +92,7 @@ const middleRingVals = {
   positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+  material: new THREE.MeshLambertMaterial({ color: colors.yellow }),
   name: "middleRing",
 };
 
@@ -105,7 +105,7 @@ const outerRingVals = {
   positionY: 1.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  material: new THREE.MeshBasicMaterial({ color: colors.blue }),
+  material: new THREE.MeshLambertMaterial({ color: colors.blue }),
   name: "outerRing",
 };
 
@@ -390,7 +390,7 @@ function createBase() {
   // create cube on top of inner ring - DEBUG
   /* const cube = new THREE.Mesh(
 		new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
-		new THREE.MeshBasicMaterial({ color: colors.white })
+		new THREE.MeshLambertMaterial({ color: colors.white })
 	);
 	cube.position.set(0, 3 * UNIT, 0);
 	base.add(cube); */
@@ -460,7 +460,7 @@ function createSkyBox() {
     1.5,
     1.64
   );
-  var material = new THREE.MeshBasicMaterial({
+  var material = new THREE.MeshLambertMaterial({
     map: texture,
     side: THREE.DoubleSide,
   });
