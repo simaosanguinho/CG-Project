@@ -49,6 +49,7 @@ const objectsPerRing = 8;
 const cameras = [];
 let sceneObjects = new Map();
 let globalLights = new Map();
+let parametricObjects = new Map();
 let mobiusStripLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
@@ -501,6 +502,12 @@ function translateObject(object, objectValues, offset, axis) {
   }
 }
 
+function rotateParametricObjects() {
+  parametricObjects.forEach((object) => {
+    object.rotation.y += 0.01;
+  });
+}
+
 function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
   // Create a shape representing the ring
   const shape = new THREE.Shape();
@@ -820,9 +827,21 @@ function createRingParametricObjects(ring, ringVals) {
 
     // scale up if object is too small
     object.children[0].geometry.computeBoundingSphere();
-    let scaleFactor = object.children[0].geometry.boundingSphere.radius;
-    object.scale.set(40 / scaleFactor, 40 / scaleFactor, 40 / scaleFactor);
+    const scale = Math.random() * (60 - 30) + 30;
+    const scaleFactor = object.children[0].geometry.boundingSphere.radius;
+
+    object.scale.set(
+      scale / scaleFactor,
+      scale / scaleFactor,
+      scale / scaleFactor
+    );
+
+    // rotate object
+    object.rotation.x = Math.random() * Math.PI;
+    object.rotation.y = Math.random() * Math.PI;
+    object.rotation.z = Math.random() * Math.PI;
     ring.add(object);
+    parametricObjects.set(`object${i}-${ringVals.name}`, object);
   }
 }
 
@@ -905,6 +924,8 @@ function update() {
   moveInnerRing();
   moveMiddleRing();
   moveOuterRing();
+
+  rotateParametricObjects();
 
   checkNoCLipMovement();
 }
