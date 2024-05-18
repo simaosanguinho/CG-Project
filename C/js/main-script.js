@@ -602,6 +602,16 @@ function kleinBottle(u, v, target) {
   target.set(x, y, z);
 }
 
+function catenoid(u, v, target) {
+  const a = 1;
+  u = (u - 0.5) * 4;
+  v = v * Math.PI * 2;
+  const x = a * Math.cosh(u) * Math.cos(v);
+  const y = a * Math.cosh(u) * Math.sin(v);
+  const z = u;
+  target.set(x, y, z);
+}
+
 
 
 //////////////////////
