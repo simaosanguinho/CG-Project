@@ -52,6 +52,12 @@ const colors = {
   magenta: 0xdd7878,
 };
 
+const directionalLightValues = {
+  color: colors.white,
+  intensity: 1,
+  position: [1 * UNIT, 6 * UNIT, 1 * UNIT],
+};
+
 const baseCylinderVals = {
   width: 1.75 * UNIT,
   depth: 1.75 * UNIT,
@@ -183,6 +189,19 @@ function createPerspectiveCamera(cameraValue, location) {
 /////////////////////
 /* CREATE LIGHT(S) */
 /////////////////////
+function createDirectionalLight() {
+  "use strict";
+  const light = new THREE.DirectionalLight(
+    directionalLightValues.color,
+    directionalLightValues.intensity
+  );
+  light.position.set(
+    directionalLightValues.position[0],
+    directionalLightValues.position[1],
+    directionalLightValues.position[2]
+  );
+  scene.add(light);
+}
 
 ////////////////////////
 /* CREATE OBJECT3D(S) */
@@ -569,6 +588,7 @@ function init() {
 
   createScene();
   createCameras();
+  createDirectionalLight();
 
   // create object functions
   /* let cube = new THREE.Mesh(
