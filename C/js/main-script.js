@@ -226,6 +226,12 @@ function createLights() {
   createAmbientLight();
 }
 
+function toggleDirectionalLight() {
+  "use strict";
+  const light = globalLights.get("directionalLight");
+  light.visible = !light.visible;
+}
+
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
@@ -662,6 +668,9 @@ function onKeyDown(e) {
     case 51: //3
       outerRingTranslationVals.inMotion = 1;
       break;
+     case 68 || 100: // d or D
+      toggleDirectionalLight();
+      break;
     case 32: //space - show axes
       console.log("show axes");
       break;
@@ -684,6 +693,8 @@ function onKeyUp(e) {
     case 51: //3
       outerRingTranslationVals.inMotion = 0;
       break;
+     case 68 || 100: // d or D
+      break; 
     default:
       break;
   }
