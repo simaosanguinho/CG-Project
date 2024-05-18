@@ -631,6 +631,19 @@ function enneperSurface(u, v, target) {
   target.set(x, y, z);
 }
 
+function boySurface(u, v, target) {
+  u = u * Math.PI;
+  v = v * 2 * Math.PI;
+  const x =
+    (Math.cos(u) * Math.sin(v)) /
+    (Math.sqrt(2) - Math.sin(2 * u) * Math.sin(3 * v));
+  const y =
+    (Math.sin(u) * Math.sin(v)) /
+    (Math.sqrt(2) - Math.sin(2 * u) * Math.sin(3 * v));
+  const z = Math.cos(u) / (Math.sqrt(2) - Math.sin(2 * u) * Math.sin(3 * v));
+  target.set(x, y, z);
+}
+
 
 
 //////////////////////
