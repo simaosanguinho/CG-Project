@@ -4,9 +4,8 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
-import { positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
+import { lights, positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
-import { createMobiusStripVertices } from "./mobius-strip-vertices";
 import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
 //////////////////////
@@ -24,7 +23,15 @@ const fov = 70;
 
 const minViewDistance = 1;
 
-const maxViewDistance = 10000;
+const maxViewDistance = 1000000;
+
+const N_POINT_LIGHTS = 8;
+
+let pointLightLocations = [];
+
+const vertices = new Float32Array(createMobiusStripVertices());
+
+let mobiusStripStructure = new THREE.Group();
 
 const colors = {
   white: 0xeff1f5,
@@ -42,6 +49,7 @@ const objectsPerRing = 8;
 const cameras = [];
 let sceneObjects = new Map();
 let globalLights = new Map();
+let mobiusStripLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 let meshLambertMaterial = new THREE.MeshLambertMaterial({
@@ -57,7 +65,6 @@ let meshNormalMaterial = new THREE.MeshNormalMaterial();
 
 const cameraValues = [[1000, 1000, 1000]];
 
-const vertices = createMobiusStripVertices();
 
 const AXIS = {
   X: "x",
@@ -80,6 +87,13 @@ const directionalLightVals = {
 const ambientLightVals = {
   color: colors.orange,
   intensity: 0.5,
+};
+
+const pointLightVals = {
+  color: colors.white,
+  intensity: 1000,
+  distance: 100,
+  decay: 10000,
 };
 
 const baseCylinderVals = {
@@ -146,7 +160,7 @@ const mobiusStripVals = {
   positionY: 9 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.MOBIUS_STRIP,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: meshToonMaterial,
   name: "mobiusStrip",
 };
 
@@ -264,6 +278,26 @@ function createAmbientLight(color, intensity) {
   globalLights.set("ambientLight", light);
 }
 
+function createPointLight(positionVals, index) {
+  "use strict";
+  const light = new THREE.PointLight(
+    pointLightVals.color,
+    pointLightVals.intensity,
+    pointLightVals.distance,
+    2
+  );
+
+  light.position.set(
+    positionVals[0],
+    positionVals[1],
+    positionVals[2]
+  );
+
+  mobiusStripStructure.add(light);
+  // mobiusStripStructure.add(lightSphere);
+  mobiusStripLights.set(index, light);
+}
+
 function createLights() {
   "use strict";
   createDirectionalLight();
@@ -276,9 +310,94 @@ function toggleDirectionalLight() {
   light.visible = !light.visible;
 }
 
+function turnOnMobiusStripLights() {
+  "use strict";
+  mobiusStripLights.forEach((light) => {
+    light.visible = true;
+  });
+}
+
+function turnOffMobiusStripLights() {
+  "use strict";
+  mobiusStripLights.forEach((light) => {
+    light.visible = false;
+  });
+}
+
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
+
+function mobiusStripParameters(u, v) {
+  const x = (1 + (v / 2) * Math.cos(u / 2)) * Math.cos(u);
+  const y = (1 + (v / 2) * Math.cos(u / 2)) * Math.sin(u);
+  const z = (v / 2) * Math.sin(u / 2);
+  return [x, y, z];
+}
+
+function getTriangleCentroid(p0, p1, p2) {
+  const x = (p0[0] + p1[0] + p2[0]) / 3;
+  const y = (p0[1] + p1[1] + p2[1]) / 3;
+  const z = (p0[2] + p1[2] + p2[2]) / 3;
+  return [x, y, z];
+}
+
+function createMobiusStripVertices() {
+  const N = 21;
+  const verticesArray = [];
+  const SCALE_FACTOR = UNIT * 4;
+  let k = 0;
+  let nLights = 0;
+  let pointLightSpacing = Math.round(N*N/N_POINT_LIGHTS);
+
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
+      const u0 = (i / N) * 2 * Math.PI;
+      const u1 = ((i + 1) / N) * 2 * Math.PI;
+      const v0 = (j / N) * 2 - 1;
+      const v1 = ((j + 1) / N) * 2 - 1;
+
+      const p0 = mobiusStripParameters(u0, v0);
+      const p1 = mobiusStripParameters(u1, v0);
+      const p2 = mobiusStripParameters(u0, v1);
+      const p3 = mobiusStripParameters(u1, v1);
+
+      // multiply by SCALE_FACTOR to scale the mobius strip
+      p0[0] *= SCALE_FACTOR;
+      p0[1] *= SCALE_FACTOR;
+      p0[2] *= SCALE_FACTOR;
+      p1[0] *= SCALE_FACTOR;
+      p1[1] *= SCALE_FACTOR;
+      p1[2] *= SCALE_FACTOR;
+      p2[0] *= SCALE_FACTOR;
+      p2[1] *= SCALE_FACTOR;
+      p2[2] *= SCALE_FACTOR;
+      p3[0] *= SCALE_FACTOR;
+      p3[1] *= SCALE_FACTOR;
+      p3[2] *= SCALE_FACTOR;
+
+      verticesArray.push(...p0);
+      verticesArray.push(...p1);
+      verticesArray.push(...p2);
+
+      verticesArray.push(...p1);
+      verticesArray.push(...p3);
+      verticesArray.push(...p2);
+
+      if (k % pointLightSpacing === 0 && nLights < N_POINT_LIGHTS) {
+        pointLightLocations.push(getTriangleCentroid(p0, p1, p2));
+        nLights++;
+      }
+
+      k++;
+    }
+  }
+  pointLightLocations = pointLightLocations.map((point) => {
+    return [point[0], point[1], point[2]];
+  });
+  return verticesArray;
+}
+
 function myClamp(value, min, max, infinite) {
   "use strict";
   if (infinite) {
@@ -459,14 +578,22 @@ function createObject(objectVals) {
 
 function createMobiusStrip() {
   const mobiusStrip = createObject(mobiusStripVals);
-  mobiusStrip.position.set(
+  mobiusStripStructure.add(mobiusStrip);
+
+  mobiusStripStructure.position.set(
     mobiusStripVals.positionX,
     mobiusStripVals.positionY,
     mobiusStripVals.positionZ
   );
+  
+  // Add point ligths to the mobius strip
+  pointLightLocations.forEach((point) => {
+    // send also index of point to create a unique name for the light
+    createPointLight(point, pointLightLocations.indexOf(point));
+  });
 
-  mobiusStrip.rotation.x += Math.PI / 2;
-  scene.add(mobiusStrip);
+  mobiusStripStructure.rotation.x += Math.PI / 2;
+  scene.add(mobiusStripStructure);
 }
 
 function createBase() {
@@ -478,12 +605,12 @@ function createBase() {
   );
 
   // create cube on top of inner ring - DEBUG
-  /* const cube = new THREE.Mesh(
-		new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
-		new THREE.MeshLambertMaterial({ color: colors.white })
-	);
-	cube.position.set(0, 3 * UNIT, 0);
-	base.add(cube); */
+    /* const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
+      new THREE.MeshLambertMaterial({ color: colors.white })
+    );
+    cube.position.set(0, 3 * UNIT, 0);
+    base.add(cube); */
 
   return base;
 }
@@ -773,7 +900,6 @@ function update() {
     merryGoRoundRotationVals.rotationAxis,
     true
   );
-  //	console.log(merryGoRound.rotation.y);
 
   // move Rings up and down
   moveInnerRing();
@@ -868,7 +994,6 @@ function init() {
 
   createScene();
   createCameras();
-  createLights();
 
   // create object functions
   /* let cube = new THREE.Mesh(
@@ -881,8 +1006,7 @@ function init() {
   createMerryGoRound();
   createMobiusStrip();
   createParametricObjects();
-
-  //resetSteps();
+  createLights();
 
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
@@ -950,6 +1074,12 @@ function onKeyDown(e) {
       resetCamera();
       controls.unlock();
       break;
+    case 80 || 112: // p or P
+      turnOnMobiusStripLights();
+      break;
+    case 83 || 115: // s or S
+      turnOffMobiusStripLights();
+      break;
     default:
       break;
   }
@@ -997,4 +1127,3 @@ function onKeyUp(e) {
 init();
 animate();
 
-export { UNIT };
