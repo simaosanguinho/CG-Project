@@ -4,7 +4,8 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
-import { positionGeometry } from "three/examples/jsm/nodes/Nodes.js";
+import { positionGeometry } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
+import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -28,6 +29,10 @@ let sceneObjects = new Map();
 let globalLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
+
+/////////////////////
+/* OBJECT VARIABLES */
+/////////////////////
 
 const cameraValues = [[1000, 1000, 1000]];
 
@@ -512,6 +517,54 @@ function handleCollisions() {
   "use strict";
 }
 
+////////////////////////
+/* NOCLIP MOVEMENT */
+////////////////////////
+let controls;
+const moveSpeed = 100;
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+let moveUp = false;
+let moveDown = false;
+
+function checkNoCLipMovement() {
+  "use strict";
+  const moveDistance = (moveSpeed * delta) / 10;
+  if (moveForward) controls.moveForward(moveDistance);
+  if (moveBackward) controls.moveForward(-moveDistance);
+  if (moveLeft) controls.moveRight(-moveDistance);
+  if (moveRight) controls.moveRight(moveDistance);
+  if (moveUp) controls.getObject().position.y += moveDistance;
+  if (moveDown) controls.getObject().position.y -= moveDistance;
+}
+
+function addNoClipControls() {
+  ("use strict");
+  // noClip
+  // Initialize PointerLockControls
+  controls = new PointerLockControls(camera, document.body);
+  scene.add(controls.getObject());
+
+  // Pointer lock event listeners
+  document.addEventListener("click", () => {
+    controls.lock();
+  });
+
+  controls.addEventListener("lock", () => {
+    console.log("Pointer locked");
+  });
+
+  controls.addEventListener("unlock", () => {
+    console.log("Pointer unlocked");
+  });
+}
+
+/////////
+/* END */
+/////////
+
 ////////////
 /* UPDATE */
 ////////////
@@ -530,6 +583,8 @@ function update() {
   moveInnerRing();
   moveMiddleRing();
   moveOuterRing();
+
+  checkNoCLipMovement();
 }
 
 function moveInnerRing() {
@@ -608,7 +663,7 @@ function render() {
 /* INITIALIZE ANIMATION CYCLE */
 ////////////////////////////////
 function init() {
-  "use strict";
+  ("use strict");
   renderer = new THREE.WebGLRenderer({
     antialias: true,
   });
@@ -629,6 +684,7 @@ function init() {
   createSkyBox();
   createMerryGoRound();
 
+  addNoClipControls();
   //resetSteps();
 
   window.addEventListener("keydown", onKeyDown);
@@ -668,8 +724,28 @@ function onKeyDown(e) {
     case 51: //3
       outerRingTranslationVals.inMotion = 1;
       break;
-     case 68 || 100: // d or D
+    case 68 || 100: // d or D
       toggleDirectionalLight();
+      break;
+    case 37: // left arrow
+      moveLeft = true;
+      break;
+    case 38: // up arrow
+      moveForward = true;
+      break;
+    case 39: // right arrow
+      moveRight = true;
+      break;
+    case 40: // down arrow
+      moveBackward = true;
+      break;
+     // o or O 
+     case 79 || 111:
+      moveUp = true;
+      break; 
+    // l or L
+    case 76 || 108:
+      moveDown = true;
       break;
     case 32: //space - show axes
       console.log("show axes");
@@ -693,8 +769,26 @@ function onKeyUp(e) {
     case 51: //3
       outerRingTranslationVals.inMotion = 0;
       break;
-     case 68 || 100: // d or D
-      break; 
+    case 37: // left arrow
+      moveLeft = false;
+      break;
+    case 38: // up arrow
+      moveForward = false;
+      break;
+    case 39: // right arrow
+      moveRight = false;
+      break;
+    case 40: // down arrow
+      moveBackward = false;
+      break;
+    // o or O
+    case 79 || 111:
+      moveUp = false;
+      break;
+    // l or L
+    case 76 || 108:
+      moveDown = false;
+      break;
     default:
       break;
   }
