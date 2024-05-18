@@ -1109,21 +1109,45 @@ function onResize() {
 }
 
 ///////////////////////
+/* Heads-Up Display  */
+///////////////////////
+
+function makeButtonActive(key) {
+  key = key.toUpperCase();
+  const button = document.getElementById(`key${key}`);
+  if (button) {
+    button.classList.add("active");
+  }
+}
+
+function makeButtonInactive(key) {
+  key = key.toUpperCase();
+  const button = document.getElementById(`key${key}`);
+  if (button) {
+    button.classList.remove("active");
+  }
+}
+
+///////////////////////
 /* KEY DOWN CALLBACK */
 ///////////////////////
 function onKeyDown(e) {
   "use strict";
   switch (e.keyCode) {
     case 49: //1
+      makeButtonActive("1");
       innerRingTranslationVals.inMotion = 1;
       break;
     case 50: //2
+      makeButtonActive("2");
       middleRingTranslationVals.inMotion = 1;
       break;
     case 51: //3
+      makeButtonActive("3");
       outerRingTranslationVals.inMotion = 1;
       break;
     case 68 || 100: // d or D
+      makeButtonActive("D");
       toggleDirectionalLight();
       break;
     case 37: // left arrow
@@ -1152,24 +1176,31 @@ function onKeyDown(e) {
       controls.unlock();
       break;
     case 80 || 112: // p or P
+      makeButtonActive("P");
       turnOnMobiusStripLights();
       break;
     case 83 || 115: // s or S
+      makeButtonActive("S");
       turnOffMobiusStripLights();
       break;
     case 81 || 113: // q or Q
+      makeButtonActive("Q");
       changeMaterials("gouraud");
       break;
     case 87 || 119: // w or W
+      makeButtonActive("W");
       changeMaterials("phong");
       break;
     case 69 || 101: // e or E
+      makeButtonActive("E");
       changeMaterials("cartoon");
       break;
     case 82 || 114: // r or R
+      makeButtonActive("R");
       changeMaterials("normal");
       break;
     case 84 || 116: // t or T
+      makeButtonActive("T");
       if (isShadingActive) {
         deactivateShading();
         isShadingActive = false;
@@ -1190,12 +1221,15 @@ function onKeyUp(e) {
   "use strict";
   switch (e.keyCode) {
     case 49: //1
+      makeButtonInactive("1");
       innerRingTranslationVals.inMotion = 0;
       break;
     case 50: //2
+      makeButtonInactive("2");
       middleRingTranslationVals.inMotion = 0;
       break;
     case 51: //3
+      makeButtonInactive("3");
       outerRingTranslationVals.inMotion = 0;
       break;
     case 37: // left arrow
@@ -1217,6 +1251,30 @@ function onKeyUp(e) {
     // l or L
     case 76 || 108:
       moveDown = false;
+      break;
+    case 68 || 100: // d or D
+      makeButtonInactive("D");
+      break;
+    case 80 || 112: // p or P
+      makeButtonInactive("P");
+      break;
+    case 83 || 115: // s or S
+      makeButtonInactive("S");
+      break;
+    case 81 || 113: // q or Q
+      makeButtonInactive("Q");
+      break;
+    case 87 || 119: // w or W
+      makeButtonInactive("W");
+      break;
+    case 69 || 101: // e or E
+      makeButtonInactive("E");
+      break;
+    case 82 || 114: // r or R
+      makeButtonInactive("R");
+      break;
+    case 84 || 116: // t or T
+      makeButtonInactive("T");
       break;
     default:
       break;
