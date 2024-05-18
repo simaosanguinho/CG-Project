@@ -3,9 +3,8 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
-import image from './images/image.png';
+import image from "./images/image.png";
 import { positionGeometry } from "three/examples/jsm/nodes/Nodes.js";
-
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -16,7 +15,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#ffffff" // #0d131f
+const backgroundColor = "#0d131f"; // #ffffff
 
 const fov = 70;
 
@@ -26,13 +25,11 @@ const maxViewDistance = 10000;
 
 const cameras = [];
 let sceneObjects = new Map();
+let globalLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 
-const cameraValues = [
-  [1000, 1000, 1000],
-  [1000, 1000, 1000],
-];
+const cameraValues = [[1000, 1000, 1000]];
 
 const AXIS = {
   X: "x",
@@ -56,6 +53,17 @@ const colors = {
   magenta: 0xdd7878,
 };
 
+const directionalLightValues = {
+  color: colors.white,
+  intensity: 2,
+  position: [1 * UNIT, 6 * UNIT, 1 * UNIT],
+};
+
+const ambientLightValues = {
+  color: colors.orange,
+  intensity: 0.5,
+};
+
 const baseCylinderVals = {
   width: 1.75 * UNIT,
   depth: 1.75 * UNIT,
@@ -64,7 +72,7 @@ const baseCylinderVals = {
   positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
-  material: new THREE.MeshBasicMaterial({ color: colors.green }),
+  material: new THREE.MeshLambertMaterial({ color: colors.green }),
   name: "base",
 };
 
@@ -72,72 +80,72 @@ const innerRingVals = {
   innerRadius: 1.5 * UNIT,
   outerRadius: 3 * UNIT,
   thetaSegments: 1000,
-	height: 3 * UNIT,	
+  height: 3 * UNIT,
   positionX: 0 * UNIT,
   positionY: 3.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  material: new THREE.MeshLambertMaterial({ color: colors.red }),
   name: "innerRing",
 };
 
 const middleRingVals = {
-	innerRadius: 3 * UNIT,
-	outerRadius: 4.5 * UNIT,
-	thetaSegments: 1000,
-	height: 2 * UNIT,	
-	positionX: 0 * UNIT,
-	positionY: 2.5 * UNIT,
-	positionZ: 0 * UNIT,
-	type: Primitives.RING,
-	material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
-	name: "middleRing",
+  innerRadius: 3 * UNIT,
+  outerRadius: 4.5 * UNIT,
+  thetaSegments: 1000,
+  height: 2 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 2.5 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.RING,
+  material: new THREE.MeshLambertMaterial({ color: colors.yellow }),
+  name: "middleRing",
 };
 
 const outerRingVals = {
-	innerRadius: 4.5 * UNIT,
-	outerRadius: 6 * UNIT,
-	thetaSegments: 1000,
-	height: 1 * UNIT,
-	positionX: 0 * UNIT,
-	positionY: 1.5 * UNIT,
-	positionZ: 0 * UNIT,
-	type: Primitives.RING,
-	material: new THREE.MeshBasicMaterial({ color: colors.blue }),
-	name: "outerRing",
+  innerRadius: 4.5 * UNIT,
+  outerRadius: 6 * UNIT,
+  thetaSegments: 1000,
+  height: 1 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 1.5 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.RING,
+  material: new THREE.MeshLambertMaterial({ color: colors.blue }),
+  name: "outerRing",
 };
 
 const merryGoRoundRotationVals = {
-	step: 0.01,
-	rotationAxis: AXIS.Y,
-	rotationDirection: 1,
+  step: 0.01,
+  rotationAxis: AXIS.Y,
+  rotationDirection: 1,
 };
 
 const innerRingTranslationVals = {
-	step: 1,
-	translationAxis: AXIS.Y,
-	inMotion: 0,
-	translationDirection: -1,
-	min: innerRingVals.positionY - innerRingVals.height / 2 + 0.6 * UNIT,
-	max: innerRingVals.positionY,
+  step: 1,
+  translationAxis: AXIS.Y,
+  inMotion: 0,
+  translationDirection: -1,
+  min: innerRingVals.positionY - innerRingVals.height / 2 + 0.6 * UNIT,
+  max: innerRingVals.positionY,
 };
 
 const middleRingTranslationVals = {
-	step: 1,
-	translationAxis: AXIS.Y,
-	inMotion: 0,
-	translationDirection: -1,
-	min: middleRingVals.positionY - middleRingVals.height / 2 + 0.1*UNIT,
-	max: middleRingVals.positionY,
+  step: 1,
+  translationAxis: AXIS.Y,
+  inMotion: 0,
+  translationDirection: -1,
+  min: middleRingVals.positionY - middleRingVals.height / 2 + 0.1 * UNIT,
+  max: middleRingVals.positionY,
 };
 
 const outerRingTranslationVals = {
-	step: 1,
-	translationAxis: AXIS.Y,
-	inMotion: 0,
-	translationDirection: -1,
-	min: outerRingVals.positionY - outerRingVals.height / 2 + 0.1*UNIT,
-	max: outerRingVals.positionY,
+  step: 1,
+  translationAxis: AXIS.Y,
+  inMotion: 0,
+  translationDirection: -1,
+  min: outerRingVals.positionY - outerRingVals.height / 2 + 0.1 * UNIT,
+  max: outerRingVals.positionY,
 };
 
 /////////////////////
@@ -160,8 +168,7 @@ function createScene() {
 //////////////////////
 function createCameras() {
   "use strict";
-  createOrtographicCamera(cameraValues[0]);
-  createPerspectiveCamera(cameraValues[1], null);
+  createPerspectiveCamera(cameraValues[0], null);
 }
 
 function createPerspectiveCamera(cameraValue, location) {
@@ -185,28 +192,45 @@ function createPerspectiveCamera(cameraValue, location) {
   }
 }
 
-function createOrtographicCamera(cameraValue) {
-  "use strict";
-  camera = new THREE.OrthographicCamera(
-    -window.innerWidth / 2,
-    window.innerWidth / 2,
-    window.innerHeight / 2,
-    -window.innerHeight / 2,
-    minViewDistance,
-    maxViewDistance
-  );
-
-  camera.position.x = cameraValue[0];
-  camera.position.y = cameraValue[1];
-  camera.position.z = cameraValue[2];
-  camera.lookAt(scene.position);
-
-  cameras.push(camera);
-}
-
 /////////////////////
 /* CREATE LIGHT(S) */
 /////////////////////
+function createDirectionalLight() {
+  "use strict";
+  const light = new THREE.DirectionalLight(
+    directionalLightValues.color,
+    directionalLightValues.intensity
+  );
+  light.position.set(
+    directionalLightValues.position[0],
+    directionalLightValues.position[1],
+    directionalLightValues.position[2]
+  );
+  scene.add(light);
+  globalLights.set("directionalLight", light);
+}
+
+function createAmbientLight(color, intensity) {
+  "use strict";
+  const light = new THREE.AmbientLight(
+    ambientLightValues.color,
+    ambientLightValues.intensity
+  );
+  scene.add(light);
+  globalLights.set("ambientLight", light);
+}
+
+function createLights() {
+  "use strict";
+  createDirectionalLight();
+  createAmbientLight();
+}
+
+function toggleDirectionalLight() {
+  "use strict";
+  const light = globalLights.get("directionalLight");
+  light.visible = !light.visible;
+}
 
 ////////////////////////
 /* CREATE OBJECT3D(S) */
@@ -315,41 +339,40 @@ function translateObject(object, objectValues, offset, axis) {
 }
 
 function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
-	// Create a shape representing the ring
-	const shape = new THREE.Shape();
+  // Create a shape representing the ring
+  const shape = new THREE.Shape();
 
-	// Define the outer ring
-	shape.moveTo(outerRadius, 0);
-	for (let i = 1; i <= thetaSegments; i++) {
-			const theta = (i / thetaSegments) * Math.PI * 2;
-			const x = Math.cos(theta) * outerRadius;
-			const y = Math.sin(theta) * outerRadius;
-			shape.lineTo(x, y);
-	}
+  // Define the outer ring
+  shape.moveTo(outerRadius, 0);
+  for (let i = 1; i <= thetaSegments; i++) {
+    const theta = (i / thetaSegments) * Math.PI * 2;
+    const x = Math.cos(theta) * outerRadius;
+    const y = Math.sin(theta) * outerRadius;
+    shape.lineTo(x, y);
+  }
 
-	// Define the inner ring
-	shape.moveTo(innerRadius, 0);
-	for (let i = 1; i <= thetaSegments; i++) {
-			const theta = (i / thetaSegments) * Math.PI * 2;
-			const x = Math.cos(theta) * innerRadius;
-			const y = Math.sin(theta) * innerRadius;
-			shape.lineTo(x, y);
-	}
+  // Define the inner ring
+  shape.moveTo(innerRadius, 0);
+  for (let i = 1; i <= thetaSegments; i++) {
+    const theta = (i / thetaSegments) * Math.PI * 2;
+    const x = Math.cos(theta) * innerRadius;
+    const y = Math.sin(theta) * innerRadius;
+    shape.lineTo(x, y);
+  }
 
-	// Create extrude settings
-	const extrudeSettings = {
-			steps: 1,
-			depth: height,
-			bevelEnabled: false,
-	};
-	// Create the extruded geometry
-	const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+  // Create extrude settings
+  const extrudeSettings = {
+    steps: 1,
+    depth: height,
+    bevelEnabled: false,
+  };
+  // Create the extruded geometry
+  const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
-	// Rotate the geometry by 90 degrees
-	geometry.rotateX(Math.PI / 2);
+  // Rotate the geometry by 90 degrees
+  geometry.rotateX(Math.PI / 2);
 
-
-	return geometry;
+  return geometry;
 }
 
 function createObject(objectVals) {
@@ -361,12 +384,12 @@ function createObject(objectVals) {
 
   switch (objectVals.type) {
     case Primitives.RING:
-			geometry = createRingGeometry(
-				objectVals.innerRadius,
-				objectVals.outerRadius,
-				objectVals.height,
-				objectVals.thetaSegments
-			);
+      geometry = createRingGeometry(
+        objectVals.innerRadius,
+        objectVals.outerRadius,
+        objectVals.height,
+        objectVals.thetaSegments
+      );
       break;
     case Primitives.CYLINDER:
       geometry = new THREE.CylinderGeometry(
@@ -386,22 +409,22 @@ function createObject(objectVals) {
 }
 
 function createBase() {
-	const base = createObject(baseCylinderVals);
-	base.position.set(
-		baseCylinderVals.positionX,
-		baseCylinderVals.positionY,
-		baseCylinderVals.positionZ
-	);
+  const base = createObject(baseCylinderVals);
+  base.position.set(
+    baseCylinderVals.positionX,
+    baseCylinderVals.positionY,
+    baseCylinderVals.positionZ
+  );
 
-	// create cube on top of inner ring - DEBUG
-	/* const cube = new THREE.Mesh(
+  // create cube on top of inner ring - DEBUG
+  /* const cube = new THREE.Mesh(
 		new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
-		new THREE.MeshBasicMaterial({ color: colors.white })
+		new THREE.MeshLambertMaterial({ color: colors.white })
 	);
 	cube.position.set(0, 3 * UNIT, 0);
 	base.add(cube); */
 
-	return base;
+  return base;
 }
 
 function createInnerRing() {
@@ -412,42 +435,42 @@ function createInnerRing() {
     innerRingVals.positionZ
   );
 
-	return innerRing;	
+  return innerRing;
 }
 
 function createMiddleRing() {
-	middleRing = createObject(middleRingVals);
-	merryGoRound.add(middleRing);
-	middleRing.position.set(
-		middleRingVals.positionX,
-		middleRingVals.positionY,
-		middleRingVals.positionZ
-	);
-	return middleRing;
+  middleRing = createObject(middleRingVals);
+  merryGoRound.add(middleRing);
+  middleRing.position.set(
+    middleRingVals.positionX,
+    middleRingVals.positionY,
+    middleRingVals.positionZ
+  );
+  return middleRing;
 }
 
 function createOuterRing() {
-	outerRing = createObject(outerRingVals);
-	merryGoRound.add(outerRing);
-	outerRing.position.set(
-		outerRingVals.positionX,
-		outerRingVals.positionY,
-		outerRingVals.positionZ
-	);
-	return outerRing;
+  outerRing = createObject(outerRingVals);
+  merryGoRound.add(outerRing);
+  outerRing.position.set(
+    outerRingVals.positionX,
+    outerRingVals.positionY,
+    outerRingVals.positionZ
+  );
+  return outerRing;
 }
 
 function createMerryGoRound() {
   merryGoRound = new THREE.Group();
-  const base = createBase(baseCylinderVals);	
-	const innerRing = createInnerRing(innerRingVals);
-	const middleRing = createMiddleRing(middleRingVals);
-	const outerRing = createOuterRing(outerRingVals);
+  const base = createBase(baseCylinderVals);
+  const innerRing = createInnerRing(innerRingVals);
+  const middleRing = createMiddleRing(middleRingVals);
+  const outerRing = createOuterRing(outerRingVals);
 
   merryGoRound.add(base);
-	merryGoRound.add(innerRing);
-	merryGoRound.add(middleRing);
-	merryGoRound.add(outerRing);
+  merryGoRound.add(innerRing);
+  merryGoRound.add(middleRing);
+  merryGoRound.add(outerRing);
 
   scene.add(merryGoRound);
 }
@@ -457,8 +480,16 @@ function createSkyBox() {
 
   var textureLoader = new THREE.TextureLoader();
   var texture = textureLoader.load(image);
-  var geometry = new THREE.SphereGeometry(20 * UNIT, 32, 16, 0, Math.PI * 2, 1.5, 1.64);
-  var material = new THREE.MeshBasicMaterial({
+  var geometry = new THREE.SphereGeometry(
+    20 * UNIT,
+    32,
+    16,
+    0,
+    Math.PI * 2,
+    1.5,
+    1.64
+  );
+  var material = new THREE.MeshLambertMaterial({
     map: texture,
     side: THREE.DoubleSide,
   });
@@ -487,23 +518,26 @@ function handleCollisions() {
 function update() {
   "use strict";
 
-	rotateObject(merryGoRound, merryGoRoundRotationVals, merryGoRoundRotationVals.rotationAxis, true);
-	//	console.log(merryGoRound.rotation.y);
+  rotateObject(
+    merryGoRound,
+    merryGoRoundRotationVals,
+    merryGoRoundRotationVals.rotationAxis,
+    true
+  );
+  //	console.log(merryGoRound.rotation.y);
 
-	// move Rings up and down
-	moveInnerRing();
-	moveMiddleRing();
-	moveOuterRing();
+  // move Rings up and down
+  moveInnerRing();
+  moveMiddleRing();
+  moveOuterRing();
 }
 
 function moveInnerRing() {
-	if (innerRingTranslationVals.inMotion === 1) {
+  if (innerRingTranslationVals.inMotion === 1) {
     // Check if the inner ring is already at its minimum or maximum position
     if (
-      innerRing.position.y <=
-        innerRingTranslationVals.min ||
-      innerRing.position.y >=
-        innerRingTranslationVals.max
+      innerRing.position.y <= innerRingTranslationVals.min ||
+      innerRing.position.y >= innerRingTranslationVals.max
     ) {
       // Change the translation direction when reaching the limits
       innerRingTranslationVals.translationDirection *= -1;
@@ -520,49 +554,45 @@ function moveInnerRing() {
 }
 
 function moveMiddleRing() {
-	if (middleRingTranslationVals.inMotion === 1) {
-		// Check if the middle ring is already at its minimum or maximum position
-		if (
-			middleRing.position.y <=
-				middleRingTranslationVals.min ||
-			middleRing.position.y >=
-				middleRingTranslationVals.max
-		) {
-			// Change the translation direction when reaching the limits
-			middleRingTranslationVals.translationDirection *= -1;
-		}
+  if (middleRingTranslationVals.inMotion === 1) {
+    // Check if the middle ring is already at its minimum or maximum position
+    if (
+      middleRing.position.y <= middleRingTranslationVals.min ||
+      middleRing.position.y >= middleRingTranslationVals.max
+    ) {
+      // Change the translation direction when reaching the limits
+      middleRingTranslationVals.translationDirection *= -1;
+    }
 
-		// Translate the middle ring
-		translateObject(
-			middleRing,
-			middleRingTranslationVals,
-			merryGoRound.position.y,
-			middleRingTranslationVals.translationAxis
-		);
-	}
+    // Translate the middle ring
+    translateObject(
+      middleRing,
+      middleRingTranslationVals,
+      merryGoRound.position.y,
+      middleRingTranslationVals.translationAxis
+    );
+  }
 }
 
 function moveOuterRing() {
-	if (outerRingTranslationVals.inMotion === 1) {
-		// Check if the outer ring is already at its minimum or maximum position
-		if (
-			outerRing.position.y <=
-				outerRingTranslationVals.min ||
-			outerRing.position.y >=
-				outerRingTranslationVals.max
-		) {
-			// Change the translation direction when reaching the limits
-			outerRingTranslationVals.translationDirection *= -1;
-		}
+  if (outerRingTranslationVals.inMotion === 1) {
+    // Check if the outer ring is already at its minimum or maximum position
+    if (
+      outerRing.position.y <= outerRingTranslationVals.min ||
+      outerRing.position.y >= outerRingTranslationVals.max
+    ) {
+      // Change the translation direction when reaching the limits
+      outerRingTranslationVals.translationDirection *= -1;
+    }
 
-		// Translate the outer ring
-		translateObject(
-			outerRing,
-			outerRingTranslationVals,
-			merryGoRound.position.y,
-			outerRingTranslationVals.translationAxis
-		);
-	}
+    // Translate the outer ring
+    translateObject(
+      outerRing,
+      outerRingTranslationVals,
+      merryGoRound.position.y,
+      outerRingTranslationVals.translationAxis
+    );
+  }
 }
 
 /////////////
@@ -587,6 +617,7 @@ function init() {
 
   createScene();
   createCameras();
+  createLights();
 
   // create object functions
   /* let cube = new THREE.Mesh(
@@ -600,8 +631,8 @@ function init() {
 
   //resetSteps();
 
-	window.addEventListener("keydown", onKeyDown);
-  window.addEventListener("keyup", onKeyUp);     
+  window.addEventListener("keydown", onKeyDown);
+  window.addEventListener("keyup", onKeyUp);
 }
 
 /////////////////////
@@ -629,19 +660,22 @@ function onKeyDown(e) {
   "use strict";
   switch (e.keyCode) {
     case 49: //1
-			innerRingTranslationVals.inMotion = 1;
+      innerRingTranslationVals.inMotion = 1;
       break;
-		case 50: //2
-			middleRingTranslationVals.inMotion = 1;
-			break;
-		case 51: //3
-			outerRingTranslationVals.inMotion = 1;
-			break;
-		case 32: //space - show axes
-		  console.log("show axes");
+    case 50: //2
+      middleRingTranslationVals.inMotion = 1;
       break;
-		default:
-			break;
+    case 51: //3
+      outerRingTranslationVals.inMotion = 1;
+      break;
+     case 68 || 100: // d or D
+      toggleDirectionalLight();
+      break;
+    case 32: //space - show axes
+      console.log("show axes");
+      break;
+    default:
+      break;
   }
 }
 ///////////////////////
@@ -651,17 +685,19 @@ function onKeyUp(e) {
   "use strict";
   switch (e.keyCode) {
     case 49: //1
-			innerRingTranslationVals.inMotion = 0;
+      innerRingTranslationVals.inMotion = 0;
       break;
-		case 50: //2
-			middleRingTranslationVals.inMotion = 0;
-			break;
-		case 51: //3
-			outerRingTranslationVals.inMotion = 0;
-			break;
-		default:
-			break;
-	}
+    case 50: //2
+      middleRingTranslationVals.inMotion = 0;
+      break;
+    case 51: //3
+      outerRingTranslationVals.inMotion = 0;
+      break;
+     case 68 || 100: // d or D
+      break; 
+    default:
+      break;
+  }
 }
 
 init();
