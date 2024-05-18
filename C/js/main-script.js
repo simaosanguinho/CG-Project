@@ -16,7 +16,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#ffffff" // #0d131f
+const backgroundColor = "#0d131f" // #ffffff
 
 const fov = 70;
 
@@ -30,7 +30,6 @@ let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 
 const cameraValues = [
-  [1000, 1000, 1000],
   [1000, 1000, 1000],
 ];
 
@@ -160,8 +159,7 @@ function createScene() {
 //////////////////////
 function createCameras() {
   "use strict";
-  createOrtographicCamera(cameraValues[0]);
-  createPerspectiveCamera(cameraValues[1], null);
+  createPerspectiveCamera(cameraValues[0], null);
 }
 
 function createPerspectiveCamera(cameraValue, location) {
@@ -183,25 +181,6 @@ function createPerspectiveCamera(cameraValue, location) {
     location.add(camera);
     camera.lookAt(0, -1, 0);
   }
-}
-
-function createOrtographicCamera(cameraValue) {
-  "use strict";
-  camera = new THREE.OrthographicCamera(
-    -window.innerWidth / 2,
-    window.innerWidth / 2,
-    window.innerHeight / 2,
-    -window.innerHeight / 2,
-    minViewDistance,
-    maxViewDistance
-  );
-
-  camera.position.x = cameraValue[0];
-  camera.position.y = cameraValue[1];
-  camera.position.z = cameraValue[2];
-  camera.lookAt(scene.position);
-
-  cameras.push(camera);
 }
 
 /////////////////////
