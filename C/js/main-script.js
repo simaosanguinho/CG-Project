@@ -4,8 +4,9 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
-import { positionGeometry } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
+import { positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
+import { createMobiusStripVertices } from "./mobius-strip-vertices";
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -40,7 +41,9 @@ let sceneObjects = new Map();
 let globalLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
-let meshLambertMaterial = new THREE.MeshLambertMaterial({ color: colors.green });
+let meshLambertMaterial = new THREE.MeshLambertMaterial({
+  color: colors.green,
+});
 let meshPhongMaterial = new THREE.MeshPhongMaterial({ color: colors.red });
 let meshToonMaterial = new THREE.MeshToonMaterial({ color: colors.yellow });
 let meshNormalMaterial = new THREE.MeshNormalMaterial();
@@ -51,6 +54,9 @@ let meshNormalMaterial = new THREE.MeshNormalMaterial();
 
 const cameraValues = [[1000, 1000, 1000]];
 
+const vertices = createMobiusStripVertices();
+console.log(vertices);
+
 const AXIS = {
   X: "x",
   Y: "y",
@@ -60,6 +66,7 @@ const AXIS = {
 const Primitives = {
   RING: "ring",
   CYLINDER: "cylinder",
+  MOBIUS_STRIP: "mobiusStrip",
 };
 
 const directionalLightValues = {
@@ -82,7 +89,7 @@ const baseCylinderVals = {
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
   //material: new THREE.MeshBasicMaterial({ color: colors.green }),
-  material : meshLambertMaterial,
+  material: meshLambertMaterial,
   name: "base",
 };
 
@@ -101,16 +108,16 @@ const innerRingVals = {
 };
 
 const middleRingVals = {
-	innerRadius: 3 * UNIT,
-	outerRadius: 4.5 * UNIT,
-	thetaSegments: 1000,
-	height: 2 * UNIT,	
-	positionX: 0 * UNIT,
-	positionY: 2.5 * UNIT,
-	positionZ: 0 * UNIT,
-	type: Primitives.RING,
-	//material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
-	material: meshToonMaterial,
+  innerRadius: 3 * UNIT,
+  outerRadius: 4.5 * UNIT,
+  thetaSegments: 1000,
+  height: 2 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 2.5 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.RING,
+  //material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
+  material: meshToonMaterial,
   name: "middleRing",
 };
 
@@ -126,6 +133,19 @@ const outerRingVals = {
   // material: new THREE.MeshLambertMaterial({ color: colors.blue }),
   material: meshNormalMaterial,
   name: "outerRing",
+};
+
+const mobiusStripVals = {
+  innerRadius: 1.5 * UNIT,
+  outerRadius: 3 * UNIT,
+  thetaSegments: 1000,
+  height: 3 * UNIT,
+  positionX: 0 * UNIT,
+  positionY: 9 * UNIT,
+  positionZ: 0 * UNIT,
+  type: Primitives.MOBIUS_STRIP,
+  material: new THREE.MeshBasicMaterial({ color: colors.red }),
+  name: "mobiusStrip",
 };
 
 const merryGoRoundRotationVals = {
@@ -411,6 +431,11 @@ function createObject(objectVals) {
         objectVals.height
       );
       break;
+    case Primitives.MOBIUS_STRIP:
+      geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+      geometry.vertices = vertices;
+      break;
 
     default:
       break;
@@ -419,6 +444,18 @@ function createObject(objectVals) {
   object.add(new THREE.Mesh(geometry, objectVals.material));
   sceneObjects.set(objectVals.name, object);
   return object;
+}
+
+function createMobiusStrip() {
+  const mobiusStrip = createObject(mobiusStripVals);
+  mobiusStrip.position.set(
+    mobiusStripVals.positionX,
+    mobiusStripVals.positionY,
+    mobiusStripVals.positionZ
+  );
+
+  mobiusStrip.rotation.x += Math.PI / 2;
+  scene.add(mobiusStrip);
 }
 
 function createBase() {
@@ -691,6 +728,7 @@ function init() {
 
   createSkyBox();
   createMerryGoRound();
+  createMobiusStrip();
 
   addNoClipControls();
   //resetSteps();
@@ -747,10 +785,10 @@ function onKeyDown(e) {
     case 40: // down arrow
       moveBackward = true;
       break;
-     // o or O 
-     case 79 || 111:
+    // o or O
+    case 79 || 111:
       moveUp = true;
-      break; 
+      break;
     // l or L
     case 76 || 108:
       moveDown = true;
@@ -804,3 +842,5 @@ function onKeyUp(e) {
 
 init();
 animate();
+
+export { UNIT };
