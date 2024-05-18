@@ -55,7 +55,6 @@ let meshNormalMaterial = new THREE.MeshNormalMaterial();
 const cameraValues = [[1000, 1000, 1000]];
 
 const vertices = createMobiusStripVertices();
-console.log(vertices);
 
 const AXIS = {
   X: "x",
