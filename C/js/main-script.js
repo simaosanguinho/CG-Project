@@ -37,6 +37,8 @@ const colors = {
   magenta: 0xdd7878,
 };
 
+const objectsPerRing = 8;
+
 const cameras = [];
 let sceneObjects = new Map();
 let globalLights = new Map();
@@ -664,27 +666,36 @@ const parametricFunctions = [
   romanSurface,
 ];
 
-function createInnerRingParametricObjects() {
+function createParametricObjects() {
   const innerRing = sceneObjects.get("innerRing");
-  // place the parametric objects on the inner ring, equally spaced
-  const numObjects = parametricFunctions.length;
-  const radius = innerRingVals.outerRadius;
-  const height = innerRingVals.height;
-  const thetaSegments = innerRingVals.thetaSegments;
-  const step = (Math.PI * 2) / numObjects;
-  for (let i = 0; i < numObjects; i++) {
+  const middleRing = sceneObjects.get("middleRing");
+  const outerRing = sceneObjects.get("outerRing");
+  createRingParametricObjects(innerRing, innerRingVals);
+  createRingParametricObjects(middleRing, middleRingVals);
+  createRingParametricObjects(outerRing, outerRingVals);
+
+}
+
+function createRingParametricObjects(ring, ringVals) {
+  const radius = ringVals.outerRadius;
+  const height = ringVals.height;
+  const step = (Math.PI * 2) / objectsPerRing;
+  for (let i = 0; i < objectsPerRing; i++) {
     const object = new THREE.Object3D();
     const geometry = new ParametricGeometry(parametricFunctions[i], 100, 100);
-    const material = new THREE.MeshBasicMaterial({ color: colors.white });
+    const material = new THREE.MeshLambertMaterial({ color: colors.white });
     object.add(new THREE.Mesh(geometry, material));
     object.position.set(
-      radius * Math.cos(i * step),
+      radius * Math.cos(i * step) * 0.85,
       height / 8,
-      radius * Math.sin(i * step)
+      radius * Math.sin(i * step) * 0.85
     );
-    // scale up
-    object.scale.set(5, 5, 5);
-    innerRing.add(object);
+
+    // scale up if object is too small
+    object.children[0].geometry.computeBoundingSphere();
+    let scaleFactor = object.children[0].geometry.boundingSphere.radius;
+    object.scale.set(40 / scaleFactor, 40 / scaleFactor, 40 / scaleFactor);
+    ring.add(object);
   }
 }
 
@@ -869,7 +880,7 @@ function init() {
   createSkyBox();
   createMerryGoRound();
   createMobiusStrip();
-  createInnerRingParametricObjects();
+  createParametricObjects();
 
   //resetSteps();
 
