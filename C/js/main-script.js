@@ -582,6 +582,26 @@ function torus(u, v, target) {
   target.set(x, y, z);
 }
 
+function kleinBottle(u, v, target) {
+  u = u * Math.PI * 2;
+  v = v * Math.PI * 2;
+  const a = 3;
+  let x, y, z;
+  if (u < Math.PI) {
+    x =
+      3 * Math.cos(u) * (1 + Math.sin(u)) +
+      2 * (1 - Math.cos(u) / 2) * Math.cos(u) * Math.cos(v);
+    y = 8 * Math.sin(u) + 2 * (1 - Math.cos(u) / 2) * Math.sin(u) * Math.cos(v);
+  } else {
+    x =
+      3 * Math.cos(u) * (1 + Math.sin(u)) +
+      2 * (1 - Math.cos(u) / 2) * Math.cos(v + Math.PI);
+    y = 8 * Math.sin(u);
+  }
+  z = 2 * (1 - Math.cos(u) / 2) * Math.sin(v);
+  target.set(x, y, z);
+}
+
 
 
 //////////////////////
