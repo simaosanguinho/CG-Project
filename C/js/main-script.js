@@ -6,6 +6,7 @@ import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
 import { lights, positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
+import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -42,6 +43,8 @@ const colors = {
   cyan: 0x04a5e5,
   magenta: 0xdd7878,
 };
+
+const objectsPerRing = 8;
 
 const cameras = [];
 let sceneObjects = new Map();
@@ -239,9 +242,12 @@ function createPerspectiveCamera(cameraValue, location) {
 }
 
 function resetCamera() {
-  camera.position.set(cameraValues[0][0], cameraValues[0][1], cameraValues[0][2]);
+  camera.position.set(
+    cameraValues[0][0],
+    cameraValues[0][1],
+    cameraValues[0][2]
+  );
   camera.lookAt(scene.position);
-
 }
 
 /////////////////////
@@ -681,6 +687,146 @@ function createSkyBox() {
 }
 
 //////////////////////
+/* PARAMETRIC OBJECTS */
+//////////////////////
+function hyperbolicParaboloid(u, v, target) {
+  const a = 1,
+    b = 1;
+  u = (u - 0.5) * 2;
+  v = (v - 0.5) * 2;
+  const x = u;
+  const y = v;
+  const z = (u * u) / (a * a) - (v * v) / (b * b);
+  target.set(x, y, z);
+}
+
+function torus(u, v, target) {
+  const R = 1,
+    r = 0.3;
+  u = u * Math.PI * 2;
+  v = v * Math.PI * 2;
+  const x = (R + r * Math.cos(v)) * Math.cos(u);
+  const y = (R + r * Math.cos(v)) * Math.sin(u);
+  const z = r * Math.sin(v);
+  target.set(x, y, z);
+}
+
+function kleinBottle(u, v, target) {
+  u = u * Math.PI * 2;
+  v = v * Math.PI * 2;
+  const a = 3;
+  let x, y, z;
+  if (u < Math.PI) {
+    x =
+      3 * Math.cos(u) * (1 + Math.sin(u)) +
+      2 * (1 - Math.cos(u) / 2) * Math.cos(u) * Math.cos(v);
+    y = 8 * Math.sin(u) + 2 * (1 - Math.cos(u) / 2) * Math.sin(u) * Math.cos(v);
+  } else {
+    x =
+      3 * Math.cos(u) * (1 + Math.sin(u)) +
+      2 * (1 - Math.cos(u) / 2) * Math.cos(v + Math.PI);
+    y = 8 * Math.sin(u);
+  }
+  z = 2 * (1 - Math.cos(u) / 2) * Math.sin(v);
+  target.set(x, y, z);
+}
+
+function catenoid(u, v, target) {
+  const a = 1;
+  u = (u - 0.5) * 4;
+  v = v * Math.PI * 2;
+  const x = a * Math.cosh(u) * Math.cos(v);
+  const y = a * Math.cosh(u) * Math.sin(v);
+  const z = u;
+  target.set(x, y, z);
+}
+
+function helicoid(u, v, target) {
+  const a = 1;
+  u = (u - 0.5) * 4;
+  v = v * Math.PI * 2;
+  const x = u * Math.cos(v);
+  const y = u * Math.sin(v);
+  const z = a * v;
+  target.set(x, y, z);
+}
+
+function enneperSurface(u, v, target) {
+  u = (u - 0.5) * 4;
+  v = (v - 0.5) * 4;
+  const x = u - u ** 3 / 3 + u * v ** 2;
+  const y = v - v ** 3 / 3 + v * u ** 2;
+  const z = u ** 2 - v ** 2;
+  target.set(x, y, z);
+}
+
+function boySurface(u, v, target) {
+  u = u * Math.PI;
+  v = v * 2 * Math.PI;
+  const x =
+    (Math.cos(u) * Math.sin(v)) /
+    (Math.sqrt(2) - Math.sin(2 * u) * Math.sin(3 * v));
+  const y =
+    (Math.sin(u) * Math.sin(v)) /
+    (Math.sqrt(2) - Math.sin(2 * u) * Math.sin(3 * v));
+  const z = Math.cos(u) / (Math.sqrt(2) - Math.sin(2 * u) * Math.sin(3 * v));
+  target.set(x, y, z);
+}
+
+function romanSurface(u, v, target) {
+  u = (u - 0.5) * Math.PI * 2;
+  v = (v - 0.5) * Math.PI * 2;
+  const x = Math.cos(u) * Math.sin(v);
+  const y = Math.sin(u) * Math.sin(v);
+  const z = Math.cos(u) * Math.cos(v);
+  target.set(x, y, z);
+}
+
+const parametricFunctions = [
+  hyperbolicParaboloid,
+  torus,
+  kleinBottle,
+  catenoid,
+  helicoid,
+  enneperSurface,
+  boySurface,
+  romanSurface,
+];
+
+function createParametricObjects() {
+  const innerRing = sceneObjects.get("innerRing");
+  const middleRing = sceneObjects.get("middleRing");
+  const outerRing = sceneObjects.get("outerRing");
+  createRingParametricObjects(innerRing, innerRingVals);
+  createRingParametricObjects(middleRing, middleRingVals);
+  createRingParametricObjects(outerRing, outerRingVals);
+
+}
+
+function createRingParametricObjects(ring, ringVals) {
+  const radius = ringVals.outerRadius;
+  const height = ringVals.height;
+  const step = (Math.PI * 2) / objectsPerRing;
+  for (let i = 0; i < objectsPerRing; i++) {
+    const object = new THREE.Object3D();
+    const geometry = new ParametricGeometry(parametricFunctions[i], 100, 100);
+    const material = new THREE.MeshLambertMaterial({ color: colors.white });
+    object.add(new THREE.Mesh(geometry, material));
+    object.position.set(
+      radius * Math.cos(i * step) * 0.85,
+      height / UNIT + 0.4 * UNIT,
+      radius * Math.sin(i * step) * 0.85
+    );
+
+    // scale up if object is too small
+    object.children[0].geometry.computeBoundingSphere();
+    let scaleFactor = object.children[0].geometry.boundingSphere.radius;
+    object.scale.set(40 / scaleFactor, 40 / scaleFactor, 40 / scaleFactor);
+    ring.add(object);
+  }
+}
+
+//////////////////////
 /* CHECK COLLISIONS */
 //////////////////////
 function checkCollisions() {
@@ -859,8 +1005,7 @@ function init() {
   createSkyBox();
   createMerryGoRound();
   createMobiusStrip();
-  
-  //resetSteps()
+  createParametricObjects();
   createLights();
 
   window.addEventListener("keydown", onKeyDown);
