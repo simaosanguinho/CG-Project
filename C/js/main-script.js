@@ -53,11 +53,6 @@ let parametricObjects = new Map();
 let mobiusStripLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
-let meshBasicMaterial = new THREE.MeshBasicMaterial({ color: colors.magenta });
-let meshLambertMaterial = new THREE.MeshLambertMaterial({ color: colors.green });
-let meshPhongMaterial = new THREE.MeshPhongMaterial({ color: colors.red });
-let meshToonMaterial = new THREE.MeshToonMaterial({ color: colors.yellow });
-let meshNormalMaterial = new THREE.MeshNormalMaterial();
 let latestMaterial = "gouraud";
 let isShadingActive = true;
 
@@ -83,7 +78,7 @@ const Primitives = {
 const directionalLightVals = {
   color: colors.white,
   intensity: 2,
-  position: [1 * UNIT, 6 * UNIT, 1 * UNIT],
+  position: [1 * UNIT, 15 * UNIT, 1 * UNIT],
 };
 
 const ambientLightVals = {
@@ -94,8 +89,8 @@ const ambientLightVals = {
 const pointLightVals = {
   color: colors.white,
   intensity: 1000,
-  distance: 100,
-  decay: 10000,
+  distance: 1000,
+  decay: 1,
 };
 
 const baseCylinderVals = {
@@ -291,7 +286,7 @@ function createPointLight(positionVals, index) {
     pointLightVals.color,
     pointLightVals.intensity,
     pointLightVals.distance,
-    2
+    pointLightVals.decay
   );
 
   light.position.set(
@@ -317,19 +312,13 @@ function toggleDirectionalLight() {
   light.visible = !light.visible;
 }
 
-function turnOnMobiusStripLights() {
+function toogleMobiusStripLights() {
   "use strict";
   mobiusStripLights.forEach((light) => {
-    light.visible = true;
+    light.visible = !light.visible;
   });
 }
 
-function turnOffMobiusStripLights() {
-  "use strict";
-  mobiusStripLights.forEach((light) => {
-    light.visible = false;
-  });
-}
 
 ////////////////////////
 /* CREATE OBJECT3D(S) */
@@ -1192,11 +1181,10 @@ function onKeyDown(e) {
       break;
     case 80 || 112: // p or P
       makeButtonActive("P");
-      turnOnMobiusStripLights();
+      toogleMobiusStripLights();
       break;
     case 83 || 115: // s or S
       makeButtonActive("S");
-      turnOffMobiusStripLights();
       break;
     case 81 || 113: // q or Q
       makeButtonActive("Q");
