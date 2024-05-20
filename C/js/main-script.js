@@ -88,7 +88,7 @@ const ambientLightVals = {
 
 const pointLightVals = {
   color: colors.white,
-  intensity: 1000,
+  intensity: 200,
   distance: 1000,
   decay: 1,
 };
