@@ -802,7 +802,6 @@ function createParametricObjects() {
   createRingParametricObjects(innerRing, innerRingVals);
   createRingParametricObjects(middleRing, middleRingVals);
   createRingParametricObjects(outerRing, outerRingVals);
-
 }
 
 function createRingParametricObjects(ring, ringVals) {
@@ -837,6 +836,7 @@ function createRingParametricObjects(ring, ringVals) {
     object.rotation.z = Math.random() * Math.PI;
     ring.add(object);
     parametricObjects.set(`object${i}-${ringVals.name}`, object);
+    sceneObjects.set(`object${i}-${ringVals.name}`, object);
   }
 }
 
