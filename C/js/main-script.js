@@ -4,7 +4,12 @@ import { VRButton } from "three/addons/webxr/VRButton.js";
 import * as Stats from "three/addons/libs/stats.module.js";
 import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
-import { color, lights, positionGeometry, rotate } from "three/examples/jsm/nodes/Nodes.js"; // for noclip
+import {
+  color,
+  lights,
+  positionGeometry,
+  rotate,
+} from "three/examples/jsm/nodes/Nodes.js"; // for noclip
 import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
@@ -32,6 +37,9 @@ let pointLightLocations = [];
 const vertices = new Float32Array(createMobiusStripVertices());
 
 let mobiusStripStructure = new THREE.Group();
+
+const STOPPED = 0;
+const MOVING = 1;
 
 const colors = {
   white: 0xeff1f5,
@@ -61,7 +69,6 @@ let isShadingActive = true;
 //////////////////////
 
 const cameraValues = [[1000, 1000, 1000]];
-
 
 const AXIS = {
   X: "x",
@@ -175,25 +182,25 @@ const merryGoRoundRotationVals = {
 const innerRingTranslationVals = {
   step: 1,
   translationAxis: AXIS.Y,
-  inMotion: 0,
+  inMotion: 1,
   translationDirection: -1,
   min: innerRingVals.positionY - innerRingVals.height / 2 + 0.6 * UNIT,
   max: innerRingVals.positionY,
 };
 
 const middleRingTranslationVals = {
-  step: 1,
+  step: 1.3,
   translationAxis: AXIS.Y,
-  inMotion: 0,
+  inMotion: 1,
   translationDirection: -1,
   min: middleRingVals.positionY - middleRingVals.height / 2 + 0.1 * UNIT,
   max: middleRingVals.positionY,
 };
 
 const outerRingTranslationVals = {
-  step: 1,
+  step: 0.8,
   translationAxis: AXIS.Y,
-  inMotion: 0,
+  inMotion: 1,
   translationDirection: -1,
   min: outerRingVals.positionY - outerRingVals.height / 2 + 0.1 * UNIT,
   max: outerRingVals.positionY,
@@ -289,11 +296,7 @@ function createPointLight(positionVals, index) {
     pointLightVals.decay
   );
 
-  light.position.set(
-    positionVals[0],
-    positionVals[1],
-    positionVals[2]
-  );
+  light.position.set(positionVals[0], positionVals[1], positionVals[2]);
 
   mobiusStripStructure.add(light);
   // mobiusStripStructure.add(lightSphere);
@@ -319,7 +322,6 @@ function toogleMobiusStripLights() {
   });
 }
 
-
 ////////////////////////
 /* CREATE OBJECT3D(S) */
 ////////////////////////
@@ -344,7 +346,7 @@ function createMobiusStripVertices() {
   const SCALE_FACTOR = UNIT * 4;
   let k = 0;
   let nLights = 0;
-  let pointLightSpacing = Math.round(N*N/N_POINT_LIGHTS);
+  let pointLightSpacing = Math.round((N * N) / N_POINT_LIGHTS);
 
   for (let i = 0; i < N; i++) {
     for (let j = 0; j < N; j++) {
@@ -587,7 +589,7 @@ function createMobiusStrip() {
     mobiusStripVals.positionY,
     mobiusStripVals.positionZ
   );
-  
+
   // Add point ligths to the mobius strip
   pointLightLocations.forEach((point) => {
     // send also index of point to create a unique name for the light
@@ -607,7 +609,7 @@ function createBase() {
   );
 
   // create cube on top of inner ring - DEBUG
-    /* const cube = new THREE.Mesh(
+  /* const cube = new THREE.Mesh(
       new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
       new THREE.MeshLambertMaterial({ color: colors.white })
     );
@@ -846,7 +848,7 @@ function createRingParametricObjects(ring, ringVals) {
 
 function changeMaterials(material) {
   latestMaterial = material;
-  if(!isShadingActive) {
+  if (!isShadingActive) {
     return;
   }
 
@@ -855,7 +857,9 @@ function changeMaterials(material) {
       sceneObjects.forEach((object) => {
         let c = object.children[0].material.color;
         console.log(c);
-        object.children[0].material = new THREE.MeshLambertMaterial({ color: c });
+        object.children[0].material = new THREE.MeshLambertMaterial({
+          color: c,
+        });
       });
       break;
     case "phong":
@@ -980,7 +984,7 @@ function update() {
 }
 
 function moveInnerRing() {
-  if (innerRingTranslationVals.inMotion === 1) {
+  if (innerRingTranslationVals.inMotion === MOVING) {
     // Check if the inner ring is already at its minimum or maximum position
     if (
       innerRing.position.y <= innerRingTranslationVals.min ||
@@ -1144,15 +1148,27 @@ function onKeyDown(e) {
   switch (e.keyCode) {
     case 49: //1
       makeButtonActive("1");
-      innerRingTranslationVals.inMotion = 1;
+      if (innerRingTranslationVals.inMotion === MOVING) {
+        innerRingTranslationVals.inMotion = STOPPED;
+      } else {
+        innerRingTranslationVals.inMotion = MOVING;
+      }
       break;
     case 50: //2
       makeButtonActive("2");
-      middleRingTranslationVals.inMotion = 1;
+      if (middleRingTranslationVals.inMotion === MOVING) {
+        middleRingTranslationVals.inMotion = STOPPED;
+      } else {
+        middleRingTranslationVals.inMotion = MOVING;
+      }
       break;
     case 51: //3
       makeButtonActive("3");
-      outerRingTranslationVals.inMotion = 1;
+      if (outerRingTranslationVals.inMotion === MOVING) {
+        outerRingTranslationVals.inMotion = STOPPED;
+      } else {
+        outerRingTranslationVals.inMotion = MOVING;
+      }
       break;
     case 68 || 100: // d or D
       makeButtonActive("D");
@@ -1229,15 +1245,12 @@ function onKeyUp(e) {
   switch (e.keyCode) {
     case 49: //1
       makeButtonInactive("1");
-      innerRingTranslationVals.inMotion = 0;
       break;
     case 50: //2
       makeButtonInactive("2");
-      middleRingTranslationVals.inMotion = 0;
       break;
     case 51: //3
       makeButtonInactive("3");
-      outerRingTranslationVals.inMotion = 0;
       break;
     case 37: // left arrow
       moveLeft = false;
@@ -1290,4 +1303,3 @@ function onKeyUp(e) {
 
 init();
 animate();
-
