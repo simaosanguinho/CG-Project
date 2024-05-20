@@ -846,6 +846,10 @@ function createRingParametricObjects(ring, ringVals) {
 
 function changeMaterials(material) {
   latestMaterial = material;
+  if(!isShadingActive) {
+    return;
+  }
+
   switch (material) {
     case "gouraud":
       sceneObjects.forEach((object) => {
@@ -1205,11 +1209,11 @@ function onKeyDown(e) {
     case 84 || 116: // t or T
       makeButtonActive("T");
       if (isShadingActive) {
-        deactivateShading();
         isShadingActive = false;
+        deactivateShading();
       } else {
-        activateShading();
         isShadingActive = true;
+        activateShading();
       }
       break;
     default:
