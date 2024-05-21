@@ -1083,7 +1083,6 @@ function init() {
   createMerryGoRound();
   createMobiusStrip();
   createParametricObjects();
-  createMobiusStrip()
   createLights();
 
   window.addEventListener("keydown", onKeyDown);
