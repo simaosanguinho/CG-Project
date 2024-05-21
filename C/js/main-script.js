@@ -851,9 +851,7 @@ function createRingParametricObjects(ring, ringVals) {
 
 function changeMaterials(material) {
   latestMaterial = material;
-  if (!isShadingActive) {
-    return;
-  }
+  isShadingActive = true;
 
   switch (material) {
     case "gouraud":
