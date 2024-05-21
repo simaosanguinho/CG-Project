@@ -838,6 +838,7 @@ function createRingParametricObjects(ring, ringVals) {
     object.rotation.x = Math.random() * Math.PI;
     object.rotation.y = Math.random() * Math.PI;
     object.rotation.z = Math.random() * Math.PI;
+    object.children[0].material.side = THREE.DoubleSide;
     ring.add(object);
     parametricObjects.set(`object${i}-${ringVals.name}`, object);
     sceneObjects.set(`object${i}-${ringVals.name}`, object);
