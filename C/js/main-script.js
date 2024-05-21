@@ -811,7 +811,9 @@ function createRingParametricObjects(ring, ringVals) {
   const radius = ringVals.outerRadius;
   const height = ringVals.height;
   const step = (Math.PI * 2) / objectsPerRing;
+  parametricFunctions.sort(() => Math.random() - 0.5);
   for (let i = 0; i < objectsPerRing; i++) {
+    // sort parametricFunctions randomly
     const object = new THREE.Object3D();
     const geometry = new ParametricGeometry(parametricFunctions[i], 100, 100);
     const material = new THREE.MeshLambertMaterial({ color: colors.white });
