@@ -22,7 +22,7 @@ const CLOCK = new THREE.Clock();
 
 const DELTA_MULT = 100;
 
-const backgroundColor = "#0d131f"; // #ffffff
+const backgroundColor = 0x000000;
 
 const fov = 70;
 
@@ -50,6 +50,7 @@ const colors = {
   yellow: 0xdf8e1d,
   cyan: 0x04a5e5,
   magenta: 0xdd7878,
+  orange: 0xf5a623,
 };
 
 const objectsPerRing = 8;
@@ -90,7 +91,7 @@ const directionalLightVals = {
 
 const ambientLightVals = {
   color: colors.orange,
-  intensity: 0.5,
+  intensity: 1,
 };
 
 const pointLightVals = {
