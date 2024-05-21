@@ -684,7 +684,7 @@ function createSkyBox() {
   );
   var material = new THREE.MeshLambertMaterial({
     map: texture,
-    side: THREE.DoubleSide,
+    side: THREE.BackSide,
   });
   var sphere = new THREE.Mesh(geometry, material);
   scene.add(sphere);
