@@ -809,6 +809,7 @@ function createParametricObjects() {
 function createRingParametricObjects(ring, ringVals) {
   const radius = ringVals.outerRadius;
   const height = ringVals.height;
+  const positionY = ringVals.positionY;
   const step = (Math.PI * 2) / objectsPerRing;
   parametricFunctions.sort(() => Math.random() - 0.5);
   for (let i = 0; i < objectsPerRing; i++) {
@@ -819,7 +820,7 @@ function createRingParametricObjects(ring, ringVals) {
     object.add(new THREE.Mesh(geometry, material));
     object.position.set(
       radius * Math.cos(i * step) * 0.85,
-      height / UNIT + 0.4 * UNIT,
+      positionY - height,
       radius * Math.sin(i * step) * 0.85
     );
 
@@ -1082,6 +1083,7 @@ function init() {
   createMerryGoRound();
   createMobiusStrip();
   createParametricObjects();
+  createMobiusStrip()
   createLights();
 
   window.addEventListener("keydown", onKeyDown);
