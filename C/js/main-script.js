@@ -570,6 +570,7 @@ function createObject(objectVals) {
       geometry = new THREE.BufferGeometry();
       geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
       geometry.vertices = vertices;
+      geometry.computeVertexNormals();
       break;
 
     default:
