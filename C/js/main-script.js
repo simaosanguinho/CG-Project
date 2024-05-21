@@ -109,7 +109,6 @@ const baseCylinderVals = {
   positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.CYLINDER,
-  //material: new THREE.MeshBasicMaterial({ color: colors.green }),
   color: colors.green,
   material: new THREE.MeshLambertMaterial({ color: colors.green }),
   name: "base",
@@ -124,7 +123,6 @@ const innerRingVals = {
   positionY: 3.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  //material: new THREE.MeshBasicMaterial({ color: colors.red }),
   color: colors.red,
   material: new THREE.MeshLambertMaterial({ color: colors.red }),
   name: "innerRing",
@@ -139,7 +137,6 @@ const middleRingVals = {
   positionY: 2.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  //material: new THREE.MeshBasicMaterial({ color: colors.yellow }),
   color: colors.yellow,
   material: new THREE.MeshLambertMaterial({ color: colors.yellow }),
   name: "middleRing",
@@ -154,7 +151,6 @@ const outerRingVals = {
   positionY: 1.5 * UNIT,
   positionZ: 0 * UNIT,
   type: Primitives.RING,
-  // material: new THREE.MeshLambertMaterial({ color: colors.blue }),
   color: colors.blue,
   material: new THREE.MeshLambertMaterial({ color: colors.blue }),
   name: "outerRing",
@@ -578,6 +574,7 @@ function createObject(objectVals) {
   }
 
   object.add(new THREE.Mesh(geometry, objectVals.material));
+  object.children[0].material.side = THREE.DoubleSide;
   sceneObjects.set(objectVals.name, object);
   return object;
 }
@@ -859,22 +856,22 @@ function changeMaterials(material) {
     case "gouraud":
       sceneObjects.forEach((object) => {
         let c = object.children[0].material.color;
-        console.log(c);
-        object.children[0].material = new THREE.MeshLambertMaterial({
-          color: c,
-        });
+        object.children[0].material = new THREE.MeshLambertMaterial({ color: c });
+        object.children[0].material.side = THREE.DoubleSide;
       });
       break;
     case "phong":
       sceneObjects.forEach((object) => {
         let c = object.children[0].material.color;
         object.children[0].material = new THREE.MeshPhongMaterial({ color: c });
+        object.children[0].material.side = THREE.DoubleSide;
       });
       break;
     case "cartoon":
       sceneObjects.forEach((object) => {
         let c = object.children[0].material.color;
         object.children[0].material = new THREE.MeshToonMaterial({ color: c });
+        object.children[0].material.side = THREE.DoubleSide;
       });
       break;
     case "normal":
@@ -882,6 +879,7 @@ function changeMaterials(material) {
         let c = object.children[0].material.color;
         object.children[0].material = new THREE.MeshNormalMaterial();
         object.children[0].material.color = c;
+        object.children[0].material.side = THREE.DoubleSide;
       });
       break;
     default:
@@ -894,6 +892,7 @@ function deactivateShading() {
   sceneObjects.forEach((object) => {
     let c = object.children[0].material.color;
     object.children[0].material = new THREE.MeshBasicMaterial({ color: c });
+    object.children[0].material.side = THREE.DoubleSide;
   });
 }
 
