@@ -59,6 +59,7 @@ let sceneObjects = new Map();
 let globalLights = new Map();
 let parametricObjects = new Map();
 let mobiusStripLights = new Map();
+let spotLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 let latestMaterial = "gouraud";
@@ -319,6 +320,13 @@ function toggleDirectionalLight() {
 function toogleMobiusStripLights() {
   "use strict";
   mobiusStripLights.forEach((light) => {
+    light.visible = !light.visible;
+  });
+}
+
+function toggleSpotlights() {
+  "use strict";
+  spotLights.forEach((light) => {
     light.visible = !light.visible;
   });
 }
@@ -808,6 +816,7 @@ function createParametricObjects() {
 }
 
 function createParametricObjectsSpotlights() {
+  let i = 0;
   parametricObjects.forEach((object) => {
       const spotLight = new THREE.SpotLight(0xffffff, 10000);
       // calculate object height
@@ -822,6 +831,8 @@ function createParametricObjectsSpotlights() {
 
       object.add(spotLight);
       //object.add(helper);
+      spotLights.set(`spotLight-${i}`, spotLight);
+      i++;
   });
 }
 
@@ -1234,6 +1245,7 @@ function onKeyDown(e) {
       break;
     case 83 || 115: // s or S
       makeButtonActive("S");
+      toggleSpotlights();
       break;
     case 81 || 113: // q or Q
       makeButtonActive("Q");
