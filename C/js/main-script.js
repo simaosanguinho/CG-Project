@@ -60,6 +60,7 @@ let sceneObjects = new Map();
 let globalLights = new Map();
 let parametricObjects = new Map();
 let mobiusStripLights = new Map();
+let spotLights = new Map();
 let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 let latestMaterial = "gouraud";
@@ -304,6 +305,7 @@ function createLights() {
   "use strict";
   createDirectionalLight();
   createAmbientLight();
+  createParametricObjectsSpotlights();
 }
 
 function toggleDirectionalLight() {
@@ -315,6 +317,13 @@ function toggleDirectionalLight() {
 function toogleMobiusStripLights() {
   "use strict";
   mobiusStripLights.forEach((light) => {
+    light.visible = !light.visible;
+  });
+}
+
+function toggleSpotlights() {
+  "use strict";
+  spotLights.forEach((light) => {
     light.visible = !light.visible;
   });
 }
@@ -805,6 +814,27 @@ function createParametricObjects() {
   createRingParametricObjects(outerRing, outerRingVals);
 }
 
+function createParametricObjectsSpotlights() {
+  let i = 0;
+  parametricObjects.forEach((object) => {
+      const spotLight = new THREE.SpotLight(0xffffff, 10000);
+      // calculate object height
+      object.children[0].geometry.computeBoundingBox();
+      let objectHeight = object.children[0].geometry.boundingBox.max.y - object.children[0].geometry.boundingBox.min.y;
+      spotLight.position.set(0, object.position.y /UNIT - objectHeight / 2, 0);
+      spotLight.target.position.x = spotLight.position.x;
+      spotLight.target.position.y = spotLight.position.y + 1;
+      spotLight.target.position.z = spotLight.position.z;
+      spotLight.angle = Math.PI / 4;
+      //const helper = new THREE.SpotLightHelper(spotLight);
+
+      object.add(spotLight);
+      //object.add(helper);
+      spotLights.set(`spotLight-${i}`, spotLight);
+      i++;
+  });
+}
+
 function createRingParametricObjects(ring, ringVals) {
   const radius = ringVals.outerRadius;
   const height = ringVals.height;
@@ -834,10 +864,6 @@ function createRingParametricObjects(ring, ringVals) {
       scale / scaleFactor
     );
 
-    // rotate object
-    object.rotation.x = Math.random() * Math.PI;
-    object.rotation.y = Math.random() * Math.PI;
-    object.rotation.z = Math.random() * Math.PI;
     object.children[0].material.side = THREE.DoubleSide;
     ring.add(object);
     parametricObjects.set(`object${i}-${ringVals.name}`, object);
@@ -1049,6 +1075,14 @@ function moveOuterRing() {
   }
 }
 
+function randomizeParametricObjectsDirection() {
+  parametricObjects.forEach((object) => {
+    object.rotation.x = Math.random() * Math.PI;
+    object.rotation.y = Math.random() * Math.PI;
+    object.rotation.z = Math.random() * Math.PI;
+  });
+}
+
 /////////////
 /* DISPLAY */
 /////////////
@@ -1084,6 +1118,7 @@ function init() {
   createMobiusStrip();
   createParametricObjects();
   createLights();
+  randomizeParametricObjectsDirection();
 
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
@@ -1208,6 +1243,7 @@ function onKeyDown(e) {
       break;
     case 83 || 115: // s or S
       makeButtonActive("S");
+      toggleSpotlights();
       break;
     case 81 || 113: // q or Q
       makeButtonActive("Q");
