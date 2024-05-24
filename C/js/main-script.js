@@ -506,9 +506,30 @@ function translateObject(object, objectValues, offset, axis) {
 }
 
 function rotateParametricObjects() {
-  parametricObjects.forEach((object) => {
-    object.rotation.y += 0.01;
-  });
+  const random = Math.floor(Math.random() * 3);
+
+  switch (random) {
+    case 0:
+      parametricObjects.forEach((object) => {
+        object.rotation.x += 0.02;
+        object.rotation.y += 0.02;
+      });
+      break;
+    case 1:
+      parametricObjects.forEach((object) => {
+        object.rotation.x += 0.02;
+        object.rotation.z += 0.02;
+      });
+      break;
+    case 2:
+      parametricObjects.forEach((object) => {
+        object.rotation.y += 0.02;
+        object.rotation.z += 0.02;
+      });
+      break;
+    default:
+      break;
+    }
 }
 
 function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
