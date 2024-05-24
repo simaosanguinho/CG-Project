@@ -1,16 +1,5 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { VRButton } from "three/addons/webxr/VRButton.js";
-import * as Stats from "three/addons/libs/stats.module.js";
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
 import image from "./images/image.png";
-import {
-  color,
-  lights,
-  positionGeometry,
-  rotate,
-} from "three/examples/jsm/nodes/Nodes.js"; // for noclip
-import { PointerLockControls } from "three/addons/controls/PointerLockControls.js";
 import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 
 //////////////////////
@@ -248,14 +237,6 @@ function createPerspectiveCamera(cameraValue, location) {
   }
 }
 
-function resetCamera() {
-  camera.position.set(
-    cameraValues[0][0],
-    cameraValues[0][1],
-    cameraValues[0][2]
-  );
-  camera.lookAt(scene.position);
-}
 
 /////////////////////
 /* CREATE LIGHT(S) */
@@ -948,68 +929,6 @@ function activateShading() {
   changeMaterials(latestMaterial);
 }
 
-//////////////////////
-/* CHECK COLLISIONS */
-//////////////////////
-function checkCollisions() {
-  "use strict";
-}
-
-///////////////////////
-/* HANDLE COLLISIONS */
-///////////////////////
-function handleCollisions() {
-  "use strict";
-}
-
-////////////////////////
-/* NOCLIP MOVEMENT */
-////////////////////////
-let controls;
-const moveSpeed = 100;
-let moveForward = false;
-let moveBackward = false;
-let moveLeft = false;
-let moveRight = false;
-let moveUp = false;
-let moveDown = false;
-
-function checkNoCLipMovement() {
-  "use strict";
-  const moveDistance = (moveSpeed * delta) / 10;
-  if (moveForward) controls.moveForward(moveDistance);
-  if (moveBackward) controls.moveForward(-moveDistance);
-  if (moveLeft) controls.moveRight(-moveDistance);
-  if (moveRight) controls.moveRight(moveDistance);
-  if (moveUp) controls.getObject().position.y += moveDistance;
-  if (moveDown) controls.getObject().position.y -= moveDistance;
-}
-
-function addNoClipControls() {
-  ("use strict");
-  // noClip
-  // Initialize PointerLockControls
-  controls = new PointerLockControls(camera, document.body);
-  scene.add(controls.getObject());
-
-  // Pointer lock event listeners
-  document.addEventListener("click", () => {
-    controls.lock();
-  });
-
-  controls.addEventListener("lock", () => {
-    console.log("Pointer locked");
-  });
-
-  controls.addEventListener("unlock", () => {
-    console.log("Pointer unlocked");
-  });
-}
-
-/////////
-/* END */
-/////////
-
 ////////////
 /* UPDATE */
 ////////////
@@ -1029,8 +948,6 @@ function update() {
   moveOuterRing();
 
   rotateParametricObjects();
-
-  checkNoCLipMovement();
 }
 
 function moveInnerRing() {
@@ -1144,7 +1061,6 @@ function init() {
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
   window.addEventListener("resize", onResize);
-  addNoClipControls();
 }
 
 /////////////////////
@@ -1233,31 +1149,6 @@ function onKeyDown(e) {
       makeButtonActive("D");
       toggleDirectionalLight();
       break;
-    case 37: // left arrow
-      moveLeft = true;
-      break;
-    case 38: // up arrow
-      moveForward = true;
-      break;
-    case 39: // right arrow
-      moveRight = true;
-      break;
-    case 40: // down arrow
-      moveBackward = true;
-      break;
-    // o or O
-    case 79 || 111:
-      moveUp = true;
-      break;
-    // l or L
-    case 76 || 108:
-      moveDown = true;
-      break;
-    case 48: // 0
-      // return to initial position camera
-      resetCamera();
-      controls.unlock();
-      break;
     case 80 || 112: // p or P
       makeButtonActive("P");
       toogleMobiusStripLights();
@@ -1311,26 +1202,6 @@ function onKeyUp(e) {
       break;
     case 51: //3
       makeButtonInactive("3");
-      break;
-    case 37: // left arrow
-      moveLeft = false;
-      break;
-    case 38: // up arrow
-      moveForward = false;
-      break;
-    case 39: // right arrow
-      moveRight = false;
-      break;
-    case 40: // down arrow
-      moveBackward = false;
-      break;
-    // o or O
-    case 79 || 111:
-      moveUp = false;
-      break;
-    // l or L
-    case 76 || 108:
-      moveDown = false;
       break;
     case 68 || 100: // d or D
       makeButtonInactive("D");
