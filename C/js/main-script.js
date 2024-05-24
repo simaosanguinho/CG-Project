@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import image from "./images/image.png";
 import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
+import { VRButton } from "three/addons/webxr/VRButton.js";
 
 //////////////////////
 /* GLOBAL VARIABLES */
@@ -48,6 +49,7 @@ const cameras = [];
 let sceneObjects = new Map();
 let globalLights = new Map();
 let parametricObjects = new Map();
+let parametricObjectsGroup = new Map();
 let mobiusStripLights = new Map();
 let spotLights = new Map();
 let renderer, scene, camera, axes, delta;
@@ -59,7 +61,7 @@ let isShadingActive = true;
 /* OBJECT VARIABLES */
 //////////////////////
 
-const cameraValues = [[1000, 1000, 1000]];
+const cameraValues = [[1000, 500, 1000]];
 
 const AXIS = {
   X: "x",
@@ -89,6 +91,13 @@ const pointLightVals = {
   intensity: 200,
   distance: 1000,
   decay: 1,
+};
+
+const spotLightVals = {
+  color: colors.white,
+  intensity: 250000,
+  angle: Math.PI / 8,
+  penumbra: 0.05,
 };
 
 const baseCylinderVals = {
@@ -236,7 +245,6 @@ function createPerspectiveCamera(cameraValue, location) {
     camera.lookAt(0, -1, 0);
   }
 }
-
 
 /////////////////////
 /* CREATE LIGHT(S) */
@@ -510,7 +518,7 @@ function rotateParametricObjects() {
       break;
     default:
       break;
-    }
+  }
 }
 
 function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
@@ -816,24 +824,45 @@ function createParametricObjects() {
   createRingParametricObjects(outerRing, outerRingVals);
 }
 
+function getObjectHeightFromGroup(group) {
+  let object = group.children[0].children[0];
+  object.geometry.computeBoundingBox();
+  return object.geometry.boundingBox.max.y - object.geometry.boundingBox.min.y;
+}
+
+function getObjectFromGroup(group) {
+  return group.children[0];
+}
+
 function createParametricObjectsSpotlights() {
   let i = 0;
-  parametricObjects.forEach((object) => {
-      const spotLight = new THREE.SpotLight(0xffffff, 10000);
-      // calculate object height
-      object.children[0].geometry.computeBoundingBox();
-      let objectHeight = object.children[0].geometry.boundingBox.max.y - object.children[0].geometry.boundingBox.min.y;
-      spotLight.position.set(0, object.position.y /UNIT - objectHeight / 2, 0);
-      spotLight.target.position.x = spotLight.position.x;
-      spotLight.target.position.y = spotLight.position.y + 1;
-      spotLight.target.position.z = spotLight.position.z;
-      spotLight.angle = Math.PI / 4;
-      //const helper = new THREE.SpotLightHelper(spotLight);
+  let heights = [
+    innerRingVals.positionY,
+    middleRingVals.positionY,
+    outerRingVals.positionY,
+  ];
+  parametricObjectsGroup.forEach((group) => {
+    const spotLight = new THREE.SpotLight(
+      spotLightVals.color,
+      spotLightVals.intensity
+    );
 
-      object.add(spotLight);
-      //object.add(helper);
-      spotLights.set(`spotLight-${i}`, spotLight);
-      i++;
+    let spotLightHeight = heights[Math.floor(i / objectsPerRing)];
+    let objectHeight = getObjectHeightFromGroup(group);
+
+    spotLight.position.set(
+      getObjectFromGroup(group).position.x,
+      -spotLightHeight + objectHeight,
+      getObjectFromGroup(group).position.z
+    );
+
+    spotLight.target = getObjectFromGroup(group);
+    spotLight.angle = spotLightVals.angle;
+    spotLight.penumbra = spotLightVals.penumbra;
+
+    group.add(spotLight);
+    spotLights.set(`spotLight-${i}`, spotLight);
+    i++;
   });
 }
 
@@ -845,6 +874,7 @@ function createRingParametricObjects(ring, ringVals) {
   parametricFunctions.sort(() => Math.random() - 0.5);
   for (let i = 0; i < objectsPerRing; i++) {
     // sort parametricFunctions randomly
+    const group = new THREE.Group();
     const object = new THREE.Object3D();
     const geometry = new ParametricGeometry(parametricFunctions[i], 100, 100);
     const material = new THREE.MeshLambertMaterial({ color: colors.white });
@@ -867,9 +897,11 @@ function createRingParametricObjects(ring, ringVals) {
     );
 
     object.children[0].material.side = THREE.DoubleSide;
-    ring.add(object);
+    group.add(object);
+    ring.add(group);
     parametricObjects.set(`object${i}-${ringVals.name}`, object);
     sceneObjects.set(`object${i}-${ringVals.name}`, object);
+    parametricObjectsGroup.set(`object${i}-${ringVals.name}`, group);
   }
 }
 
@@ -885,7 +917,9 @@ function changeMaterials(material) {
     case "gouraud":
       sceneObjects.forEach((object) => {
         let c = object.children[0].material.color;
-        object.children[0].material = new THREE.MeshLambertMaterial({ color: c });
+        object.children[0].material = new THREE.MeshLambertMaterial({
+          color: c,
+        });
         object.children[0].material.side = THREE.DoubleSide;
       });
       break;
@@ -1040,16 +1074,11 @@ function init() {
   });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
+  document.body.appendChild(VRButton.createButton(renderer));
+  renderer.xr.enabled = true;
 
   createScene();
   createCameras();
-
-  // create object functions
-  /* let cube = new THREE.Mesh(
-    new THREE.BoxGeometry(20 * UNIT, 20 * UNIT, 20 * UNIT),
-    new THREE.MeshNormalMaterial()
-  );
-  scene.add(cube); */
 
   createSkyBox();
   createMerryGoRound();
@@ -1057,6 +1086,9 @@ function init() {
   createParametricObjects();
   createLights();
   randomizeParametricObjectsDirection();
+
+  // move everthing down for VR
+  scene.position.y = -7 * UNIT;
 
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
@@ -1071,7 +1103,7 @@ function animate() {
   delta = CLOCK.getDelta() * DELTA_MULT;
   update();
   render();
-  requestAnimationFrame(animate);
+  renderer.setAnimationLoop(animate);
 }
 
 ////////////////////////////
