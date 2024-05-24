@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import image from "./images/image.png";
 import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.js";
 import { VRButton } from "three/addons/webxr/VRButton.js";
 
@@ -679,7 +678,7 @@ function createSkyBox() {
   "use strict";
 
   var textureLoader = new THREE.TextureLoader();
-  var texture = textureLoader.load(image);
+  var texture = textureLoader.load("js/images/image.png");
   var geometry = new THREE.SphereGeometry(
     20 * UNIT,
     32,
