@@ -16,7 +16,7 @@ import { ParametricGeometry } from "three/addons/geometries/ParametricGeometry.j
 //////////////////////
 /* GLOBAL VARIABLES */
 //////////////////////
-const UNIT = 90;
+const UNIT = 1;
 
 const CLOCK = new THREE.Clock();
 
@@ -65,12 +65,13 @@ let renderer, scene, camera, axes, delta;
 let merryGoRound, innerRing, middleRing, outerRing;
 let latestMaterial = "gouraud";
 let isShadingActive = true;
+let skyDome;
 
 //////////////////////
 /* OBJECT VARIABLES */
 //////////////////////
 
-const cameraValues = [[1000, 1000, 1000]];
+const cameraValues = [[11*UNIT, 11*UNIT, 11 * UNIT]];
 
 const AXIS = {
   X: "x",
@@ -95,9 +96,15 @@ const ambientLightVals = {
   intensity: 1,
 };
 
+const spotLightVals = {
+  color: colors.white,
+  intensity: 1000 * UNIT,
+  angle: Math.PI / 4,
+};
+
 const pointLightVals = {
   color: colors.white,
-  intensity: 200,
+  intensity: 2 * UNIT,
   distance: 1000,
   decay: 1,
 };
@@ -178,7 +185,7 @@ const merryGoRoundRotationVals = {
 };
 
 const innerRingTranslationVals = {
-  step: 1,
+  step: 0.011*UNIT,
   translationAxis: AXIS.Y,
   inMotion: 1,
   translationDirection: -1,
@@ -187,7 +194,7 @@ const innerRingTranslationVals = {
 };
 
 const middleRingTranslationVals = {
-  step: 1.3,
+  step: 0.014*UNIT,
   translationAxis: AXIS.Y,
   inMotion: 1,
   translationDirection: -1,
@@ -196,7 +203,7 @@ const middleRingTranslationVals = {
 };
 
 const outerRingTranslationVals = {
-  step: 0.8,
+  step: 0.0088*UNIT,
   translationAxis: AXIS.Y,
   inMotion: 1,
   translationDirection: -1,
@@ -226,6 +233,7 @@ function createCameras() {
   "use strict";
   createPerspectiveCamera(cameraValues[0], null);
 }
+
 
 function createPerspectiveCamera(cameraValue, location) {
   "use strict";
@@ -610,25 +618,19 @@ function createMobiusStrip() {
 
 function createBase() {
   const base = createObject(baseCylinderVals);
+  merryGoRound.add(base);
   base.position.set(
     baseCylinderVals.positionX,
     baseCylinderVals.positionY,
     baseCylinderVals.positionZ
   );
 
-  // create cube on top of inner ring - DEBUG
-  /* const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
-      new THREE.MeshLambertMaterial({ color: colors.white })
-    );
-    cube.position.set(0, 3 * UNIT, 0);
-    base.add(cube); */
-
   return base;
 }
 
 function createInnerRing() {
   innerRing = createObject(innerRingVals);
+  merryGoRound.add(innerRing);
   innerRing.position.set(
     innerRingVals.positionX,
     innerRingVals.positionY,
@@ -678,6 +680,7 @@ function createMerryGoRound() {
 function createSkyBox() {
   "use strict";
 
+  skyDome = new THREE.Group();
   var textureLoader = new THREE.TextureLoader();
   var texture = textureLoader.load(image);
   var geometry = new THREE.SphereGeometry(
@@ -694,7 +697,8 @@ function createSkyBox() {
     side: THREE.BackSide,
   });
   var sphere = new THREE.Mesh(geometry, material);
-  scene.add(sphere);
+  skyDome.add(sphere);
+  scene.add(skyDome);
   sphere.rotation.x = Math.PI;
 }
 
@@ -817,19 +821,19 @@ function createParametricObjects() {
 function createParametricObjectsSpotlights() {
   let i = 0;
   parametricObjects.forEach((object) => {
-      const spotLight = new THREE.SpotLight(0xffffff, 10000);
+      const spotLight = new THREE.SpotLight(spotLightVals.color, spotLightVals.intensity);
       // calculate object height
       object.children[0].geometry.computeBoundingBox();
       let objectHeight = object.children[0].geometry.boundingBox.max.y - object.children[0].geometry.boundingBox.min.y;
       spotLight.position.set(0, object.position.y /UNIT - objectHeight / 2, 0);
       spotLight.target.position.x = spotLight.position.x;
-      spotLight.target.position.y = spotLight.position.y + 1;
+      spotLight.target.position.y = spotLight.position.y + 0.011*UNIT;
       spotLight.target.position.z = spotLight.position.z;
-      spotLight.angle = Math.PI / 4;
-      //const helper = new THREE.SpotLightHelper(spotLight);
+      spotLight.angle = spotLightVals.angle;
+      const helper = new THREE.SpotLightHelper(spotLight);
 
       object.add(spotLight);
-      //object.add(helper);
+      object.add(helper);
       spotLights.set(`spotLight-${i}`, spotLight);
       i++;
   });
@@ -855,7 +859,7 @@ function createRingParametricObjects(ring, ringVals) {
 
     // scale up if object is too small
     object.children[0].geometry.computeBoundingSphere();
-    const scale = Math.random() * (60 - 30) + 30;
+    const scale = Math.random() * (0.66*UNIT - 0.33*UNIT) + 0.33*UNIT;
     const scaleFactor = object.children[0].geometry.boundingSphere.radius;
 
     object.scale.set(
@@ -985,10 +989,6 @@ function addNoClipControls() {
   });
 }
 
-/////////
-/* END */
-/////////
-
 ////////////
 /* UPDATE */
 ////////////
@@ -1103,15 +1103,13 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
+  // VR setup
+  renderer.xr.enabled = true;
+  document.body.appendChild(VRButton.createButton(renderer));
+
   createScene();
   createCameras();
 
-  // create object functions
-  /* let cube = new THREE.Mesh(
-    new THREE.BoxGeometry(20 * UNIT, 20 * UNIT, 20 * UNIT),
-    new THREE.MeshNormalMaterial()
-  );
-  scene.add(cube); */
 
   createSkyBox();
   createMerryGoRound();
@@ -1119,11 +1117,14 @@ function init() {
   createParametricObjects();
   createLights();
   randomizeParametricObjectsDirection();
+  
+  scene.position.y -= 10 * UNIT;
+  cameras[0].position.y -= 10 * UNIT;
 
   window.addEventListener("keydown", onKeyDown);
   window.addEventListener("keyup", onKeyUp);
   window.addEventListener("resize", onResize);
-  addNoClipControls();
+  // addNoClipControls();
 }
 
 /////////////////////
@@ -1134,7 +1135,7 @@ function animate() {
   delta = CLOCK.getDelta() * DELTA_MULT;
   update();
   render();
-  requestAnimationFrame(animate);
+  renderer.setAnimationLoop(animate);
 }
 
 ////////////////////////////
