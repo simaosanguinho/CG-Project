@@ -543,13 +543,11 @@ function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
     shape.lineTo(x, y);
   }
 
-  // Create extrude settings
   const extrudeSettings = {
     steps: 1,
     depth: height,
     bevelEnabled: false,
   };
-  // Create the extruded geometry
   const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
   // Rotate the geometry by 90 degrees
@@ -625,14 +623,6 @@ function createBase() {
     baseCylinderVals.positionY,
     baseCylinderVals.positionZ
   );
-
-  // create cube on top of inner ring - DEBUG
-  /* const cube = new THREE.Mesh(
-      new THREE.BoxGeometry(2 * UNIT, 2 * UNIT, 2 * UNIT),
-      new THREE.MeshLambertMaterial({ color: colors.white })
-    );
-    cube.position.set(0, 3 * UNIT, 0);
-    base.add(cube); */
 
   return base;
 }
