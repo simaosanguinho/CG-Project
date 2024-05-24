@@ -61,7 +61,7 @@ let isShadingActive = true;
 /* OBJECT VARIABLES */
 //////////////////////
 
-const cameraValues = [[1000, 500, 1000]];
+const cameraValues = [[10*UNIT, 5*UNIT, 10*UNIT]];
 
 const AXIS = {
   X: "x",
@@ -88,14 +88,14 @@ const ambientLightVals = {
 
 const pointLightVals = {
   color: colors.white,
-  intensity: 200,
+  intensity: 2 * UNIT,
   distance: 1000,
   decay: 1,
 };
 
 const spotLightVals = {
   color: colors.white,
-  intensity: 250000,
+  intensity: 2500*UNIT,
   angle: Math.PI / 8,
   penumbra: 0.05,
 };
@@ -176,7 +176,7 @@ const merryGoRoundRotationVals = {
 };
 
 const innerRingTranslationVals = {
-  step: 1,
+  step: 0.011*UNIT,
   translationAxis: AXIS.Y,
   inMotion: 1,
   translationDirection: -1,
@@ -185,7 +185,7 @@ const innerRingTranslationVals = {
 };
 
 const middleRingTranslationVals = {
-  step: 1.3,
+  step: 0.014*UNIT,
   translationAxis: AXIS.Y,
   inMotion: 1,
   translationDirection: -1,
@@ -194,7 +194,7 @@ const middleRingTranslationVals = {
 };
 
 const outerRingTranslationVals = {
-  step: 0.8,
+  step: 0.0088*UNIT,
   translationAxis: AXIS.Y,
   inMotion: 1,
   translationDirection: -1,
@@ -264,7 +264,7 @@ function createDirectionalLight() {
   globalLights.set("directionalLight", light);
 }
 
-function createAmbientLight(color, intensity) {
+function createAmbientLight() {
   "use strict";
   const light = new THREE.AmbientLight(
     ambientLightVals.color,
@@ -286,7 +286,6 @@ function createPointLight(positionVals, index) {
   light.position.set(positionVals[0], positionVals[1], positionVals[2]);
 
   mobiusStripStructure.add(light);
-  // mobiusStripStructure.add(lightSphere);
   mobiusStripLights.set(index, light);
 }
 
@@ -525,7 +524,6 @@ function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
   // Create a shape representing the ring
   const shape = new THREE.Shape();
 
-  // Define the outer ring
   shape.moveTo(outerRadius, 0);
   for (let i = 1; i <= thetaSegments; i++) {
     const theta = (i / thetaSegments) * Math.PI * 2;
@@ -534,7 +532,6 @@ function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
     shape.lineTo(x, y);
   }
 
-  // Define the inner ring
   shape.moveTo(innerRadius, 0);
   for (let i = 1; i <= thetaSegments; i++) {
     const theta = (i / thetaSegments) * Math.PI * 2;
@@ -550,7 +547,6 @@ function createRingGeometry(innerRadius, outerRadius, height, thetaSegments) {
   };
   const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
-  // Rotate the geometry by 90 degrees
   geometry.rotateX(Math.PI / 2);
 
   return geometry;
@@ -608,7 +604,6 @@ function createMobiusStrip() {
 
   // Add point ligths to the mobius strip
   pointLightLocations.forEach((point) => {
-    // send also index of point to create a unique name for the light
     createPointLight(point, pointLightLocations.indexOf(point));
   });
 
@@ -814,8 +809,8 @@ function createParametricObjects() {
   createRingParametricObjects(outerRing, outerRingVals);
 }
 
-function getObjectHeightFromGroup(group) {
-  let object = group.children[0].children[0];
+function getObjectHeight(objectData) {
+  let object = objectData.children[0];
   object.geometry.computeBoundingBox();
   return object.geometry.boundingBox.max.y - object.geometry.boundingBox.min.y;
 }
@@ -838,7 +833,7 @@ function createParametricObjectsSpotlights() {
     );
 
     let spotLightHeight = heights[Math.floor(i / objectsPerRing)];
-    let objectHeight = getObjectHeightFromGroup(group);
+    let objectHeight = getObjectHeight(getObjectFromGroup(group));
 
     spotLight.position.set(
       getObjectFromGroup(group).position.x,
@@ -863,7 +858,7 @@ function createRingParametricObjects(ring, ringVals) {
   const step = (Math.PI * 2) / objectsPerRing;
   parametricFunctions.sort(() => Math.random() - 0.5);
   for (let i = 0; i < objectsPerRing; i++) {
-    // sort parametricFunctions randomly
+    // place parametricFunctions randomly
     const group = new THREE.Group();
     const object = new THREE.Object3D();
     const geometry = new ParametricGeometry(parametricFunctions[i], 100, 100);
@@ -877,7 +872,7 @@ function createRingParametricObjects(ring, ringVals) {
 
     // scale up if object is too small
     object.children[0].geometry.computeBoundingSphere();
-    const scale = Math.random() * (60 - 30) + 30;
+    const scale = Math.random() * (0.66*UNIT - 0.33*UNIT) + 0.33*UNIT;
     const scaleFactor = object.children[0].geometry.boundingSphere.radius;
 
     object.scale.set(
