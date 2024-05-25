@@ -4,7 +4,7 @@ In this project we explore the Three.js library and some key concepts in the are
 
 - *[Project A](./A)* - Project B and C's skecthes, technical drawings and scene graphs.
 - *[Project B](./B)* - a functional crane built in JavaScript using Three.js.
-- *[Project C](./C)* - a fucntional merry-go-round in Javascript using Three.js.
+- *[Project C](./C)* - a functional merry-go-round in Javascript using Three.js.
 
 ### Run
 
